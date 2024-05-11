@@ -8,7 +8,7 @@
 </script>
 
 <template>
-    <button :class="`bg-${bgColor} text-${textColor} font-bold p-2 w-80 h-11 text-xl ${customStyle}`">
+    <button :class="`bg-${bgColor} text-${textColor} font-bold p-2 w-80 h-11 text-xl rounded ${customStyle}`">
         {{ text }}
     </button>
 </template>
