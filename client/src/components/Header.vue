@@ -5,7 +5,7 @@ import BurgerMenu from './BurgerMenu.vue';
 </script>
 
 <template>
-    <header class="flex px-5 py-4 mt-11 gap-24 justify-center items-center">
+    <header class="flex py-4 mt-11 gap-24 justify-center items-center">
         <!-- svg logo -->
         <a href="#" class="">
             <svg width="102" height="22" viewBox="0 0 102 22" fill="none" xmlns="http://www.w3.org/2000/svg">
