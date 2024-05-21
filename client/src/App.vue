@@ -7,8 +7,8 @@ import Wishlist from './pages/Wishlist.vue';
 
 <template>
     <Header />
-    <!-- <Profil />
-    <Wishlist /> -->
+    <Profil />
+    <Wishlist />
     <Footer />
 </template>
 
