@@ -24,6 +24,8 @@ import WishCard from '../components/Cards/WishCard.vue'
         <!-- produits récommendés -->
         <span class="font-medium text-2xl">Recommendés pour vous</span>
         <!-- TODO: recommended products carousel and products card-->
-        <div class="flex gap-2"></div>
+        <div class="flex gap-2">
+            <!-- trois / quatre produits sexy Recommendés pour vous -->
+        </div>
     </section>
 </template>
