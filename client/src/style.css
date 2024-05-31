@@ -5,7 +5,9 @@
 
 :root {
   font-family: League Spartan, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+
+}
+  /**line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
@@ -20,17 +22,15 @@
 
 }
 
-a:hover {
-  color: var(--primary-color);
-}
 
-/*body {
+
+body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}*/
+}
 
 
 button {
@@ -74,4 +74,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+}*/

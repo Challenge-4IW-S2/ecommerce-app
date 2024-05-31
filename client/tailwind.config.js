@@ -5,15 +5,20 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    colors: {
-      current: 'currentColor',
-      transparent: 'transparent',
-      primary:'#C72C48'
-
-
+    extend: {
+      colors: {
+        'principal': '#C72C48',
+      },
+      fontFamily: {
+        'body': ['League Spartan'],
+      },
+      gridTemplateRows: {
+          '[auto,auto,1fr]': 'auto auto 1fr',
+      },
     },
-    extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+  ],
 }
 

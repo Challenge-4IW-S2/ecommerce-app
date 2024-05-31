@@ -26,33 +26,32 @@
         </div>
       </div>
     </nav>
-    <nav class="bg-gray-50 dark:bg-gray-700">
+    <nav class=" dark:bg-gray-700">
       <div class="max-w-screen-xl px-4 py-3 mx-auto">
         <div class="flex items-center">
           <ul class="flex flex-row font-medium mt-0 space-x-8 rtl:space-x-reverse text-sm">
             <li>
-              <a href="#" class="text-gray-900 dark:text-white hover:font-bold hover:text-primary" aria-current="page">Tapes-in</a>
+              <a href="#" class="text-gray-900 dark:text-white hover:font-bold hover:text-principal" aria-current="page">Tapes-in</a>
             </li>
             <li>
-              <a href="#" class="text-gray-900 dark:text-white hover:text-primary hover:font-bold">Tissages</a>
+              <a href="#" class="text-gray-900 dark:text-white hover:text-principal hover:font-bold">Tissages</a>
             </li>
             <li>
-              <a href="#" class="text-gray-900 dark:text-white hover:text-primary hover:font-bold">Extension à clip</a>
+              <a href="#" class="text-gray-900 dark:text-white hover:text-principal hover:font-bold">Extension à clip</a>
             </li>
             <li>
-              <a href="#" class="text-gray-900 dark:text-white hover:text-primary hover:font-bold">Cosmétique</a>
+              <a href="#" class="text-gray-900 dark:text-white hover:text-principal hover:font-bold">Cosmétique</a>
             </li>
             <li>
               <form action="" class="relative mx-auto w-max">
                 <input type="search"
                        placeholder="Rechercher un produit"
-                       class="peer cursor-pointer relative z-10 w-12 bg-transparent pl-12 outline-none focus:w-full focus:cursor-text w-full " />
+                       class="peer cursor-pointer relative z-10 w-12 bg-transparent pl-12 outline-none focus:w-full focus:cursor-text " />
                 <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-y-0 my-auto h-4 w-12  px-3.5 peer-focus:border-lime-300 peer-focus:stroke-lime-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </form>
             </li>
-
           </ul>
         </div>
       </div>
