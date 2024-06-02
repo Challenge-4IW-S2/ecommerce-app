@@ -1,2 +1,18 @@
-# ecommerce-app
-Challenge 4IW | Semestre 2 - Inès MAGANGA ; Estelle NKUMBA ; Victor GRANDIN
+# challenge-template
+
+## Requirements
+
+- Docker
+- Docker Compose
+
+## Usage
+
+### Development
+
+```bash
+docker compose up --detach --build
+```
+
+### Production
+
+TODO
