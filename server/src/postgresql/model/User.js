@@ -1,4 +1,5 @@
 import { Model, DataTypes } from "sequelize";
+import bcrypt from 'bcryptjs';
 
 export default function (connection) {
 
@@ -40,6 +41,18 @@ export default function (connection) {
             tableName: "users",
         }
     );
+
+    User.addHook("beforeCreate", async function (user) {
+        const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
+        user.password = hash;
+    });
+
+    User.addHook("beforeUpdate", async function (user, { fields }) {
+        if (fields.includes("password")) {
+            const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
+            user.password = hash;
+        }
+    });
 
     return User;
 }
