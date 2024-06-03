@@ -1,5 +1,8 @@
 import express from "express";
 import { indexRouter } from "./routes/index.js";
+import "./mongo/mongodb.js";
+import "./postgresql/postgresql.js";
+
 
 const server = express();
 
