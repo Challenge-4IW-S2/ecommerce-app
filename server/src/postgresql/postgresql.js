@@ -5,6 +5,9 @@ import AdressModel from "./model/Adress.js";
 import CategoryModel from "./model/Category.js";
 import OrderModel from "./model/Orders.js";
 import WishlistModel from "./model/Wishlist.js";
+import ProductModel from './model/Product.js';
+import ProductPictureModel from './model/ProductPicture.js';
+import CommentModel from './model/Comment.js';
 import { v4 as uuidv4 } from "uuid";
 
 const UserRole = UserRoleModel(db.connection);
@@ -13,9 +16,11 @@ const Adress = AdressModel(db.connection);
 const Category = CategoryModel(db.connection);
 const Order = OrderModel(db.connection);
 const Wishlist = WishlistModel(db.connection);
+const Product = ProductModel(db.connection);
+const ProductPicture = ProductPictureModel(db.connection);
+const Comment = CommentModel(db.connection);
 
 const userRoles = ['ROLE_ADMIN', 'ROLE_STORE_KEEPER', 'ROLE_COMPTA', 'ROLE_USER'];
-const categories = ['Tapes-in', 'Tissages', 'Extension à clip', 'Cosmétiques'];
 
 async function init() {
     await UserRole.sync({ force: false }).then(async () => {
@@ -52,44 +57,23 @@ async function init() {
     });
 
     await Category.sync({ force: false }).then(async () => {
-    console.log("Table categories created");
-    const count = await Category.count();
-    if (count === 0) {
-        categories.forEach(async (category) => {
-            await Category.create({
-                id: uuidv4(),
-                name: category
-            }).then(() => {
-                console.log(`Category ${category} created`);
-            }).catch((err) => {
-                console.log(`Error creating role ${category}: ${err}`);
-            });
-        });
-    }
-});
+        console.log("Table categories created");
+    });
+
+    await Product.sync({ force: false }).then(async () => {
+        console.log("Table products created");
+    });
+
+    await ProductPicture.sync({ force: false }).then(async () => {
+        console.log("Table product_pictures created");
+    });
+
+    await Comment.sync({ force: false }).then(async () => {
+        console.log("Table comments created");
+    });
 }
 
 init();
-
-// import UserRoleRepository from "./Repository/UserRoleRepository.js";
-// const userRoleRepository = new UserRoleRepository();
-// userRoleRepository.createUserRole("ROLE_TEST");
-// userRoleRepository.deleteUserRole("e16b1ca0-a8e3-4179-a45b-9e4e8259c294");
-
-// import UserRepository from "./Repository/UserRepository.js";
-// const userRepository = new UserRepository();
-// userRepository.createUser({
-//     email: "test@test.com",
-//     password: "Test1234",
-//     firstname: "Test",
-//     lastname: "Test",
-//     phone: "0606060606",
-//     role: "ROLE_ADMIN"
-// });
-// userRepository.updateUser("0fd554d4-5a1a-4a46-a767-aae04ffd4771", {
-//     email: "test1@test.com",
-// })
-// userRepository.deleteUser("0fd554d4-5a1a-4a46-a767-aae04ffd4771");
 
 export default {
     connection: db.connection,

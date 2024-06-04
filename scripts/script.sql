@@ -70,7 +70,6 @@ CREATE TABLE categories (
 CREATE TABLE products (
     id UUID DEFAULT uuid_generate_v4(),
     name VARCHAR(255) NOT NULL,
-    picture VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     price_ht DECIMAL(10, 2) NOT NULL,
     price_ttc DECIMAL(10, 2) NOT NULL,
@@ -79,6 +78,14 @@ CREATE TABLE products (
     category UUID NOT NULL,
     CONSTRAINT products_pkey PRIMARY KEY (id),
     CONSTRAINT products_category_fkey FOREIGN KEY (category) REFERENCES categories (id)
+);
+
+CREATE TABLE products_pictures (
+    id UUID DEFAULT uuid_generate_v4(),
+    product_id UUID NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    CONSTRAINT products_pictures_pkey PRIMARY KEY (id),
+    CONSTRAINT products_pictures_product_id_fkey FOREIGN KEY (product_id) REFERENCES products (id)
 );
 
 CREATE TABLE comments (
