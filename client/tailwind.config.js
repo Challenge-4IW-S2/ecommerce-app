@@ -6,16 +6,22 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        '125': '31.25rem' // 1 unit of space = 0.25rem (=4px), here 31.25 * 16 (1rem) = 500px
+      },
       colors: {
-        custom: {
-          red: '#C72C48',
-          gray: '#B1B1B1',
-          black: '#201F1F',
-        },
+        primary: "#C72C48",
+        black: "#201F1F",
+        white: "#FAFAFA"
 
       },
     },
   },
   plugins: [],
+  purge: {
+    options: {
+      safelist: ['fill-primary']
+    }
+  }
 }
 

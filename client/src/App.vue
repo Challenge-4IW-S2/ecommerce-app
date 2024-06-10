@@ -1,14 +1,15 @@
 <script setup>
-import Header from './components/Header.vue';
-import Footer from './components/Footer.vue';
-import Profil from './pages/Profil.vue';
-import Wishlist from './pages/Wishlist.vue';
+import Login from "./pages/Login.vue";
+import Register from "./pages/Register.vue";
+import Header from "./page-components/Header.vue";
+import Footer from "./page-components/Footer.vue";
+
 </script>
 
-<template>
-    <Header />
-    <Profil />
-    <Wishlist />
-    <Footer />
+<template class="container">
+  <Header :currentPage="currentPage" :changeView="changeView"></Header>
+  <Login></Login>
+<!--  <Register></Register>-->
+  <Footer></Footer>
 </template>
 

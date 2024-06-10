@@ -1,8 +1,8 @@
 <script setup>
 defineProps({
-  type: {
+  to: {
     type: String,
-    default: "submit"
+    default: "#"
   },
   text: {
     type: String,
@@ -12,10 +12,9 @@ defineProps({
 </script>
 
 <template>
-  <button :type="type" class="bg-black text-white h-12 block text-center content-center w-full">{{ text }}</button>
+  <a :href="to" class="bg-black text-white h-12 block text-center content-center">{{ text }}</a>
 </template>
 
 <style scoped>
 
 </style>
-
