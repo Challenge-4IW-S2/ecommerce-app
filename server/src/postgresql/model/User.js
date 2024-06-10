@@ -20,7 +20,7 @@ export default function (connection) {
                 type: DataTypes.STRING,
                 allowNull: true,
                 validate: {
-                    is: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{8,}$/, // u moins 8 caractères, et inclut au moins une majuscule, une minuscule et un caractère spécial
+                    is: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{12,}$/, // au moins 12 caractères, et inclut au moins une majuscule, une minuscule et un caractère spécial
                 },
             },
             firstname: {type: DataTypes.STRING, allowNull: true},
@@ -39,6 +39,7 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "users",
+            underscored: true
         }
     );
 

@@ -13,11 +13,13 @@
     "csv-parser": "^3.0.0",
     "express": "4.19.2",
     "mongoose": "^8.4.1",
+    "npm": "^10.8.1",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.2"
+    "nodemon": "^3.1.2",
+    "sequelize-cli": "^6.6.2"
   }
 }

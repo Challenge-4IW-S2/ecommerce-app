@@ -22,6 +22,7 @@ export class AuthController {
                 success: false,
                 message: 'User not created, an error occurred',
                 e: error.message,
+                ee: process.env
             });
         })
     }
