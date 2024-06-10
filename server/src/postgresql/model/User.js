@@ -20,7 +20,7 @@ export default function (connection) {
                 type: DataTypes.STRING,
                 allowNull: true,
                 validate: {
-                is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                    is: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{8,}$/, // u moins 8 caractères, et inclut au moins une majuscule, une minuscule et un caractère spécial
                 },
             },
             firstname: {type: DataTypes.STRING, allowNull: true},
