@@ -12,3 +12,4 @@ import Footer from "./page-components/Footer.vue";
 <!--  <Register></Register>-->
   <Footer></Footer>
 </template>
+

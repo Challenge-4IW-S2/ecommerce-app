@@ -13,6 +13,7 @@ export default {
         primary: "#C72C48",
         black: "#201F1F",
         white: "#FAFAFA"
+
       },
     },
   },
