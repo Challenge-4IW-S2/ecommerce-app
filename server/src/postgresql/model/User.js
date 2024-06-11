@@ -20,7 +20,7 @@ export default function (connection) {
                 type: DataTypes.STRING,
                 allowNull: true,
                 validate: {
-                is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+                    is: /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{12,}$/, // au moins 12 caractères, et inclut au moins une majuscule, une minuscule et un caractère spécial
                 },
             },
             firstname: {type: DataTypes.STRING, allowNull: true},
@@ -31,14 +31,15 @@ export default function (connection) {
                 type: DataTypes.UUID, 
                 allowNull: true,
                 references: {
-                model: 'user_roles',
-                key: 'id'
+                    model: 'user_roles',
+                    key: 'id'
                 }
             },
         },
         {
             sequelize: connection,
             tableName: "users",
+            underscored: true
         }
     );
 
