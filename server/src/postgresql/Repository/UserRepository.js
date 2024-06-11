@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default class UserRepository {
     constructor() {
-        this.User = UserModel(db.connection);
+        this.User = new UserModel(db.connection);
         this.userRoleRepository = new UserRoleRepository();
     }
 
@@ -13,11 +13,11 @@ export default class UserRepository {
         return await this.User.findAll();
     }
 
-    async findById(id) {
+    async findByPk(id) {
         return await this.User.findByPk(id);
     }
 
-    async findByOtherField(field, value) {
+    async findOne(field, value) {
         return await this.User.findOne({
             where: {
                 [field]: value

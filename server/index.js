@@ -1,42 +1,28 @@
 import express from "express";
-import cookieParser from "cookie-parser";
-import {router} from "./src/routes/user.js";
-import user from "./src/routes/user.js";
-import security from "./src/routes/security.js";
+import cors from "cors";
+import { indexRouter } from "./src/routes/index.js";
+import "./src/mongo/mongodb.js";
+import "./src/postgresql/postgresql.js";
 
-const app = express();
+const server = express();
+const port = 8000;
+server.use(cors());
+server.use(express.json());
+server.use("/", indexRouter);
 
-//function parseBody(req, res, next) {
-//  const data = [];
-//  req.on("data", (chunk) => {
-//    data.push(chunk);
-//  });
-//  req.on("end", () => {
-//    const buffer = Buffer.concat(data);
-//    const body = buffer.toString();
-//    try {
-//      const bodyParsed = JSON.parse(body);
-//      req.body = bodyParsed;
-//      next();
-//    } catch (e) {
-//      return res.sendStatus(400);
-//    }
-//  });
-//}
+server.get('/setup', async (req, res) => {
+ try {
+     await pool.query('CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, name VARCHAR(100), location TEXT)');
+     res.status(200).send({ message: 'Table Created' });
 
-//app.use(parseBody);
-app.use(express.json());
-app.use(cookieParser(process.env.JWT_SECRET));
-
-app.get("/", (req, res, next) => {
-    res.send("Coucou " + JSON.stringify(req.query));
-});
-app.post("/", (req, res, next) => {
-    res.send("Coucou FROM POST " + JSON.stringify(req.body));
+ } catch (err) {
+     console.error(err.message);
+     res.sendStatus(500);
+ }
 });
 
-app.use("/users", user);
-app.use(security);
-app.listen(process.env.PORT, () => {
-    console.log("Server running on port " + process.env.PORT);
+server.post('/signup',indexRouter);
+server.use("/login", indexRouter);
+server.listen(port, "0.0.0.0", () => {
+  console.log("Server listening on http://localhost:8000");
 });
