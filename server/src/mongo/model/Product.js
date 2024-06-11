@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
 
 const productSchema = new Schema({
-    name: {
-        type: String,
+    _id: {
+        type: 'UUID',
         required: true,
     },
-    picture: {
+    name: {
         type: String,
         required: true,
     },
@@ -14,15 +14,15 @@ const productSchema = new Schema({
         type: String,
         required: true,
     },
-    priceHT: {
+    price_ht: {
         type: Number,
         required: true,
     },
-    priceTTC: {
+    price_ttc: {
         type: Number,
         required: true,
     },
-    isActive: {
+    is_active: {
         type: Boolean,
         required: true,
         default: true,
@@ -32,8 +32,8 @@ const productSchema = new Schema({
         required: true,
         lowercase: true,
     },
-    category: {
-        type: String,
+    category_id: {
+        type: 'UUID',
         required: true,
     }
 });

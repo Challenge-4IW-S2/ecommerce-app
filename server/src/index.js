@@ -8,6 +8,7 @@ import {AuthController} from "./controllers/AuthController.js";
 const server = express();
 const port = 8000;
 server.use("/", indexRouter);
+
 server.use(express.json());
 server.get('/setup', async (req, res) => {
  try {
