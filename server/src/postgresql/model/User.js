@@ -31,8 +31,8 @@ export default function (connection) {
                 type: DataTypes.UUID, 
                 allowNull: true,
                 references: {
-                model: 'user_roles',
-                key: 'id'
+                    model: 'user_roles',
+                    key: 'id'
                 }
             },
         },
