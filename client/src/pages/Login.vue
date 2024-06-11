@@ -4,6 +4,13 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
+import {ref} from "vue";
+
+const email = ref('')
+
+function logEmail() {
+  console.log(email.value)
+}
 </script>
 
 <template>
@@ -11,13 +18,17 @@ import ButtonLink from "../components/Links/ButtonLink.vue";
     <h1>
       Connectez-vous à votre compte
     </h1>
+    <button @click="logEmail">
+      dadad
+    </button>
     <form>
       <div class="flex flex-col gap-4">
         <Input
             id="e-mail"
             type="email"
             title="Adresse e-mail"
-            placeholder="Adresse e-mail"></Input>
+            placeholder="Adresse e-mail"
+            v-model:value="email"></Input>
         <Input
             id="password"
             type="password"

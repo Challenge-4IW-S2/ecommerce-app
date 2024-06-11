@@ -7,7 +7,7 @@ import Footer from "./page-components/Footer.vue";
 </script>
 
 <template class="container">
-  <Header :currentPage="currentPage" :changeView="changeView"></Header>
+  <Header></Header>
   <Login></Login>
 <!--  <Register></Register>-->
   <Footer></Footer>
