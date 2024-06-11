@@ -1,15 +1,17 @@
 <script setup>
-import Login from "./pages/Login.vue";
-import Register from "./pages/Register.vue";
-import Header from "./page-components/Header.vue";
-import Footer from "./page-components/Footer.vue";
-
+import Header from "./components/Header.vue";
+import CardDescription from "./components/CardDescription.vue";
 </script>
 
-<template class="container">
-  <Header></Header>
-  <Login></Login>
-<!--  <Register></Register>-->
-  <Footer></Footer>
+<template>
+  <Header/>
+  <CardDescription/>
+  <div>
+
+  </div>
+
 </template>
 
+<style scoped>
+
+</style>

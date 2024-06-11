@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "tw-elements": "^2.0.0",
     "vue": "^3.3.11"
   },
   "devDependencies": {

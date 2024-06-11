@@ -61,3 +61,4 @@ import BurgerMenu from './BurgerMenu.vue';
         </nav>
     </header>
 </template>
+>>>>>>> develop
