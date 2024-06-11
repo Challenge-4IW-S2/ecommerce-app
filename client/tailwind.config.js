@@ -6,22 +6,20 @@ export default {
   ],
   theme: {
     extend: {
-      spacing: {
-        '125': '31.25rem' // 1 unit of space = 0.25rem (=4px), here 31.25 * 16 (1rem) = 500px
-      },
       colors: {
-        primary: "#C72C48",
-        black: "#201F1F",
-        white: "#FAFAFA"
-
+        'principal': '#C72C48',
+      },
+      fontFamily: {
+        'body': ['League Spartan'],
+      },
+      gridTemplateRows: {
+          '[auto,auto,1fr]': 'auto auto 1fr',
       },
     },
   },
-  plugins: [],
-  purge: {
-    options: {
-      safelist: ['fill-primary']
-    }
-  }
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+  ],
+
 }
 
