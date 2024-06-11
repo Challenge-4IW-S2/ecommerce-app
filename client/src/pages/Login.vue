@@ -4,13 +4,27 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
+import ky from "ky";
 import {ref} from "vue";
 
 const email = ref('')
+const password = ref('')
 
-function logEmail() {
-  console.log(email.value)
-}
+const connect = async () => {
+  try {
+    const response = await ky.post("http://localhost:8000/login", {
+      json: {
+        email: email.value,
+        password: password.value,
+      },
+    }).json();
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 </script>
 
 <template>
@@ -21,7 +35,7 @@ function logEmail() {
     <button @click="logEmail">
       dadad
     </button>
-    <form>
+    <form @submit.prevent="connect">
       <div class="flex flex-col gap-4">
         <Input
             id="e-mail"
@@ -33,7 +47,10 @@ function logEmail() {
             id="password"
             type="password"
             title="Mot de passe"
-            placeholder="Mot de passe"></Input>
+            placeholder="Mot de passe"
+            v-model:value="password"
+
+        ></Input>
       </div>
       <div class="flex flex-col gap-4 mt-5">
         <a href="#" class="text-xs font-medium border-b border-black w-fit">Récupérer mon compte</a>

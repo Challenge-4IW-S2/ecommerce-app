@@ -1,92 +1,86 @@
-//importing modules
-const bcrypt = require("bcrypt");
-const db = require("../postgresql/Repository/UserRepository");
-const jwt = require("jsonwebtoken");
+import { Router } from "express";
+import User from "../postgresql/model/User.js";
+export const router = new Router();
 
-// Assigning users to the variable User
-const User = db.users;
+router.get("/", async (req, res, next) => {
+    const users = await User.findAll({
+        where: req.query,
+    });
+    res.json(users);
+});
 
-
-
-//signing a user up
-//hashing users password before its saved to the database with bcrypt
-const signup = async (req, res) => {
+router.post("/", async (req, res, next) => {
     try {
-        const { userName, email, password } = req.body;
-        const data = {
-            userName,
-            email,
-            password: await bcrypt.hash(password, 10),
-        };
-        //saving the user
-        const user = await User.create(data);
-
-        //if user details is captured
-        //generate token with the user's id and the secretKey in the env file
-        // set cookie with the token generated
-        if (user) {
-            let token = jwt.sign({ id: user.id }, process.env.secretKey, {
-                expiresIn: 1 * 24 * 60 * 60 * 1000,
-            });
-
-            res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-            console.log("user", JSON.stringify(user, null, 2));
-            console.log(token);
-            //send users details
-            return res.status(201).send(user);
-        } else {
-            return res.status(409).send("Details are not correct");
-        }
-    } catch (error) {
-        console.log(error);
+        const user = await User.create(req.body);
+        res.status(201).json(user);
+    } catch (e) {
+        next(e);
     }
-};
+});
 
-
-//login authentication
-const login = async (req, res) => {
+router.get("/:id", async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const user = await User.findByPk(parseInt(req.params.id));
+        if (user) {
+            res.json(user);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (e) {
+        next(e);
+    }
+});
 
-        //find a user by their email
-        const user = await User.findOne({
+router.patch("/:id", async (req, res, next) => {
+    try {
+        const [nbUpdated, users] = await User.update(req.body, {
             where: {
-                email: email
-            }
-
+                id: parseInt(req.params.id),
+            },
+            returning: true,
+            individualHooks: true,
         });
-
-        //if user email is found, compare password with bcrypt
-        if (user) {
-            const isSame = await bcrypt.compare(password, user.password);
-
-            //if password is the same
-            //generate token with the user's id and the secretKey in the env file
-
-            if (isSame) {
-                let token = jwt.sign({ id: user.id }, process.env.secretKey, {
-                    expiresIn: 1 * 24 * 60 * 60 * 1000,
-                });
-
-                //if password matches wit the one in the database
-                //go ahead and generate a cookie for the user
-                res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-                console.log("user", JSON.stringify(user, null, 2));
-                console.log(token);
-                //send user data
-                return res.status(201).send(user);
-            } else {
-                return res.status(401).send("Authentication failed");
-            }
+        if (users[0]) {
+            res.json(users[0]);
         } else {
-            return res.status(401).send("Authentication failed");
+            res.sendStatus(404);
         }
-    } catch (error) {
-        console.log(error);
+    } catch (e) {
+        next(e);
     }
-};
+});
 
-module.exports = {
-    signup,
-    login,
-};
+router.delete("/:id", async (req, res, next) => {
+    try {
+        const nbDeleted = await User.destroy({
+            where: {
+                id: parseInt(req.params.id),
+            },
+        });
+        if (nbDeleted === 1) {
+            res.sendStatus(204);
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (e) {
+        next(e);
+    }
+});
+
+router.put("/:id", async (req, res, next) => {
+    try {
+        const nbDeleted = await User.destroy({
+            where: {
+                id: parseInt(req.params.id),
+            },
+        });
+        const user = await User.create({
+            ...req.body,
+            id: parseInt(req.params.id),
+        });
+        res.status(nbDeleted ? 200 : 201).json(user);
+    } catch (e) {
+        next(e);
+    }
+});
+export default router;

@@ -36,6 +36,6 @@ POST http://localhost:8000/login
 Content-Type: application/json
 
 {
-  "email": "john@doe.fr",
-  "password": "Azerty1234!"
+  "email": "test@example.com",
+  "password": "testpassword"
 }
