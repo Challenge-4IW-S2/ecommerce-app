@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ecommerce-app.iml" filepath="$PROJECT_DIR$/.idea/ecommerce-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Vuejs/vue-demo/.idea/vue-demo.iml" filepath="$PROJECT_DIR$/../../Vuejs/vue-demo/.idea/vue-demo.iml" />
     </modules>
   </component>
 </project>
