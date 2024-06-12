@@ -10,28 +10,6 @@ export default class ProductRepository {
     }
 
     searchProduct(search) {
-        // return this.Product.find({
-        //     $or: [
-        //         {
-        //             name: {
-        //                 $regex: search,
-        //                 $options: 'i',
-        //             }
-        //         },
-        //         {
-        //             description: {
-        //                 $regex: search,
-        //                 $options: 'i',
-        //             }
-        //         }
-            
-        //     ],
-        //     $and: [
-        //         {
-        //             is_active: true
-        //         }
-        //     ]
-        // });
         return this.Product.aggregate()
         .lookup(
             {

@@ -1,0 +1,19 @@
+<script lang="ts" setup>
+const props = defineProps({
+    productImg: String,
+    productName: String,
+    productPrice: String,
+    productCategory: String,
+});
+</script>
+
+<template>
+    <div class="flex">
+        <img :src="productImg" alt="`image du produit ${{ productName }}`" />
+        <div class="flex flex-col gap-2">
+            <p class="text-custom-gray">{{ productName }}</p>
+            <p class="text-custom-red">{{ productPrice }} €</p>
+            <p class="text-custom-gray">{{ productCategory }}</p>
+        </div>
+    </div>
+</template>

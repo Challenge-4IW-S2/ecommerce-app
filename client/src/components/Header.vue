@@ -1,5 +1,5 @@
 <script setup>
-import Search from './Search.vue';
+import Search from './Search/Search.vue';
 import SmallCart from './Cart/SmallCart.vue';
 import Cart from './Cart/Cart.vue';
 import BurgerMenu from './BurgerMenu.vue';
