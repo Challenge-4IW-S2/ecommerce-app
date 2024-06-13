@@ -1,13 +1,13 @@
 import db from './db.js';
-import UserRoleModel from "./model/UserRole.js";
-import UserModel from "./model/User.js";
-import AdressModel from "./model/Adress.js";
-import CategoryModel from "./model/Category.js";
-import OrderModel from "./model/Orders.js";
-import WishlistModel from "./model/Wishlist.js";
-import ProductModel from './model/Product.js';
-import ProductPictureModel from './model/ProductPicture.js';
-import CommentModel from './model/Comment.js';
+import UserRoleModel from "./models/UserRole.js";
+import UserModel from "./models/User.js";
+import AdressModel from "./models/Adress.js";
+import CategoryModel from "./models/Category.js";
+import OrderModel from "./models/Orders.js";
+import WishlistModel from "./models/Wishlist.js";
+import ProductModel from './models/Product.js';
+import ProductPictureModel from './models/ProductPicture.js';
+import CommentModel from './models/Comment.js';
 import { v4 as uuidv4 } from "uuid";
 
 const UserRole = UserRoleModel(db.connection);

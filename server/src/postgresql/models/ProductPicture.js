@@ -6,8 +6,14 @@ export default function (connection) {
 
     ProductPicture.init(
         {
-            id: { type: DataTypes.UUID, primaryKey: true },
-            url: { type: DataTypes.STRING, allowNull: false },
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true
+            },
+            url: {
+                type: DataTypes.STRING,
+                allowNull: false
+            },
             product_id: {
                 type: DataTypes.UUID,
                 allowNull: false,

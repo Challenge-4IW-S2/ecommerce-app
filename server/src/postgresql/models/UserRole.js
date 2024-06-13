@@ -1,22 +1,22 @@
 import { Model, DataTypes } from "sequelize";
 
-
 export default function (connection) {
-  class Category extends Model {}
+  class UserRole extends Model {}
 
-  Category.init(
+  UserRole.init(
     {
         id: { type: DataTypes.UUID, primaryKey: true },
         name: { 
             type: DataTypes.STRING(45), 
-            allowNull: true
+            allowNull: true,
+            unique: true,
         },
     },
     {
-      sequelize: connection,
-      tableName: "categories",
+        sequelize: connection,
+        tableName: "user_roles"
     }
   );
 
-  return Category;
+  return UserRole;
 };

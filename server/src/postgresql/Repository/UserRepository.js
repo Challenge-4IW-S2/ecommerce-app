@@ -1,5 +1,5 @@
 import db from '../db.js';
-import UserModel from '../model/User.js';
+import UserModel from '../models/User.js';
 import UserRoleRepository from './UserRoleRepository.js';
 import { v4 as uuidv4 } from 'uuid';
 
