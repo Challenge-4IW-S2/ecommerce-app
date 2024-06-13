@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
     productImg: String,
     productName: String,
-    productPrice: String,
+    productPrice: Number,
     productCategory: String,
 });
 </script>

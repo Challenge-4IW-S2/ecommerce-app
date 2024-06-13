@@ -25,4 +25,5 @@ indexRouter.post("/users/role", UserController.userRole);
 indexRouter.get("/users/roles", UserController.getAllUserRole);
 
 // Product routes
+indexRouter.get("/products", ProductController.index);
 indexRouter.get("/searchProduct", ProductController.search);
