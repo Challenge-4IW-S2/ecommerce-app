@@ -1,86 +1,110 @@
-import { Router } from "express";
-import User from "../postgresql/model/User.js";
-export const router = new Router();
+import UserRepository from "../postgresql/Repository/UserRepository.js";
+import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
 
-router.get("/", async (req, res, next) => {
-    const users = await User.findAll({
-        where: req.query,
-    });
-    res.json(users);
-});
-
-router.post("/", async (req, res, next) => {
-    try {
-        const user = await User.create(req.body);
-        res.status(201).json(user);
-    } catch (e) {
-        next(e);
+export class UserController {
+    static async getAllUsers(request, response) {
+        const userRepository = new UserRepository();
+        const users = await userRepository.findAll();
+        response.json(users);
     }
-});
-
-router.get("/:id", async (req, res, next) => {
-    try {
-        const user = await User.findByPk(parseInt(req.params.id));
-        if (user) {
-            res.json(user);
-        } else {
-            res.sendStatus(404);
+    static async getUser(request, response) {
+        const userRepository = new UserRepository();
+        const user = await userRepository.findByPk(request.params.id);
+        if (!user) return response.status(404).send("User not found");
+        response.json(user);
+    }
+    static async createUser(request, response) {
+        const parameters = {
+            email: request.body.email,
+            password: request.body.password,
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            phone: request.body.phone,
+            role: request.body.role
         }
-    } catch (e) {
-        next(e);
+        const userRepository = new UserRepository();
+        userRepository.createUser(parameters).then(res => {
+            response.json({
+                success: true,
+                message: 'User successfully created',
+            });
+        }).catch(error => {
+            response.json({
+                success: false,
+                message: 'User not created, an error occurred',
+                e: error.message,
+            });
+        })
     }
-});
-
-router.patch("/:id", async (req, res, next) => {
-    try {
-        const [nbUpdated, users] = await User.update(req.body, {
-            where: {
-                id: parseInt(req.params.id),
-            },
-            returning: true,
-            individualHooks: true,
-        });
-        if (users[0]) {
-            res.json(users[0]);
-        } else {
-            res.sendStatus(404);
+    static async updateUser(request, response) {
+        const parameters = {
+            email: request.body.email,
+            password: request.body.password,
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            phone: request.body.phone,
+            role: request.body.role
         }
-    } catch (e) {
-        next(e);
+        const userRepository = new UserRepository();
+        userRepository.updateUser(request.params.id, parameters).then(res => {
+            response.json({
+                success: true,
+                message: 'User successfully updated',
+            });
+        }).catch(error => {
+            response.json({
+                success: false,
+                message: 'User not updated, an error occurred',
+                e: error.message,
+            });
+        })
     }
-});
+    static async deleteUser(request, response) {
+        const userRepository = new UserRepository();
+        userRepository.deleteUser(request.params.id).then(res => {
+            response.json({
+                success: true,
+                message: 'User successfully deleted',
+            });
+        }).catch(error => {
+            response.json({
+                success: false,
+                message: 'User not deleted, an error occurred',
+                e: error.message,
+            });
+        })
+    }
 
-router.delete("/:id", async (req, res, next) => {
-    try {
-        const nbDeleted = await User.destroy({
-            where: {
-                id: parseInt(req.params.id),
-            },
-        });
-        if (nbDeleted === 1) {
-            res.sendStatus(204);
-        } else {
-            res.sendStatus(404);
+    static async userRole(request, response) {
+        const userRoleRepository = new UserRoleRepository();
+        const role = await userRoleRepository.findByPk(request.body.role);
+        if (!role) return response.status(404).send("User role not found");
+        response.json(role);
+    }
+
+    static async updateUserRole(request, response) {
+        const parameters = {
+            role: request.body.role
         }
-    } catch (e) {
-        next(e);
+        const userRoleRepository = new UserRoleRepository();
+        userRoleRepository.updateUserRole(request.params.id, parameters).then(res => {
+            response.json({
+                success: true,
+                message: 'User role successfully updated',
+            });
+        }).catch(error => {
+            response.json({
+                success: false,
+                message: 'User role not updated, an error occurred',
+                e: error.message,
+            });
+        })
     }
-});
 
-router.put("/:id", async (req, res, next) => {
-    try {
-        const nbDeleted = await User.destroy({
-            where: {
-                id: parseInt(req.params.id),
-            },
-        });
-        const user = await User.create({
-            ...req.body,
-            id: parseInt(req.params.id),
-        });
-        res.status(nbDeleted ? 200 : 201).json(user);
-    } catch (e) {
-        next(e);
+    static async getAllUserRole(request, response) {
+        const userRoleRepository = new UserRoleRepository();
+        const roles = await userRoleRepository.findAll();
+        console.log(roles)
+        response.json(roles);
     }
-});
-export default router;
+}

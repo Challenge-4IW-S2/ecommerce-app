@@ -39,3 +39,47 @@ Content-Type: application/json
   "email": "test@example.com",
   "password": "testpassword"
 }
+
+### Any request to the user routes
+###
+GET http://localhost:8000/users
+
+### Get a user by id
+GET localhost:8000/users/a6792ced-5d8f-4d8e-93c3-9a90b4767b73
+
+### Get user roles
+POST localhost:8000/users/role
+Content-Type: application/json
+
+{
+  "role": "f120fc9e-d43c-4726-8f44-37e5531dd169"
+}
+
+### Get all roles
+GET localhost:8000/users/roles
+
+###
+POST localhost:8000/users
+Content-Type: application/json
+
+{
+  "email": "test@example.fr",
+  "password": "Testpassword&1",
+  "role": ["ROLE_USER"],
+  "firstname":"Test",
+  "lastname": "Tester",
+  "phone": "0606060606"
+}
+
+###
+PUT localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
+Content-Type: application/json
+
+{
+  "email": "atest@example.fr"
+}
+###
+DELETE localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
+
+### Structure of models
+GET localhost:8000/model/User

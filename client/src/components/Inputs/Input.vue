@@ -12,7 +12,9 @@ const props = defineProps({
     validator: (value) => ['text', 'email', 'password', 'number', 'date', 'datetime-local', 'month', 'search', 'tel', 'time', 'url', 'week', 'color'].includes(value),
     default: 'text'
   },
-  id: String
+  id: String,
+  error: String,
+  option: String
 })
 
 let dynamicType = ref(props.type);
@@ -24,13 +26,14 @@ function changeVisibility(){
       ? 'text'
       : 'password';
 }
+
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
     <label :for="id">{{ title }}</label>
     <div class="w-full relative">
-      <input :id="id" :type="dynamicType" :placeholder="placeholder" v-model="value" class="border border-black pl-3 py-2 placeholder:text:base w-full" >
+      <input :id="id" :type="dynamicType" :placeholder="placeholder" v-model="value"  :option="option" class="border border-black pl-3 py-2 placeholder:text:base w-full" >
       <span v-if="type === 'password'" class="absolute top-2/4 right-4 -translate-y-2/4 text-xs cursor-pointer" @click="changeVisibility">
         {{
           dynamicType === 'password' ? 'AFFICHER' : 'MASQUER'

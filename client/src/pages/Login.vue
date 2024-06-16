@@ -9,6 +9,8 @@ import {ref} from "vue";
 
 const email = ref('')
 const password = ref('')
+const msgError = ref('')
+
 
 const connect = async () => {
   try {
@@ -18,12 +20,15 @@ const connect = async () => {
         password: password.value,
       },
     }).json();
-    console.log(response);
+    if (!response.ok) {
+      msgError.value = await response.text();
+    } else {
+      const data = await response.json();
+    }
   } catch (error) {
-    console.error(error);
+    msgError.value = 'Votre email ou votre mot de passe sont incorrects.';
   }
 };
-
 
 </script>
 
@@ -32,9 +37,9 @@ const connect = async () => {
     <h1>
       Connectez-vous à votre compte
     </h1>
-    <button @click="logEmail">
-      dadad
-    </button>
+    <small class="error" v-if="msgError" >
+      {{ msgError }}
+    </small>
     <form @submit.prevent="connect">
       <div class="flex flex-col gap-4">
         <Input
@@ -49,7 +54,6 @@ const connect = async () => {
             title="Mot de passe"
             placeholder="Mot de passe"
             v-model:value="password"
-
         ></Input>
       </div>
       <div class="flex flex-col gap-4 mt-5">
