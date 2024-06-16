@@ -1,5 +1,16 @@
 <script setup>
 import Input from "../Inputs/Input.vue";
+import Select from "../Inputs/Select.vue";
+import {computed, defineEmits, onMounted, ref} from "vue";
+import Button from "../Buttons/Button.vue";
+onMounted(() => {
+  // Initialize formData with empty strings or any default value
+  props.inputs.forEach(input => {
+    if (formData.value[input.name] === undefined) {
+      formData.value[input.name] = ''; // Set an empty string as default
+    }
+  });
+});
 const props = defineProps({
   inputs: {
     Array,
@@ -7,25 +18,55 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['submit']);
+const formData = ref({ value: {} });
+
+const filteredInputs = computed(() => {
+  //if(PAGE === 'add'){
+  return props.inputs.filter(input => input.type !== 'DATE' && input.name !== 'id' && input.name !== 'is_verified');
+  //}else{
+  //}
+});
 const handleSubmit = (event) => {
   event.preventDefault();
   emit('submit', formData.value);
+  console.log(formData.value);
+};
+const filterProps = (input) => {
+  if (input.is === 'select') {
+      delete input.type;  // Remove the type property
+      return {
+        id: input.name,
+        title: input.name,
+        options: input.options,
+        modelValue: formData.value[input.name]
+      };
+    } else {
+    return {
+        id: input.name,
+        title: input.name,
+        type: input.type,
+        placeholder: input.name,
+        //error: input.error,
+        modelValue:formData.value[input.name]
+      };
+    }
 };
 
 </script>
 <template>
   <form @submit="handleSubmit">
     <div class="grid gap-6 mb-6 md:grid-cols-2">
-     <div v-for="input in inputs" >
-        <div>{{ input }}</div>
+     <div v-for="input in filteredInputs" :key="input.name" >
        <component
-           :is="input.type === 'select' ? 'Select' : 'Input'"
-           v-bind="input"
-           v-model="input.value"
+           :is="input.is === 'select' ? Select : Input"
+           v-bind="filterProps(input)"
+           v-model="formData.value[input.name]"
        />
      </div>
     </div>
-    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+    <div class="flex justify-end">
+      <Button text="Ajouter" />
+    </div>
   </form>
 </template>
 <style scoped>
