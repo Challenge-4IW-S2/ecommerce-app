@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-    <footer class="bg-custom-red text-white flex flex-col gap-[60px] pt-[51px] pb-[30px] px-6 items-center">
+    <footer class="bg-principal text-white flex flex-col gap-[60px] pt-[51px] pb-[30px] px-6 items-center">
         <div class="flex flex-col gap-[35px] self-start">
             <a href="#" class="font-medium text-sm">Politique de confidentialité</a>
             <a href="#" class="font-medium text-sm">Conditions d’utilisations</a>

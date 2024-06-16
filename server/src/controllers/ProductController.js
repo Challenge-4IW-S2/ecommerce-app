@@ -5,7 +5,9 @@ export class ProductController {
     static async index(request, response) {
         try {
             const productRepositoryMongo = new ProductRepositoryMongo();
-            const products = await productRepositoryMongo.getAllProducts();
+            const page = request.query.page;
+            const order = request.query.order;
+            const products = await productRepositoryMongo.getAllProducts(page, order);
             response.json({
                 success: true,
                 data: products,

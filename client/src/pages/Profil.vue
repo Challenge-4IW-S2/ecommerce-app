@@ -9,13 +9,13 @@ import RadioInput from '../components/Inputs/RadioInput.vue'
     <section class="px-5 flex flex-col mb-2">
         <span class="font-medium text-2xl">Bonjour, Jane Doe</span>
         <div class="flex flex-col items-center gap-4 my-3">
-            <Button text="Modifier les informations" bgColor="custom-red" textColor="white" customStyle="" />
+            <Button text="Modifier les informations" bgColor="principal" textColor="white" customStyle="" />
             <Button text="Changer le mot de passe" bgColor="" textColor="black" customStyle="border border-black" />
         </div>
         <span class="font-extralight text-2xl">Carnet d'adresses</span>
         <div class="flex flex-col items-center gap-4 mb-3">
             <AdressCard />
-            <Button text="Ajouter une adresse" bgColor="custom-red" textColor="white" customStyle="" />
+            <Button text="Ajouter une adresse" bgColor="principal" textColor="white" customStyle="" />
         </div>
         <span class="font-extralight text-2xl">Historique des commandes</span>
         <HistoryCarousel />

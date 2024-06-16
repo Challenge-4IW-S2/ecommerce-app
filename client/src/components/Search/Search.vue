@@ -8,6 +8,7 @@ const isSearchOpen = ref(false);
 const search = ref('');
 const openSearch = () => {
     isSearchOpen.value = !isSearchOpen.value;
+    search.value = '';
 }
 let response = ref([]);
 
@@ -19,7 +20,6 @@ const connect = async (newValue) => {
                 search: newValue,
             },
         }).json();
-        console.log(response);
     } catch (error) {
         console.error(error);
     }
@@ -40,7 +40,7 @@ watch(search, (newValue) => {
     </button>
 
     <div v-if="isSearchOpen"
-        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-custom-red gap-2">
+        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2">
         <!-- close button -->
         <button @click="openSearch" class="self-end">
             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 256 256">
