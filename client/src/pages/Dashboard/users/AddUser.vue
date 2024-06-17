@@ -24,6 +24,9 @@ const getModelStructure = async () => {
       if (field.type==='STRING'){
         field.type = 'text';
       }
+      if(field.name === 'password'){
+        field.type = 'password';
+      }
       return field;
     });
   }

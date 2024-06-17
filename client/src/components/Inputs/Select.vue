@@ -9,7 +9,6 @@ const props = defineProps({
   modelValue: [String, Number]  // La valeur sélectionnée
 });
 const emit = defineEmits(['update:modelValue']);
-console.log('Select props:', props);
 </script>
 
 <template>

@@ -39,7 +39,7 @@ console.log(internalModelValue)
 </script>
 
 <template>
-  <div >
+  <div>
     <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-white">
       {{ title }}
     </label>

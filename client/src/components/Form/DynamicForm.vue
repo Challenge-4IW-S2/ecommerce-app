@@ -3,14 +3,7 @@ import Input from "../Inputs/Input.vue";
 import Select from "../Inputs/Select.vue";
 import {computed, defineEmits, onMounted, ref} from "vue";
 import Button from "../Buttons/Button.vue";
-onMounted(() => {
-  // Initialize formData with empty strings or any default value
-  props.inputs.forEach(input => {
-    if (formData.value[input.name] === undefined) {
-      formData.value[input.name] = ''; // Set an empty string as default
-    }
-  });
-});
+
 const props = defineProps({
   inputs: {
     Array,
@@ -19,6 +12,20 @@ const props = defineProps({
 });
 const emit = defineEmits(['submit']);
 const formData = ref({ value: {} });
+onMounted(() => {
+  props.inputs.forEach(input => {
+    formData.value[input.name] = '';
+  });
+});
+const vInput = { // Custom directive definition
+  mounted(el, { value }) {
+    console.log(el, value)
+    el.addEventListener("input", (event) => {
+      value(event.target.value);
+      console.log(event.target.value);
+    });
+  },
+};
 
 const filteredInputs = computed(() => {
   //if(PAGE === 'add'){
@@ -29,7 +36,6 @@ const filteredInputs = computed(() => {
 const handleSubmit = (event) => {
   event.preventDefault();
   emit('submit', formData.value);
-  console.log(formData.value);
 };
 const filterProps = (input) => {
   if (input.is === 'select') {
@@ -38,8 +44,8 @@ const filterProps = (input) => {
         id: input.name,
         title: input.name,
         options: input.options,
-        modelValue: formData.value[input.name]
-      };
+        vInput: formData.value[input.name],
+      }
     } else {
     return {
         id: input.name,
@@ -47,11 +53,11 @@ const filterProps = (input) => {
         type: input.type,
         placeholder: input.name,
         //error: input.error,
-        modelValue:formData.value[input.name]
-      };
+      vInput: formData.value[input.name],
     }
+  }
 };
-
+  console.log(formData.value)
 </script>
 <template>
   <form @submit="handleSubmit">
@@ -60,7 +66,7 @@ const filterProps = (input) => {
        <component
            :is="input.is === 'select' ? Select : Input"
            v-bind="filterProps(input)"
-           v-model="formData.value[input.name]"
+           vInput="formData.value[input.name]"
        />
      </div>
     </div>
