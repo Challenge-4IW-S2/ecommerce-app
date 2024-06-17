@@ -23,6 +23,8 @@ server.get('/setup', async (req, res) => {
 
 server.post('/signup',indexRouter);
 server.use("/login", indexRouter);
+server.use("/users", indexRouter);
+server.use("/model", indexRouter);
 server.listen(port, "0.0.0.0", () => {
   console.log("Server listening on http://localhost:8000");
 });
