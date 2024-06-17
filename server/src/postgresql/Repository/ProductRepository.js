@@ -1,5 +1,5 @@
 import db from '../db.js';
-import ProductModel from '../model/Product.js';
+import ProductModel from '../models/Product.js';
 import CategoryRepository from '../repository/CategoryRepository.js';
 import { v4 as uuidv4 } from 'uuid';
 

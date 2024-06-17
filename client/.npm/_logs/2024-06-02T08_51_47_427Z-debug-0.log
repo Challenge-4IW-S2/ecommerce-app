@@ -1,0 +1,370 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@9.6.4
+2 info using node@v20.0.0
+3 timing npm:load:whichnode Completed in 6ms
+4 timing config:load:defaults Completed in 6ms
+5 timing config:load:file:/usr/local/lib/node_modules/npm/npmrc Completed in 0ms
+6 timing config:load:builtin Completed in 0ms
+7 timing config:load:cli Completed in 1ms
+8 timing config:load:env Completed in 0ms
+9 timing config:load:project Completed in 1ms
+10 timing config:load:file:/home/node/.npmrc Completed in 1ms
+11 timing config:load:user Completed in 1ms
+12 timing config:load:file:/usr/local/etc/npmrc Completed in 0ms
+13 timing config:load:global Completed in 0ms
+14 timing config:load:setEnvs Completed in 0ms
+15 timing config:load Completed in 9ms
+16 timing npm:load:configload Completed in 9ms
+17 timing npm:load:mkdirpcache Completed in 1ms
+18 timing npm:load:mkdirplogs Completed in 0ms
+19 verbose title npm install
+20 verbose argv "install"
+21 timing npm:load:setTitle Completed in 0ms
+22 timing config:load:flatten Completed in 2ms
+23 timing npm:load:display Completed in 2ms
+24 verbose logfile logs-max:10 dir:/home/node/.npm/_logs/2024-06-02T08_51_47_427Z-
+25 verbose logfile /home/node/.npm/_logs/2024-06-02T08_51_47_427Z-debug-0.log
+26 timing npm:load:logFile Completed in 6ms
+27 timing npm:load:timers Completed in 0ms
+28 timing npm:load:configScope Completed in 0ms
+29 timing npm:load Completed in 24ms
+30 timing arborist:ctor Completed in 0ms
+31 silly logfile done cleaning log files
+32 timing idealTree:init Completed in 67ms
+33 timing idealTree:userRequests Completed in 0ms
+34 silly idealTree buildDeps
+35 timing idealTree:#root Completed in 0ms
+36 timing idealTree:buildDeps Completed in 2ms
+37 timing idealTree:fixDepFlags Completed in 0ms
+38 timing idealTree Completed in 73ms
+39 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules
+40 timing reify:loadTrees Completed in 313ms
+41 timing reify:diffTrees Completed in 6ms
+42 silly reify mark retired [ '/home/node/node_modules/tw-elements' ]
+43 silly reify mark retired [ '/home/node/node_modules/@tailwindcss/aspect-ratio' ]
+44 silly reify moves {
+44 silly reify   '/home/node/node_modules/tw-elements': '/home/node/node_modules/.tw-elements-29uzR5jT',
+44 silly reify   '/home/node/node_modules/@tailwindcss/aspect-ratio': '/home/node/node_modules/@tailwindcss/.aspect-ratio-qR8vcJ5m'
+44 silly reify }
+45 timing reify:retireShallow Completed in 3ms
+46 timing reify:createSparse Completed in 5ms
+47 timing reify:loadBundles Completed in 0ms
+48 silly audit bulk request {
+48 silly audit   '@alloc/quick-lru': [ '5.2.0' ],
+48 silly audit   '@babel/parser': [ '7.24.1' ],
+48 silly audit   '@esbuild/aix-ppc64': [ '0.20.2' ],
+48 silly audit   '@esbuild/android-arm': [ '0.20.2' ],
+48 silly audit   '@esbuild/android-arm64': [ '0.20.2' ],
+48 silly audit   '@esbuild/android-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/darwin-arm64': [ '0.20.2' ],
+48 silly audit   '@esbuild/darwin-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/freebsd-arm64': [ '0.20.2' ],
+48 silly audit   '@esbuild/freebsd-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-arm': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-arm64': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-ia32': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-loong64': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-mips64el': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-ppc64': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-riscv64': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-s390x': [ '0.20.2' ],
+48 silly audit   '@esbuild/linux-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/netbsd-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/openbsd-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/sunos-x64': [ '0.20.2' ],
+48 silly audit   '@esbuild/win32-arm64': [ '0.20.2' ],
+48 silly audit   '@esbuild/win32-ia32': [ '0.20.2' ],
+48 silly audit   '@esbuild/win32-x64': [ '0.20.2' ],
+48 silly audit   '@isaacs/cliui': [ '8.0.2' ],
+48 silly audit   '@jridgewell/gen-mapping': [ '0.3.5' ],
+48 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+48 silly audit   '@jridgewell/set-array': [ '1.2.1' ],
+48 silly audit   '@jridgewell/sourcemap-codec': [ '1.4.15' ],
+48 silly audit   '@jridgewell/trace-mapping': [ '0.3.25' ],
+48 silly audit   '@nodelib/fs.scandir': [ '2.1.5' ],
+48 silly audit   '@nodelib/fs.stat': [ '2.0.5' ],
+48 silly audit   '@nodelib/fs.walk': [ '1.2.8' ],
+48 silly audit   '@pkgjs/parseargs': [ '0.11.0' ],
+48 silly audit   '@rollup/rollup-android-arm-eabi': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-android-arm64': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-darwin-arm64': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-darwin-x64': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-arm-gnueabihf': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-arm64-gnu': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-arm64-musl': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-powerpc64le-gnu': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-riscv64-gnu': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-s390x-gnu': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-x64-gnu': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-linux-x64-musl': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-win32-arm64-msvc': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-win32-ia32-msvc': [ '4.13.2' ],
+48 silly audit   '@rollup/rollup-win32-x64-msvc': [ '4.13.2' ],
+48 silly audit   '@types/estree': [ '1.0.5' ],
+48 silly audit   '@vitejs/plugin-vue': [ '4.6.2' ],
+48 silly audit   '@vue/compiler-core': [ '3.4.21' ],
+48 silly audit   '@vue/compiler-dom': [ '3.4.21' ],
+48 silly audit   '@vue/compiler-sfc': [ '3.4.21' ],
+48 silly audit   '@vue/compiler-ssr': [ '3.4.21' ],
+48 silly audit   '@vue/reactivity': [ '3.4.21' ],
+48 silly audit   '@vue/runtime-core': [ '3.4.21' ],
+48 silly audit   '@vue/runtime-dom': [ '3.4.21' ],
+48 silly audit   '@vue/server-renderer': [ '3.4.21' ],
+48 silly audit   '@vue/shared': [ '3.4.21' ],
+48 silly audit   'ansi-regex': [ '6.0.1', '5.0.1' ],
+48 silly audit   'ansi-styles': [ '6.2.1', '4.3.0' ],
+48 silly audit   'any-promise': [ '1.3.0' ],
+48 silly audit   anymatch: [ '3.1.3' ],
+48 silly audit   arg: [ '5.0.2' ],
+48 silly audit   autoprefixer: [ '10.4.19' ],
+48 silly audit   'balanced-match': [ '1.0.2' ],
+48 silly audit   'binary-extensions': [ '2.3.0' ],
+48 silly audit   'brace-expansion': [ '2.0.1' ],
+48 silly audit   braces: [ '3.0.2' ],
+48 silly audit   browserslist: [ '4.23.0' ],
+48 silly audit   'camelcase-css': [ '2.0.1' ],
+48 silly audit   'caniuse-lite': [ '1.0.30001616' ],
+48 silly audit   chokidar: [ '3.6.0' ],
+48 silly audit   'glob-parent': [ '5.1.2', '6.0.2' ],
+48 silly audit   'color-convert': [ '2.0.1' ],
+48 silly audit   'color-name': [ '1.1.4' ],
+48 silly audit   commander: [ '4.1.1' ],
+48 silly audit   'cross-spawn': [ '7.0.3' ],
+48 silly audit   cssesc: [ '3.0.0' ],
+48 silly audit   csstype: [ '3.1.3' ],
+48 silly audit   didyoumean: [ '1.2.2' ],
+48 silly audit   dlv: [ '1.1.3' ],
+48 silly audit   eastasianwidth: [ '0.2.0' ],
+48 silly audit   'electron-to-chromium': [ '1.4.758' ],
+48 silly audit   'emoji-regex': [ '9.2.2', '8.0.0' ],
+48 silly audit   entities: [ '4.5.0' ],
+48 silly audit   esbuild: [ '0.20.2' ],
+48 silly audit   escalade: [ '3.1.2' ],
+48 silly audit   'estree-walker': [ '2.0.2' ],
+48 silly audit   'fast-glob': [ '3.3.2' ],
+48 silly audit   fastq: [ '1.17.1' ],
+48 silly audit   'fill-range': [ '7.0.1' ],
+48 silly audit   'foreground-child': [ '3.1.1' ],
+48 silly audit   'fraction.js': [ '4.3.7' ],
+48 silly audit   fsevents: [ '2.3.3' ],
+48 silly audit   'function-bind': [ '1.1.2' ],
+48 silly audit   glob: [ '10.3.12' ],
+48 silly audit   hasown: [ '2.0.2' ],
+48 silly audit   'is-binary-path': [ '2.1.0' ],
+48 silly audit   'is-core-module': [ '2.13.1' ],
+48 silly audit   'is-extglob': [ '2.1.1' ],
+48 silly audit   'is-fullwidth-code-point': [ '3.0.0' ],
+48 silly audit   'is-glob': [ '4.0.3' ],
+48 silly audit   'is-number': [ '7.0.0' ],
+48 silly audit   isexe: [ '2.0.0' ],
+48 silly audit   jackspeak: [ '2.3.6' ],
+48 silly audit   jiti: [ '1.21.0' ],
+48 silly audit   lilconfig: [ '2.1.0', '3.1.1' ],
+48 silly audit   'lines-and-columns': [ '1.2.4' ],
+48 silly audit   'lru-cache': [ '10.2.2' ],
+48 silly audit   'magic-string': [ '0.30.8' ],
+48 silly audit   merge2: [ '1.4.1' ],
+48 silly audit   micromatch: [ '4.0.5' ],
+48 silly audit   minimatch: [ '9.0.4' ],
+48 silly audit   minipass: [ '7.1.0' ],
+48 silly audit   mz: [ '2.7.0' ],
+48 silly audit   nanoid: [ '3.3.7' ],
+48 silly audit   'node-releases': [ '2.0.14' ],
+48 silly audit   'normalize-path': [ '3.0.0' ],
+48 silly audit   'normalize-range': [ '0.1.2' ],
+48 silly audit   'object-assign': [ '4.1.1' ],
+48 silly audit   'object-hash': [ '3.0.0' ],
+48 silly audit   'path-key': [ '3.1.1' ],
+48 silly audit   'path-parse': [ '1.0.7' ],
+48 silly audit   'path-scurry': [ '1.10.2' ],
+48 silly audit   picocolors: [ '1.0.0' ],
+48 silly audit   picomatch: [ '2.3.1' ],
+48 silly audit   pify: [ '2.3.0' ],
+48 silly audit   pirates: [ '4.0.6' ],
+48 silly audit   postcss: [ '8.4.38' ],
+48 silly audit   'postcss-import': [ '15.1.0' ],
+48 silly audit   'postcss-js': [ '4.0.1' ],
+48 silly audit   'postcss-load-config': [ '4.0.2' ],
+48 silly audit   'postcss-nested': [ '6.0.1' ],
+48 silly audit   'postcss-selector-parser': [ '6.0.16' ],
+48 silly audit   'postcss-value-parser': [ '4.2.0' ],
+48 silly audit   'queue-microtask': [ '1.2.3' ],
+48 silly audit   'read-cache': [ '1.0.0' ],
+48 silly audit   readdirp: [ '3.6.0' ],
+48 silly audit   resolve: [ '1.22.8' ],
+48 silly audit   reusify: [ '1.0.4' ],
+48 silly audit   rollup: [ '4.13.2' ],
+48 silly audit   'run-parallel': [ '1.2.0' ],
+48 silly audit   'shebang-command': [ '2.0.0' ],
+48 silly audit   'shebang-regex': [ '3.0.0' ],
+48 silly audit   'signal-exit': [ '4.1.0' ],
+48 silly audit   'source-map-js': [ '1.2.0' ],
+48 silly audit   'string-width': [ '5.1.2', '4.2.3' ],
+48 silly audit   'strip-ansi': [ '6.0.1', '7.1.0' ],
+48 silly audit   sucrase: [ '3.35.0' ],
+48 silly audit   'supports-preserve-symlinks-flag': [ '1.0.0' ],
+48 silly audit   tailwindcss: [ '3.4.3' ],
+48 silly audit   thenify: [ '3.3.1' ],
+48 silly audit   'thenify-all': [ '1.6.0' ],
+48 silly audit   'to-regex-range': [ '5.0.1' ],
+48 silly audit   'ts-interface-checker': [ '0.1.13' ],
+48 silly audit   'update-browserslist-db': [ '1.0.15' ],
+48 silly audit   'util-deprecate': [ '1.0.2' ],
+48 silly audit   vite: [ '5.2.7' ],
+48 silly audit   vue: [ '3.4.21' ],
+48 silly audit   which: [ '2.0.2' ],
+48 silly audit   'wrap-ansi': [ '8.1.0', '7.0.0' ],
+48 silly audit   yaml: [ '2.4.2' ]
+48 silly audit }
+49 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-win32-x64-msvc
+50 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-win32-x64-msvc' ]
+51 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-win32-ia32-msvc
+52 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-win32-ia32-msvc' ]
+53 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-win32-arm64-msvc
+54 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-win32-arm64-msvc' ]
+55 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-x64-musl
+56 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-x64-musl' ]
+57 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-x64-gnu
+58 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-x64-gnu' ]
+59 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-s390x-gnu
+60 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-s390x-gnu' ]
+61 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-riscv64-gnu
+62 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-riscv64-gnu' ]
+63 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-powerpc64le-gnu
+64 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-powerpc64le-gnu' ]
+65 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-linux-arm-gnueabihf
+66 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-linux-arm-gnueabihf' ]
+67 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-darwin-x64
+68 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-darwin-x64' ]
+69 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-android-arm64
+70 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-android-arm64' ]
+71 verbose reify failed optional dependency /home/node/node_modules/@rollup/rollup-android-arm-eabi
+72 silly reify mark deleted [ '/home/node/node_modules/@rollup/rollup-android-arm-eabi' ]
+73 verbose reify failed optional dependency /home/node/node_modules/@esbuild/win32-x64
+74 silly reify mark deleted [ '/home/node/node_modules/@esbuild/win32-x64' ]
+75 verbose reify failed optional dependency /home/node/node_modules/@esbuild/win32-ia32
+76 silly reify mark deleted [ '/home/node/node_modules/@esbuild/win32-ia32' ]
+77 verbose reify failed optional dependency /home/node/node_modules/@esbuild/win32-arm64
+78 silly reify mark deleted [ '/home/node/node_modules/@esbuild/win32-arm64' ]
+79 verbose reify failed optional dependency /home/node/node_modules/@esbuild/sunos-x64
+80 silly reify mark deleted [ '/home/node/node_modules/@esbuild/sunos-x64' ]
+81 verbose reify failed optional dependency /home/node/node_modules/@esbuild/openbsd-x64
+82 silly reify mark deleted [ '/home/node/node_modules/@esbuild/openbsd-x64' ]
+83 verbose reify failed optional dependency /home/node/node_modules/@esbuild/netbsd-x64
+84 silly reify mark deleted [ '/home/node/node_modules/@esbuild/netbsd-x64' ]
+85 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-x64
+86 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-x64' ]
+87 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-s390x
+88 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-s390x' ]
+89 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-riscv64
+90 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-riscv64' ]
+91 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-ppc64
+92 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-ppc64' ]
+93 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-mips64el
+94 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-mips64el' ]
+95 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-loong64
+96 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-loong64' ]
+97 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-ia32
+98 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-ia32' ]
+99 verbose reify failed optional dependency /home/node/node_modules/@esbuild/linux-arm
+100 silly reify mark deleted [ '/home/node/node_modules/@esbuild/linux-arm' ]
+101 verbose reify failed optional dependency /home/node/node_modules/@esbuild/freebsd-x64
+102 silly reify mark deleted [ '/home/node/node_modules/@esbuild/freebsd-x64' ]
+103 verbose reify failed optional dependency /home/node/node_modules/@esbuild/freebsd-arm64
+104 silly reify mark deleted [ '/home/node/node_modules/@esbuild/freebsd-arm64' ]
+105 verbose reify failed optional dependency /home/node/node_modules/@esbuild/darwin-x64
+106 silly reify mark deleted [ '/home/node/node_modules/@esbuild/darwin-x64' ]
+107 verbose reify failed optional dependency /home/node/node_modules/@esbuild/android-x64
+108 silly reify mark deleted [ '/home/node/node_modules/@esbuild/android-x64' ]
+109 verbose reify failed optional dependency /home/node/node_modules/@esbuild/android-arm64
+110 silly reify mark deleted [ '/home/node/node_modules/@esbuild/android-arm64' ]
+111 verbose reify failed optional dependency /home/node/node_modules/@esbuild/android-arm
+112 silly reify mark deleted [ '/home/node/node_modules/@esbuild/android-arm' ]
+113 verbose reify failed optional dependency /home/node/node_modules/@esbuild/aix-ppc64
+114 silly reify mark deleted [ '/home/node/node_modules/@esbuild/aix-ppc64' ]
+115 timing reifyNode:node_modules/@rollup/rollup-win32-x64-msvc Completed in 10ms
+116 timing reifyNode:node_modules/@rollup/rollup-win32-ia32-msvc Completed in 10ms
+117 timing reifyNode:node_modules/@rollup/rollup-win32-arm64-msvc Completed in 10ms
+118 timing reifyNode:node_modules/@rollup/rollup-linux-x64-musl Completed in 10ms
+119 timing reifyNode:node_modules/@rollup/rollup-linux-x64-gnu Completed in 10ms
+120 timing reifyNode:node_modules/@rollup/rollup-linux-s390x-gnu Completed in 10ms
+121 timing reifyNode:node_modules/@rollup/rollup-linux-riscv64-gnu Completed in 11ms
+122 timing reifyNode:node_modules/@rollup/rollup-linux-powerpc64le-gnu Completed in 10ms
+123 timing reifyNode:node_modules/@rollup/rollup-linux-arm-gnueabihf Completed in 10ms
+124 timing reifyNode:node_modules/@rollup/rollup-darwin-x64 Completed in 10ms
+125 timing reifyNode:node_modules/@rollup/rollup-android-arm64 Completed in 10ms
+126 timing reifyNode:node_modules/@rollup/rollup-android-arm-eabi Completed in 10ms
+127 timing reifyNode:node_modules/@esbuild/win32-x64 Completed in 10ms
+128 timing reifyNode:node_modules/@esbuild/win32-ia32 Completed in 10ms
+129 timing reifyNode:node_modules/@esbuild/win32-arm64 Completed in 10ms
+130 timing reifyNode:node_modules/@esbuild/sunos-x64 Completed in 10ms
+131 timing reifyNode:node_modules/@esbuild/openbsd-x64 Completed in 10ms
+132 timing reifyNode:node_modules/@esbuild/netbsd-x64 Completed in 10ms
+133 timing reifyNode:node_modules/@esbuild/linux-x64 Completed in 11ms
+134 timing reifyNode:node_modules/@esbuild/linux-s390x Completed in 11ms
+135 timing reifyNode:node_modules/@esbuild/linux-riscv64 Completed in 11ms
+136 timing reifyNode:node_modules/@esbuild/linux-ppc64 Completed in 11ms
+137 timing reifyNode:node_modules/@esbuild/linux-mips64el Completed in 11ms
+138 timing reifyNode:node_modules/@esbuild/linux-loong64 Completed in 11ms
+139 timing reifyNode:node_modules/@esbuild/linux-ia32 Completed in 11ms
+140 timing reifyNode:node_modules/@esbuild/linux-arm Completed in 11ms
+141 timing reifyNode:node_modules/@esbuild/freebsd-x64 Completed in 11ms
+142 timing reifyNode:node_modules/@esbuild/freebsd-arm64 Completed in 12ms
+143 timing reifyNode:node_modules/@esbuild/darwin-x64 Completed in 12ms
+144 timing reifyNode:node_modules/@esbuild/android-x64 Completed in 12ms
+145 timing reifyNode:node_modules/@esbuild/android-arm64 Completed in 12ms
+146 timing reifyNode:node_modules/@esbuild/android-arm Completed in 12ms
+147 timing reifyNode:node_modules/@esbuild/aix-ppc64 Completed in 12ms
+148 timing reify:unpack Completed in 13ms
+149 timing reify:unretire Completed in 0ms
+150 timing build:queue Completed in 3ms
+151 timing build:deps Completed in 4ms
+152 timing build Completed in 4ms
+153 timing reify:build Completed in 4ms
+154 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 426ms
+155 timing auditReport:getReport Completed in 430ms
+156 silly audit report {}
+157 timing auditReport:init Completed in 0ms
+158 timing reify:audit Completed in 434ms
+159 timing reify:trash Completed in 421ms
+160 timing reify:save Completed in 23ms
+161 timing reify Completed in 852ms
+162 silly ADD
+163 silly ADD
+164 silly ADD
+165 silly ADD
+166 silly ADD
+167 silly ADD
+168 silly ADD
+169 silly ADD
+170 silly ADD
+171 silly ADD
+172 silly ADD
+173 silly ADD
+174 silly ADD
+175 silly ADD
+176 silly ADD
+177 silly ADD
+178 silly ADD
+179 silly ADD
+180 silly ADD
+181 silly ADD
+182 silly ADD
+183 silly ADD
+184 silly ADD
+185 silly ADD
+186 silly ADD
+187 silly ADD
+188 silly ADD
+189 silly ADD
+190 silly ADD
+191 silly ADD
+192 silly ADD
+193 silly ADD
+194 silly ADD
+195 silly REMOVE node_modules/@tailwindcss/aspect-ratio
+196 silly REMOVE node_modules/tw-elements
+197 timing command:install Completed in 864ms
+198 verbose exit 0
+199 timing npm Completed in 896ms
+200 info ok

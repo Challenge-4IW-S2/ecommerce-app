@@ -3,7 +3,7 @@ import CategoryRepository from './Repository/CategoryRepository.js';
 import ProductRepository from './Repository/ProductRepository.js';
 import ProductPictureRepository from './Repository/ProductImageRepository.js';
 
-// import Product from './model/Product.js';
+// import Product from './models/Product.js';
 // import fs from 'fs';
 // import csvParser from 'csv-parser';
 // import path from 'path';
