@@ -7,14 +7,14 @@ export class ProductController {
             const productRepositoryMongo = new ProductRepositoryMongo();
             const page = request.query.page;
             const order = request.query.order;
-            const products = await productRepositoryMongo.getAllProducts(page, order);
-            response.json({
-                success: true,
-                data: products,
+            await productRepositoryMongo.getAllProducts(page, order).then((data) => {
+                response.json({
+                    products: data.productsResults,
+                    totalPages: data.totalPagesResults,
+                });
             });
         } catch (error) {
             response.json({
-                success: false,
                 message: error.message,
             });
         }
@@ -24,14 +24,13 @@ export class ProductController {
         try {
             const productRepositoryMongo = new ProductRepositoryMongo();
             const search = request.query.search;
-            const products = await productRepositoryMongo.searchProduct(search);
-            response.json({
-                success: true,
-                data: products,
+            await productRepositoryMongo.searchProduct(search).then((data) => {
+                response.json({
+                    data,
+                });
             });
         } catch (error) {
             response.json({
-                success: false,
                 message: error.message,
             });
         }

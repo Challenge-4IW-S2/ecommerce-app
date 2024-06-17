@@ -35,7 +35,17 @@ const productSchema = new Schema({
     category_id: {
         type: 'UUID',
         required: true,
-    }
+    },
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
+    updated_at: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
 });
 
 const Product = model('Product', productSchema);

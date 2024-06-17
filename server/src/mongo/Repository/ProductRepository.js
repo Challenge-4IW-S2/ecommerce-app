@@ -13,7 +13,7 @@ export default class ProductRepository {
 
         // nombre total de pages ( ex : 100 / 10 = 10)
         const totalProducts = await this.Product.countDocuments({ is_active: true });
-        const totalPages = Math.ceil(totalProducts / 10);
+        const totalPagesResults = Math.ceil(totalProducts / 10);
 
         // gestion de l'ordre
         let orderBy;
@@ -40,7 +40,7 @@ export default class ProductRepository {
         }
 
         // récupération des produits
-        const products = await this.Product.aggregate()
+        const productsResults = await this.Product.aggregate()
             .lookup({
                 from: 'categories',
                 localField: 'category_id',
@@ -68,7 +68,7 @@ export default class ProductRepository {
             })
             .limit(Number(page))
 
-        return { products, totalPages };
+        return { productsResults, totalPagesResults };
     }
 
     searchProduct(search) {
