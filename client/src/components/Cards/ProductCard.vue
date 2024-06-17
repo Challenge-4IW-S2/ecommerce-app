@@ -13,7 +13,7 @@ const openModal = () => {
 <template>
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
     <div class="flex flex-col relative z-0">
-        <img :src="product.pictures[0].url" :alt="`image du produit ${product.name}`">
+        <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`">
         <button @click="openModal"
             class="bg-black h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 14 14">

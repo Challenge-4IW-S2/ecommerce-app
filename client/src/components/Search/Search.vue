@@ -25,7 +25,6 @@ const connect = async (newValue) => {
     }
 }
 watch(search, (newValue) => {
-    console.log(newValue);
     connect(newValue);
 });
 </script>
@@ -40,7 +39,7 @@ watch(search, (newValue) => {
     </button>
 
     <div v-if="isSearchOpen"
-        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2">
+        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2 z-50">
         <!-- close button -->
         <button @click="openSearch" class="self-end">
             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 256 256">
@@ -51,14 +50,8 @@ watch(search, (newValue) => {
         <!-- input search -->
         <SearchInput v-model="search" />
         <div v-if="search !== ''" class="flex flex-col">
-            <div v-for="(product, index) in response.data" :key="index">
-                <!-- message d'erreur si pas de resultat -->
-                <span v-if="response.data.length === 0" class="self-center text-custom-gray italic">Pas de
-                    résultat</span>
-                <!-- Affichage des résults -->
-                <SearchResult :productImg="product.pictures[0].url" :productName="product.name"
-                    :productPrice="product.price_ttc" :productCategory="product.category[0].name" />
-            </div>
+            <!-- Affichage des résults -->
+            <SearchResult v-for="(product, index) in response.data" :key="index" :product="product" />
         </div>
     </div>
 </template>

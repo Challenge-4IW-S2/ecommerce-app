@@ -9,54 +9,52 @@ let products = ref([]);
 let currentPage = ref(1);
 let totalPages = ref(0);
 let productsPerPage = ref(10);
-let success = ref(false);
 let order = ref('');
 
 
 // get all products API
-const getProducts = async (page) => {
+const getProducts = async (page, orderBy) => {
     try {
-        const data = await ky.get("http://localhost:8000/products", {
+        await ky.get("http://localhost:8000/products", {
             searchParams: {
                 page: page,
-                order: order.value,
+                order: orderBy,
             },
-        }).json();
-        products.value = data.data.products;
-        totalPages.value = data.data.totalPages;
-        success.value = data.success;
+        }).json().then((response) => {
+            const { products: productsResults, totalPages: totalPagesResults } = response;
+            products.value = productsResults;
+            totalPages.value = totalPagesResults;
+        });
     } catch (error) {
         console.error(error);
     }
 }
 
 onMounted(() => {
-    getProducts(productsPerPage.value);
+    getProducts(productsPerPage.value, order.value);
 });
 
 const goToNextPage = () => {
     if (currentPage.value < totalPages.value) {
         productsPerPage.value = productsPerPage.value + 10;
         currentPage.value++;
-        getProducts(productsPerPage.value);
+        getProducts(productsPerPage.value, order.value);
     }
 };
 
 const orderSelected = (newValue) => {
     order.value = newValue;
+    getProducts(productsPerPage.value, order.value);
 };
 
 </script>
 
 <template>
-    <section v-if="success && products.length !== 0" class="flex flex-col mb-2">
+    <section v-if="products.length !== 0" class="flex flex-col mb-2">
         <!-- composant filtre ici -->
         <FilterProducts @order="orderSelected" />
         <img src="/bannerproduct.webp" alt="bannière de la page produits" class="" />
         <div class="grid grid-cols-2">
-            <!-- <ProductCard v-for="(product, index) in products" :key="index"
-                :productName="product.name" :productDesc="product.description" :productPrice=""
-                :productCategory="product.category[0].name" /> -->
             <ProductCard v-for="(product, index) in products" :key="index" :product="product" />
         </div>
         <div class="flex flex-col items-center gap-2 mt-4">
@@ -68,7 +66,7 @@ const orderSelected = (newValue) => {
             </button>
         </div>
     </section>
-    <section v-else>
+    <section v-else class="flex flex-col items-center">
         <span class=" text-custom-gray italic">Aucun produit disponible</span>
     </section>
 </template>

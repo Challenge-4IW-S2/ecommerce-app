@@ -1,19 +1,16 @@
 <script lang="ts" setup>
 defineProps({
-    productImg: String,
-    productName: String,
-    productPrice: Number,
-    productCategory: String,
+    product: Object,
 });
 </script>
 
 <template>
     <div class="flex">
-        <img :src="productImg" alt="`image du produit ${{ productName }}`" />
+        <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`" />
         <div class="flex flex-col gap-2">
-            <p class="text-custom-gray">{{ productName }}</p>
-            <p class="text-principal">{{ productPrice }} EUR</p>
-            <p class="text-custom-gray">{{ productCategory }}</p>
+            <p class="text-custom-gray">{{ product.name }}</p>
+            <p class="text-principal">{{ product.price_ttc }} EUR</p>
+            <p class="text-custom-gray">{{ product.category }}</p>
         </div>
     </div>
 </template>
