@@ -6,7 +6,10 @@ export default function (connection) {
 
   Category.init(
     {
-        id: { type: DataTypes.UUID, primaryKey: true },
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true
+        },
         name: { 
             type: DataTypes.STRING(45), 
             allowNull: true

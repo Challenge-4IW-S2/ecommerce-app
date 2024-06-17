@@ -1,5 +1,5 @@
 import db from '../db.js';
-import CommentModel from '../model/Comment.js';
+import CommentModel from '../models/Comment.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class CommentRepository {

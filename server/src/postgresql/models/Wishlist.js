@@ -5,7 +5,10 @@ export default function (connection) {
 
     Wishlist.init(
         {
-            id: { type: DataTypes.UUID, primaryKey: true },
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true
+            },
             user_id: {
                 type: DataTypes.UUID,
                 allowNull: true,
@@ -14,7 +17,11 @@ export default function (connection) {
                     key: 'id'
                 }
             },
-            list: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false, defaultValue: [] },
+            list: {
+                type: DataTypes.ARRAY(DataTypes.STRING),
+                allowNull: false,
+                defaultValue: []
+            },
         },
         {
             sequelize: connection,

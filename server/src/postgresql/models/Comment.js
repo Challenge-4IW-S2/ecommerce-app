@@ -6,10 +6,22 @@ export default function (connection) {
 
     Comment.init(
         {
-            id: { type: DataTypes.UUID, primaryKey: true },
-            comment: { type: DataTypes.TEXT, allowNull: false },
-            rating: { type: DataTypes.INTEGER, allowNull: false },
-            is_active: { type: DataTypes.BOOLEAN, defaultValue: false },
+            id: {
+                type: DataTypes.UUID,
+                primaryKey: true
+            },
+            comment: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            },
+            rating: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            is_active: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            },
             user_id: {
                 type: DataTypes.UUID,
                 allowNull: false,

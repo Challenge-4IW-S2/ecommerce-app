@@ -1,5 +1,5 @@
 import db from "../db";
-import ProductPictureModel from "../model/ProductPicture";
+import ProductPictureModel from "../models/ProductPicture.js";
 import { v4 as uuidv4 } from "uuid";
 
 export default class ProductPictureRepository {
