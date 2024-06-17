@@ -50,6 +50,10 @@ export default function (connection) {
                     key: 'id'
                 }
             },
+            deleted: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false
+            }
         },
         {
             sequelize: connection,
