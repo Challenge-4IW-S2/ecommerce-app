@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./scripts/script.sql:/docker-entrypoint-initdb.d/script.sql
+     # - pg-data:/var/lib/postgresql/data
+  
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+  mongodb:
+    image: mongo
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - db-data:/data/db
+      - ./mongo/data:/home/data
+    working_dir: /home/data
+
+  client:
+    image: node:20.0.0-alpine
+    user: node
+    entrypoint: sh -c
+    working_dir: /home/node
+    command: '"npm install && npm run dev"'
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client:/home/node
+  
+  server:
+    image: node:20.0.0-alpine
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/app?authSource=admin
+    ports:
+      - 8000:8000
+    user: node
+    tty: true
+    stdin_open: true
+    working_dir: /home/node
+    entrypoint: sh -c
+    command: '"npm install && npm run dev"'
+    volumes:
+      - ./server:/home/node
+    depends_on:
+      - db
+      - mongodb
+
+volumes:
+  pg-data: {}
+  db-data: {}

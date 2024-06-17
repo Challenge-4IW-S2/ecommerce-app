@@ -1,0 +1,41 @@
+### GET request to the root endpoint
+GET http://localhost:8000
+
+###
+
+### POST request to the root endpoint
+POST http://localhost:8000
+Content-Type: application/json
+
+{
+  "key": "value"
+}
+
+###
+
+### GET request to the /users endpoint
+###
+PATCH http://localhost:8000/users/1
+Content-Type: application/json
+
+{
+  "password": "Azerty1234!"
+}
+###
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{
+  "email": "john@doe.fr",
+  "password": "Azerty1234!"
+}
+
+### Any request to the security routes
+###
+POST http://localhost:8000/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "testpassword"
+}
