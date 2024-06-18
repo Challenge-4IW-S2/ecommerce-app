@@ -46,10 +46,14 @@ export default class UserRepository {
     }
 
     async deleteUser(id) {
-        return await this.User.destroy({
-            where: {
-                id: id
-            }
+
+        return await this.updateUser(id, {
+            email: null,
+            password: null,
+            firstname: null,
+            lastname: null,
+            phone: null,
+            role: null
         });
     }
 }

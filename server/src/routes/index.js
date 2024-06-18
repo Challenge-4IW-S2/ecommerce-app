@@ -2,7 +2,6 @@ import Router from "express";
 import { HelloController } from "../controllers/helloController.js";
 import { ProductController } from "../controllers/ProductController.js";
 import {AuthController} from "../controllers/AuthController.js";
-// import {UserController} from "../controllers/UserController.js";
 import {UtilitiesController} from "../controllers/UtilitiesController.js";
 export const indexRouter = Router();
 

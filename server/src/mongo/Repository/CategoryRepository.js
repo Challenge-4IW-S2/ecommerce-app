@@ -1,4 +1,4 @@
-import CategoryModel from '../model/Category.js'
+import CategoryModel from '../model/Category.js';
 
 export default class CategoryRepository {
     constructor() {

@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import { indexRouter } from "./src/routes/index.js";
 import "./src/mongo/mongodb.js";
-import "./src/postgresql/postgresql.js";
 
 const server = express();
 const port = 8000;

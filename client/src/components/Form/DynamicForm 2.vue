@@ -1,7 +1,7 @@
 <script setup>
 import Input from "../Inputs/Input.vue";
 import Select from "../Inputs/Select.vue";
-import {computed, defineEmits, onMounted, reactive, ref} from "vue";
+import {computed, defineEmits, onMounted, ref} from "vue";
 import Button from "../Buttons/Button.vue";
 
 const props = defineProps({
@@ -11,8 +11,21 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['submit']);
-const formData = reactive({});
-
+const formData = ref({ value: {} });
+onMounted(() => {
+  props.inputs.forEach(input => {
+    formData.value[input.name] = '';
+  });
+});
+const vInput = { // Custom directive definition
+  mounted(el, { value }) {
+    console.log(el, value)
+    el.addEventListener("input", (event) => {
+      value(event.target.value);
+      console.log(event.target.value);
+    });
+  },
+};
 
 const filteredInputs = computed(() => {
   //if(PAGE === 'add'){
@@ -22,7 +35,7 @@ const filteredInputs = computed(() => {
 });
 const handleSubmit = (event) => {
   event.preventDefault();
-  emit('submit', formData);
+  emit('submit', formData.value);
 };
 const filterProps = (input) => {
   if (input.is === 'select') {
@@ -31,7 +44,7 @@ const filterProps = (input) => {
         id: input.name,
         title: input.name,
         options: input.options,
-        vInput: formData[input.name],
+        vInput: formData.value[input.name],
       }
     } else {
     return {
@@ -40,10 +53,11 @@ const filterProps = (input) => {
         type: input.type,
         placeholder: input.name,
         //error: input.error,
-      vInput: formData[input.name],
+      vInput: formData.value[input.name],
     }
   }
 };
+  console.log(formData.value)
 </script>
 <template>
   <form @submit="handleSubmit">
@@ -52,7 +66,7 @@ const filterProps = (input) => {
        <component
            :is="input.is === 'select' ? Select : Input"
            v-bind="filterProps(input)"
-           v-model="formData[input.name]"
+           vInput="formData.value[input.name]"
        />
      </div>
     </div>

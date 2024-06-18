@@ -45,7 +45,7 @@ Content-Type: application/json
 GET http://localhost:8000/users
 
 ### Get a user by id
-GET localhost:8000/users/a6792ced-5d8f-4d8e-93c3-9a90b4767b73
+GET localhost:8000/users/0ab12aa2-b7e3-456c-93a5-05e81a3d924b
 
 ### Get user roles
 POST localhost:8000/users/role

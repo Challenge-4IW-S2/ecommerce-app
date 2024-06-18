@@ -3,13 +3,18 @@ import EditForm from "../../../components/Form/DynamicForm.vue";
 import {computed, onMounted, ref} from "vue";
 import ky from "ky";
 import {useRoute} from "vue-router";
+import DynamicForm from "../../../components/Form/DynamicForm.vue";
+import {fetchModelStructure} from "../../functions/model.js";
 const route = useRoute();
+const modelName = 'User';
+const modelStructure = ref([]);
+
 const data = ref([]);
 const inputs = ref([])
 const id = computed(() => route.params.id);
 const getRoleOptions = async () => {
   try {
-    const response = await ky.get("http://localhost:8000//users/role").json();
+    const response = await ky.get("http://localhost:8000/users/role").json();
     if (response) {
       console.log(response)
       return response.map((role) => {
@@ -18,12 +23,42 @@ const getRoleOptions = async () => {
           text: role.name
         };
       });
-
     } else {
       console.log('No data found');
     }
   } catch (error) {
     console.error('Failed to fetch roles:', error);
+  }
+};
+const getModelStructure = async () => {
+  const [structure] = await ky.get(`http://localhost:8000/users/${id.value}`).json();
+  console.log(structure)
+  if (structure) {
+    console.log(structure)
+    modelStructure.value = structure.map(field => {
+      if (field.name === 'role') {
+        field.is = 'select';
+        /* field.options = getRoles();
+         field.options.then((data) => {
+           field.options = data;
+         });
+         console.log(field.options)*/
+        field.options = [
+          { value: 'admin', label: 'Admin' },
+          { value: 'user', label: 'User' },
+        ];
+      }
+      if(field.type === 'UUID'){
+        field.type = 'password';
+      }
+      if (field.type==='STRING'){
+        field.type = 'text';
+      }
+      if(field.name === 'password'){
+        field.type = 'password';
+      }
+      return field;
+    });
   }
 };
 
@@ -45,7 +80,7 @@ const fetchData = async () => {
               id: key,
               title: 'Role',
               type: 'select',
-              options: await getRoleOptions(), // Fonction pour récupérer les options de rôle
+              //options: await getRoleOptions(), // Fonction pour récupérer les options de rôle
               value: data.value[key]
             };
           } else if (key === 'id') {
@@ -98,14 +133,16 @@ const getTypeForKey = (key) => {
 };
 
 // Appeler fetchData lors du montage du composant
-onMounted(fetchData);
-
+onMounted(() => {
+  getModelStructure();
+  //fetchData();
+});
 
 </script>
 
 <template>
   <h1> Modification Utilisateur n°  </h1>
-  <EditForm :inputs="inputs" />
+  <DynamicForm :inputs="modelStructure" @submit="handleFormSubmit"  />
 </template>
 
 <style scoped>

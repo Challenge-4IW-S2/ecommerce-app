@@ -4,18 +4,28 @@ import { ref, onMounted } from "vue";
 import { fetchModelStructure } from "../../functions/model.js";
 import DynamicForm from "../../../components/Form/DynamicForm.vue";
 import Button from "../../../components/Buttons/Button.vue";
+import ky from "ky";
 const modelStructure = ref([]);
 const modelName = 'User';
 
+const getRoles = async () => {
+  const response = await ky.get("http://localhost:8000/users/roles").json();
+  return response;
+};
 const getModelStructure = async () => {
   const [structure] = await Promise.all([fetchModelStructure(modelName)]);
   if (structure) {
     modelStructure.value = structure.map(field => {
       if (field.name === 'role') {
         field.is = 'select';
+       /* field.options = getRoles();
+        field.options.then((data) => {
+          field.options = data;
+        });
+        console.log(field.options)*/
         field.options = [
           { value: 'admin', label: 'Admin' },
-          { value: 'user', label: 'User' }
+          { value: 'user', label: 'User' },
         ];
       }
       if(field.type === 'UUID'){
@@ -31,8 +41,11 @@ const getModelStructure = async () => {
     });
   }
 };
-const handleFormSubmit = (formData) => {
-  console.log(formData);
+const handleFormSubmit = async (formData) => {
+  const data = await ky.post("http://localhost:8000/signup", {
+    json: formData,
+  }).json();
+  console.log(data);
 };
 
 onMounted(() => {

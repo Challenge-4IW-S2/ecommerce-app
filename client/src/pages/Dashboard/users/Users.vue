@@ -12,17 +12,7 @@ const actions = ref([
   {
     label: 'Edit',
     method: (row) => {
-      computed({
-        get() {
-          return route.query.search ?? ''
-        },
-        set(search) {
-          router.replace({ query: { search } })
-        }
-      })
-      const response = ky.get(`http://localhost:8000/users/${row}`).json();
-      console.log(response)
-      alert(`Editing ${row}`);
+      router.push(`/admin/users/${row}`)
     },
     color: 'blue',
   },
@@ -39,6 +29,7 @@ const actions = ref([
 const fetchData = async () => {
   try {
     const response = await ky.get("http://localhost:8000/users").json();
+    console.log(response)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
@@ -48,12 +39,8 @@ const fetchData = async () => {
         },
       }).json();
       data.value.forEach((user) => {
-        console.log(user_roles.id)
-        console.log(user.role)
         if (user.role === user_roles.id) {
-          console.log('Role found')
           user.role = user_roles.name;
-          console.log(user.role)
         }
       });
     } else {
@@ -72,7 +59,8 @@ fetchData();
   <div>
     <h1>User Dashboard</h1>
   </div>
-  <Table :params="data" :actions="actions" />
+  <Table :params="data" :actions="actions"  />
+
 </template>
 
 <style scoped>
