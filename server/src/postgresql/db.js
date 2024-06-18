@@ -16,7 +16,7 @@ const loadModels = async () => {
         const models = {};
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);
-        const modelsDirectory = path.join(__dirname, 'model');
+        const modelsDirectory = path.join(__dirname, 'models');
     try {
 
         const files = fs.readdirSync(modelsDirectory).filter(file => file.endsWith('.js'));
