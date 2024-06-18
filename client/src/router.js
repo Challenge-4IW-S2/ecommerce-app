@@ -1,11 +1,12 @@
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from './App.vue'
+import HomeView from './pages/Home.vue'
 import LoginView from './pages/Login.vue'
 import RegisterView from './pages/Register.vue'
 import DashboardUsersView from './pages/Dashboard/users/Users.vue'
 import DashboardUserEdit from './pages/Dashboard/users/EditUser.vue'
 import DashboardAddUser from './pages/Dashboard/users/AddUser.vue';
+import ProductsView from './pages/Products.vue'
 
 
 const routes = [
@@ -15,7 +16,8 @@ const routes = [
    // { path: '/admin', component: DashboardView },
     { path: '/admin/users', component: DashboardUsersView },
     { path: '/admin/users/:id', component: DashboardUserEdit },
-    {path: '/admin/add-user', component: DashboardAddUser}
+    {path: '/admin/add-user', component: DashboardAddUser},
+    { path: '/products', component: ProductsView}
 ]
 
 const router = createRouter({
