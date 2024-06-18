@@ -1,5 +1,5 @@
 import db from '../db.js';
-import OrderModel from '../model/Order.js';
+import OrderModel from '../models/Order.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class OrderRepository {

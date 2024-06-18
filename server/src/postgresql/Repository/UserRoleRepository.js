@@ -1,5 +1,5 @@
 import db from '../db.js'; 
-import UserRoleModel from '../model/UserRole.js';
+import UserRoleModel from '../models/UserRole.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class UserRoleRepository {

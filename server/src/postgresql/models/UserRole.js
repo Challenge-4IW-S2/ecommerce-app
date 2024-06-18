@@ -5,7 +5,10 @@ export default function (connection) {
 
   UserRole.init(
     {
-        id: { type: DataTypes.UUID, primaryKey: true },
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true
+        },
         name: { 
             type: DataTypes.STRING(45), 
             allowNull: true,
@@ -14,9 +17,7 @@ export default function (connection) {
     },
     {
         sequelize: connection,
-        tableName: "user_roles",
-        underscored: true,
-        timestamps: false
+        tableName: "user_roles"
     }
   );
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import User from "../postgresql/model/User.js";
+import User from "../postgresql/models/User.js";
 export const router = new Router();
 
 router.get("/", async (req, res, next) => {
