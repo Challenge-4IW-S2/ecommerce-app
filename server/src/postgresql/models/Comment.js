@@ -42,6 +42,8 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "comments",
+            underscored: true,
+            timestamps: true
         }
     );
 
