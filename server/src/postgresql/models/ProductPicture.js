@@ -26,7 +26,8 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "product_pictures",
-            underscored: true
+            underscored: true,
+            timestamps: true
         }
     );
 

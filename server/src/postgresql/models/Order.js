@@ -34,6 +34,7 @@ export default function (connection) {
             sequelize: connection,
             tableName: "orders",
             underscored: true,
+            timestamps: true
         }
     );
 
