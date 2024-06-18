@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-  <router-link :to="to" class="bg-black text-white h-12 block text-center content-center">{{ action }}</router-link>
+  <router-link :to="to" class="bg-black text-white h-12 block text-center content-center py-2 px-4">{{ action }}</router-link>
 </template>
 
 <style scoped>

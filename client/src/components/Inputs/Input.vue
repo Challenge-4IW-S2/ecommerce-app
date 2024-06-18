@@ -16,6 +16,7 @@ const props = defineProps({
   },
   error: String,
   option: String,
+  modelValue: String
 })
 
 let dynamicType = ref(props.type);
@@ -27,14 +28,11 @@ function changeVisibility() {
       ? 'text'
       : 'password';
 }
-
 const emit = defineEmits(['update:modelValue']);
 const internalModelValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 });
-
-console.log(internalModelValue)
 
 </script>
 

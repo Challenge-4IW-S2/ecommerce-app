@@ -18,16 +18,13 @@ const loadModels = async () => {
         const __dirname = path.dirname(__filename);
         const modelsDirectory = path.join(__dirname, 'models');
     try {
-
         const files = fs.readdirSync(modelsDirectory).filter(file => file.endsWith('.js'));
-        console.log(files)
         for (const file of files) {
             const modelPath = path.join(modelsDirectory, file);
-            console.log(modelPath)
             // Résoudre le chemin du fichier en URL compatible avec import()
             const modelUrl = pathToFileURL(modelPath).href;
             const { default: initModel } = await import(modelUrl);
-            console.log(initModel)
+            console.log("initModel",initModel)
             const model = initModel(connection);
             console.log(model)
             models[model.name] = model;
@@ -38,7 +35,6 @@ const loadModels = async () => {
                 model.associate(models);
             }
         });
-
         console.log('Modèles chargés avec succès:', Object.keys(models));
         return models;
     }catch (error) {

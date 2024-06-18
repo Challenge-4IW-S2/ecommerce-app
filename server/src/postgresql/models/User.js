@@ -1,6 +1,5 @@
 import { Model, DataTypes } from "sequelize";
 import bcrypt from 'bcryptjs';
-import db from '../db.js';
 export default function (connection) {
 
     class User extends Model {}
@@ -75,5 +74,6 @@ export default function (connection) {
             user.password = hash;
         }
     });
+
     return User;
 }
