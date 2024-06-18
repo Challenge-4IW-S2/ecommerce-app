@@ -34,7 +34,7 @@ export class AuthController {
         }
         const userRepository = new UserRepository();
         const user = await userRepository.findOne('email', parameters.email);
-        if (!user) return response.status(401).send( "User not found");
+        if (!user) return response.status(401).send("User not found");
         if (!(await bcrypt.compare(request.body.password, user.password))) {
             return response.status(401).send( "Email or password incorrect");
         }
@@ -54,17 +54,5 @@ export class AuthController {
             httpOnly: true,
             signed: true,
         });
-
-        response.json({
-            user: user,
-            success: true,
-            message: 'User successfully logged in',
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not logged in, an error occurred',
-                e: error.message,
-            });
-        })
     }
 }

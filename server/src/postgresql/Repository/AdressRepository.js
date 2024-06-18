@@ -1,5 +1,5 @@
 import db from '../db.js';
-import AdressModel from '../models/Adress.js';
+import AdressModel from '../models/Address.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default class AdressRepository {
