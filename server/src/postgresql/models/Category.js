@@ -18,6 +18,7 @@ export default function (connection) {
     {
       sequelize: connection,
       tableName: "categories",
+        underscored: true,
     }
   );
 

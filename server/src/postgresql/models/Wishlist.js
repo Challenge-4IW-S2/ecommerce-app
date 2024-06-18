@@ -26,6 +26,7 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "wishlists",
+            underscored: true,
         }
     );
 

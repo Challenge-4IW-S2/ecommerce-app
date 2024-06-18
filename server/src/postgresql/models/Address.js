@@ -37,6 +37,7 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "adresses",
+            underscored: true,
         }
     );
 

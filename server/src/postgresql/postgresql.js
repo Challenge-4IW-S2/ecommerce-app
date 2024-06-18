@@ -1,9 +1,9 @@
 import db from './db.js';
 import UserRoleModel from "./models/UserRole.js";
 import UserModel from "./models/User.js";
-import AdressModel from "./models/Adress.js";
+import AdressModel from "./models/Address.js";
 import CategoryModel from "./models/Category.js";
-import OrderModel from "./models/Orders.js";
+import OrderModel from "./models/Order.js";
 import WishlistModel from "./models/Wishlist.js";
 import ProductModel from './models/Product.js';
 import ProductPictureModel from './models/ProductPicture.js';
@@ -27,7 +27,7 @@ async function init() {
         console.log("Table user_role created");
         const count = await UserRole.count();
         if (count === 0) {
-            userRoles.forEach(async (role) => {
+            for (const role of userRoles) {
                 await UserRole.create({
                     id: uuidv4(),
                     name: role
@@ -36,7 +36,7 @@ async function init() {
                 }).catch((err) => {
                     console.log(`Error creating role ${role}: ${err}`);
                 });
-            });
+            }
         }
     });
 
