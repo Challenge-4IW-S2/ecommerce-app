@@ -1,4 +1,4 @@
-import ProductPicture from "../model/ProductPicture.js";
+import ProductPicture from '../models/ProductPicture.js';
 
 export default class ProductPictureRepository {
     constructor() {

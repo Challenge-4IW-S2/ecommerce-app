@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import ky from 'ky';
-import ProductCard from '../components/Cards/ProductCard.vue';
-import ProgressBar from '../components/ProgressBar.vue';
-import FilterProducts from '../components/FilterProducts.vue';
+import ProductCard from '../../components/Cards/ProductCard.vue';
+import ProgressBar from '../../components/ProgressBar.vue';
+import FilterProducts from '../../components/FilterProducts.vue';
 
 let products = ref([]);
 let currentPage = ref(1);
@@ -50,23 +50,22 @@ const orderSelected = (newValue) => {
 </script>
 
 <template>
-    <section v-if="products.length !== 0" class="flex flex-col mb-2">
-        <!-- composant filtre ici -->
+    <section class="flex flex-col mb-2">
         <FilterProducts @order="orderSelected" />
         <img src="/bannerproduct.webp" alt="bannière de la page produits" class="" />
-        <div class="grid grid-cols-2">
-            <ProductCard v-for="(product, index) in products" :key="index" :product="product" />
-        </div>
-        <div class="flex flex-col items-center gap-2 mt-4">
+        <article v-if="products.length !== 0" class="flex flex-col items-center gap-2">
+            <div class="grid grid-cols-2">
+                <ProductCard v-for="(product, index) in products" :key="index" :product="product" />
+            </div>
             <span class="italic">Page {{ currentPage }} sur {{ totalPages }}</span>
             <ProgressBar :percentage="currentPage" :max="totalPages" />
             <button v-if="currentPage !== totalPages" @click="goToNextPage"
                 class="bg-black text-white font-bold p-2 w-32 h-12 rounded">
                 Charger plus
             </button>
-        </div>
-    </section>
-    <section v-else class="flex flex-col items-center">
-        <span class=" text-custom-gray italic">Aucun produit disponible</span>
+        </article>
+        <article v-else class="flex flex-col items-center">
+            <span class=" text-custom-gray italic">Aucun produit disponible</span>
+        </article>
     </section>
 </template>

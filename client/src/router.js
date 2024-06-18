@@ -6,7 +6,8 @@ import RegisterView from './pages/Register.vue'
 import DashboardUsersView from './pages/Dashboard/users/Users.vue'
 import DashboardUserEdit from './pages/Dashboard/users/EditUser.vue'
 import DashboardAddUser from './pages/Dashboard/users/AddUser.vue';
-import ProductsView from './pages/Products.vue'
+import ProductsView from './pages/Products/Products.vue'
+import ProductView from './pages/Products/Product.vue'
 
 
 const routes = [
@@ -17,7 +18,8 @@ const routes = [
     { path: '/admin/users', component: DashboardUsersView },
     { path: '/admin/users/:id', component: DashboardUserEdit },
     {path: '/admin/add-user', component: DashboardAddUser},
-    { path: '/products', component: ProductsView}
+    { path: '/products', component: ProductsView},
+    { path: '/product/:name/:id', component: ProductView}
 ]
 
 const router = createRouter({

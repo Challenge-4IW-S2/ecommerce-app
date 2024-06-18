@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 // import CategoryRepository from './Repository/CategoryRepository.js';
 // import ProductRepository from './Repository/ProductRepository.js';
-// import ProductPictureRepository from './Repository/ProductImageRepository.js';
+import ProductPictureRepository from './Repository/ProductImageRepository.js';
 // import { randomUUID } from 'crypto';
 
 mongoose.connect(process.env.MONGO_URL).then(() => {
@@ -10,7 +10,7 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 
 // const productRepository = new ProductRepository();
 // const categoryRepository = new CategoryRepository();
-// const productPictureRepository = new ProductPictureRepository();
+const productPictureRepository = new ProductPictureRepository();
 
 // categoryRepository.createCategory({
 //     _id: 'f7e22e1a-18ec-4517-9c70-48f3f36b9922',
@@ -45,7 +45,6 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 //     console.log(product);
 // });
 
-// 20 nouveaux produits
 // const newProducts = [
 //     { 
 //         _id: randomUUID(), 
@@ -157,9 +156,9 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 // }
 
 // productPictureRepository.createProductPicture({
-//     _id: '6cd4dcad-d7ec-48e6-a5f2-240c1c5d0c85',
+//     _id: '808621d8-7e75-4079-941b-ebf9ee889ae3',
 //     url: 'placeholderimage.webp',
-//     product_id: 'fb0f1efb-0ad7-4cca-bba5-03e1a80b5f15'
+//     product_id: '808621d8-7e75-4079-941b-ebf9ee889ae3'
 // }).then((productPicture) => {
 //     console.log(productPicture);
 // });

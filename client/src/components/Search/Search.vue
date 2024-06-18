@@ -1,16 +1,21 @@
 <script setup>
-import SearchInput from './SearchInput.vue';
-import SearchResult from './SearchResult.vue';
 import { ref, watch } from 'vue';
 import ky from 'ky';
+import { useSearchHistoryStore } from '../../store/searchHistoryStore';
 
+import SearchInput from './SearchInput.vue';
+import SearchResult from './SearchResult.vue';
+import ButtonDelete from '../Buttons/ButtonDelete.vue';
+
+const searchHistoryStore = useSearchHistoryStore();
+const searchHistory = searchHistoryStore.searchHistory;
+let response = ref([]);
 const isSearchOpen = ref(false);
 const search = ref('');
 const openSearch = () => {
     isSearchOpen.value = !isSearchOpen.value;
     search.value = '';
 }
-let response = ref([]);
 
 // search product API
 const connect = async (newValue) => {
@@ -24,9 +29,21 @@ const connect = async (newValue) => {
         console.error(error);
     }
 }
+
+const addToSearchHistory = () => {
+    searchHistoryStore.addSearchHistory(search.value);
+}
+const deleteSearchHistory = () => {
+    searchHistoryStore.deleteSearchHistory();
+}
+
+const setSearchValue = (value) => {
+    search.value = value;
+}
 watch(search, (newValue) => {
     connect(newValue);
 });
+
 </script>
 
 <template>
@@ -51,7 +68,20 @@ watch(search, (newValue) => {
         <SearchInput v-model="search" />
         <div v-if="search !== ''" class="flex flex-col">
             <!-- Affichage des résults -->
-            <SearchResult v-for="(product, index) in response.data" :key="index" :product="product" />
+            <SearchResult v-for="(product, index) in response.data" :key="index" :product="product"
+                @click="addToSearchHistory" />
+        </div>
+        <!-- search History -->
+        <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
+            <div class="flex justify-between">
+                <h2 class="text-xl font-bold">Historique de recherche</h2>
+                <ButtonDelete @click="deleteSearchHistory" />
+            </div>
+            <ul class="flex flex-col gap-2">
+                <li v-for="(search, index) in searchHistory" :key="index" class="" @click="setSearchValue(search)">
+                    {{ search }}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
