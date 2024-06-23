@@ -50,9 +50,12 @@ export class UserController {
         const userRepository = new UserRepository();
         try {
             const id = request.params.id;
+            console.log(id)
             const nbDeleted = await userRepository.destroy(id);
-            const user = await userRepository.createUser({ id, ...parameters});
-            response.status(nbDeleted === 1 ? 200 : 201).json(user);
+            console.log(nbDeleted)
+           const user = await userRepository.createUser({ id, ...parameters});
+            console.log(user)
+           response.status(nbDeleted === 1 ? 200 : 201).json(user);
         } catch (e) {
             response.json({
                 success: false,

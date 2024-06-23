@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node --watch --trace-warnings index.js",
     "dev:nodemon": "nodemon -L index.js",
+    "d:s:u": "node src/postgresql/migrations/20220303154800-create-users.js",
     "start": "node index.js"
   },
   "dependencies": {
