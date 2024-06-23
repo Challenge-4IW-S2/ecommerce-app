@@ -45,6 +45,14 @@ export default class UserRepository {
         });
     }
 
+
+    async destroy(id) {
+            return await this.User.destroy({
+                where: {
+                    id: id
+                }
+            });
+        }
     async deleteUser(id) {
 
         return await this.updateUser(id, {

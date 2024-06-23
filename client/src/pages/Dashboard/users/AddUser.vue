@@ -9,7 +9,7 @@ const modelStructure = ref([]);
 const modelName = 'User';
 
 const getRoles = async () => {
-  const response = await ky.get("http://localhost:8000/users/roles").json();
+  //const response = await ky.get("http://localhost:8000/users/roles").json();
   return response;
 };
 const getModelStructure = async () => {
@@ -27,9 +27,6 @@ const getModelStructure = async () => {
           { value: 'admin', label: 'Admin' },
           { value: 'user', label: 'User' },
         ];
-      }
-      if(field.type === 'UUID'){
-        field.type = 'password';
       }
       if (field.type==='STRING'){
         field.type = 'text';

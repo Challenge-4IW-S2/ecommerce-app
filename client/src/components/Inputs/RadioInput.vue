@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    label: String,
+    title: String,
     id: String,
     name: String,
     value: String,
@@ -12,7 +12,7 @@ defineProps({
 
 <template>
     <div class="flex pl-1 gap-1">
-        <input type="radio" :id="id" :name="name" :value="value" />
-        <label class="font-semibold text-xs" :for="id">{{ label }}</label>
+        <input type="checkbox" :id="id" :name="name" :value="value" />
+        <label class="font-semibold text-xs dark:text-black" :for="id">{{ title }}</label>
     </div>
 </template>

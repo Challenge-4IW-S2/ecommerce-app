@@ -4,6 +4,8 @@ import { ProductController } from "../controllers/ProductController.js";
 import {AuthController} from "../controllers/AuthController.js";
 import {UserController} from "../controllers/UserController.js";
 import {UtilitiesController} from "../controllers/UtilitiesController.js";
+import {validateBody} from "../middlewares/validateBody.js";
+import {CreationUserSchema, UserUpdateSchema} from "../schemas/UserSchema.js";
 export const indexRouter = Router();
 
 indexRouter.get("/", HelloController.index);
@@ -12,17 +14,16 @@ indexRouter.get("/", HelloController.index);
 indexRouter.get('/model/:modelName', UtilitiesController.fetchModelStructure);
 
 //Auth
-indexRouter.post("/signup", AuthController.signup);
+indexRouter.post("/signup", validateBody(CreationUserSchema),AuthController.signup);
 indexRouter.post("/login", AuthController.login);
 
 // User routes
 indexRouter.get("/users", UserController.getAllUsers);
-indexRouter.get("/users/:id", UserController.getUser);
 indexRouter.post("/users", UserController.createUser);
-indexRouter.put("/users/:id", UserController.updateUser);
+indexRouter.get("/users/:id", UserController.getUser);
+indexRouter.put("/users/:id", validateBody(UserUpdateSchema) ,UserController.updateUser);
 indexRouter.delete("/users/:id", UserController.deleteUser);
-indexRouter.post("/users/role", UserController.userRole);
-indexRouter.get("/users/roles", UserController.getAllUserRole);
+indexRouter.get("/role", UserController.getAllUserRole);
 
 // Product routes
 indexRouter.post("/searchProduct", ProductController.search);

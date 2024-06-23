@@ -6,115 +6,53 @@ import {useRoute} from "vue-router";
 import DynamicForm from "../../../components/Form/DynamicForm.vue";
 import {fetchModelStructure} from "../../functions/model.js";
 const route = useRoute();
-const modelName = 'User';
 const modelStructure = ref([]);
-
-const data = ref([]);
-const inputs = ref([])
 const id = computed(() => route.params.id);
 const getRoleOptions = async () => {
   try {
-    const response = await ky.get("http://localhost:8000/users/role").json();
-    if (response) {
-      console.log(response)
-      return response.map((role) => {
-        return {
-          value: role.id,
-          text: role.name
-        };
-      });
-    } else {
-      console.log('No data found');
-    }
+    const response = await ky.get("http://localhost:8000/role").json();
+    return response.map(role => ({
+      value: role.id,
+      label: role.name
+    }));
   } catch (error) {
     console.error('Failed to fetch roles:', error);
+   return [];
   }
 };
 const getModelStructure = async () => {
-  const [structure] = await ky.get(`http://localhost:8000/users/${id.value}`).json();
-  console.log(structure)
-  if (structure) {
-    console.log(structure)
-    modelStructure.value = structure.map(field => {
-      if (field.name === 'role') {
-        field.is = 'select';
-        /* field.options = getRoles();
-         field.options.then((data) => {
-           field.options = data;
-         });
-         console.log(field.options)*/
-        field.options = [
-          { value: 'admin', label: 'Admin' },
-          { value: 'user', label: 'User' },
-        ];
-      }
-      if(field.type === 'UUID'){
-        field.type = 'password';
-      }
-      if (field.type==='STRING'){
-        field.type = 'text';
-      }
-      if(field.name === 'password'){
-        field.type = 'password';
-      }
-      return field;
-    });
-  }
-};
-
-const fetchData = async () => {
-  console.log("Fetching data")
   try {
     //Recuperer le user passer dans l'url
     const response = await ky.get(`http://localhost:8000/users/${id.value}`).json();
-    if (response) {
-      data.value = response;
-      if (data.value.role) {
-        const user_roles = await ky.post("http://localhost:8000/users/role", {
-          json: { role: data.value.role }
-        }).json();
-        inputs.value = Object.keys(data.value).map(async (key) => {
-          if (key === 'role') {
-            // Gérer le champ 'role' comme un select
-            return {
-              id: key,
-              title: 'Role',
-              type: 'select',
-              //options: await getRoleOptions(), // Fonction pour récupérer les options de rôle
-              value: data.value[key]
-            };
-          } else if (key === 'id') {
-            // Gérer le champ 'id' comme désactivé
-            return {
-              id: key,
-              title: key.charAt(0).toUpperCase() + key.slice(1),
-              type: 'text',
-              placeholder: `Enter ${key}`,
-              value: data.value[key],
-              disabled: true // Champ désactivé
-            };
-          } else {
-            return {
-              id: key,
-              title: key.charAt(0).toUpperCase() + key.slice(1),
-              type: getTypeForKey(key),
-              placeholder: `Enter ${key}`,
-              value: data.value[key]
-            };
-          }
-
-        });
-
-      }
-
-    } else {
-
-      console.log('No data found');
+    if (response){
+      const roles = await getRoleOptions();
+      modelStructure.value = Object.keys(response).map(key => {
+        let field = {
+          name: key,
+          value: response[key],
+          type: getTypeForKey(key)  // Déterminer le type en utilisant getTypeForKey
+        };
+        if (key === 'role') {
+          field.is = 'select';
+          field.options = roles;
+        }
+        if (typeof field.value === 'string') {
+          field.type = 'text';
+        }
+        if (key === 'password') {
+          field.type = 'password';
+        }
+        return field;
+      });
     }
   } catch (error) {
     console.error('Failed to fetch user:', error);
   }
-}
+};
+const handleFormSubmit = async (formData) => {
+  console.log(formData);
+};
+
 const getTypeForKey = (key) => {
   switch (key) {
     case 'email':
@@ -123,26 +61,30 @@ const getTypeForKey = (key) => {
       return 'password';
     case 'phone':
       return 'tel';
-    case 'is_verified':
-      return 'select';
     case 'role':
       return 'select';
     default:
       return 'text';
   }
 };
-
-// Appeler fetchData lors du montage du composant
 onMounted(() => {
   getModelStructure();
-  //fetchData();
 });
-
+console.log(modelStructure);
 </script>
 
 <template>
-  <h1> Modification Utilisateur n°  </h1>
-  <DynamicForm :inputs="modelStructure" @submit="handleFormSubmit"  />
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="text-center text-3xl">Modifier un utilisateur</h1>
+    <p class="text-center">Remplissez le formulaire ci-dessous pour le modifier </p>
+    <div class="flex justify-end">
+      <router-link to="/admin/users" class="bg-black px-4 text-white h-12 block text-center content-center">Retour</router-link>
+    </div>
+      <div>
+        <DynamicForm :inputs="modelStructure" @submit="handleFormSubmit"  />
+      </div>
+    </div>
+
 </template>
 
 <style scoped>

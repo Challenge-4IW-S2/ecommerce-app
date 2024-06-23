@@ -356,10 +356,10 @@ module.exports = {
     await queryInterface.dropTable('orders');
     await queryInterface.dropTable('comments');
     await queryInterface.dropTable('addresses');
-    await queryInterface.dropTable('users');
-    await queryInterface.dropTable('product_pictures');
     await queryInterface.dropTable('products');
+    await queryInterface.dropTable('product_pictures');
     await queryInterface.dropTable('user_roles');
     await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('users');
   }
 };

@@ -20,6 +20,7 @@ export class AuthController {
                 message: 'User successfully created',
             });
         }).catch(error => {
+            console.log(parameters)
             response.json({
                 success: false,
                 message: 'User not created, an error occurred',
@@ -34,11 +35,10 @@ export class AuthController {
         }
         const userRepository = new UserRepository();
         const user = await userRepository.findOne('email', parameters.email);
-        if (!user) return response.status(401).send("User not found");
+        if (!user) return response.status(401).send("Email or password incorrect");
         if (!(await bcrypt.compare(request.body.password, user.password))) {
             return response.status(401).send( "Email or password incorrect");
         }
-
         const token = jwt.sign(
             {
                 id: user.id,
@@ -50,9 +50,9 @@ export class AuthController {
                 algorithm: "HS256",
             }
         );
-        response("JWT", token, {
+        response.json("JWT", token, {
             httpOnly: true,
             signed: true,
-        });
+        });  // pour que le front accede pas à ce cookies
     }
 }

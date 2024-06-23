@@ -33,12 +33,11 @@ const internalModelValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 });
-
 </script>
 
 <template>
   <div>
-    <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-white">
+    <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-black">
       {{ title }}
     </label>
     <div class="w-full relative">
