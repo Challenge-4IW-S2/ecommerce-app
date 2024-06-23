@@ -57,8 +57,8 @@ export default function (connection) {
         {
             sequelize: connection,
             tableName: "users",
-            timestamps: true,
             underscored: true,
+            timestamps: true
         }
     );
 

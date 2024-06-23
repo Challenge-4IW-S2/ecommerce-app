@@ -19,6 +19,7 @@ export default function (connection) {
         sequelize: connection,
         tableName: "user_roles",
         underscored: true,
+        timestamps: true
     }
   );
 

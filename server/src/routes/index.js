@@ -2,7 +2,6 @@ import Router from "express";
 import { HelloController } from "../controllers/helloController.js";
 import { ProductController } from "../controllers/ProductController.js";
 import {AuthController} from "../controllers/AuthController.js";
-import {UserController} from "../controllers/UserController.js";
 import {UtilitiesController} from "../controllers/UtilitiesController.js";
 import {validateBody} from "../middlewares/validateBody.js";
 import {CreationUserSchema, UserUpdateSchema} from "../schemas/UserSchema.js";
