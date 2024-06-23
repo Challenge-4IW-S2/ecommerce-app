@@ -1,6 +1,5 @@
 <script setup>
-import {ref} from "vue";
-import { computed} from 'vue';
+import { ref, computed } from "vue";
 
 const props = defineProps({
   id: String,
@@ -20,8 +19,7 @@ const props = defineProps({
 })
 
 let dynamicType = ref(props.type);
-
-const value = defineModel('value');
+let inputValue = ref(props.modelValue);
 
 function changeVisibility() {
   dynamicType.value = dynamicType.value === 'password'
@@ -30,15 +28,18 @@ function changeVisibility() {
 }
 const emit = defineEmits(['update:modelValue']);
 const internalModelValue = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
+  get: () => inputValue.value,
+  set: (value) => {
+    inputValue.value = value;
+    emit('update:modelValue', value)
+  }
 });
 
 </script>
 
 <template>
   <div>
-    <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-white">
+    <label :for="id" class="block mb-2 text-sm text-gray-900">
       {{ title }}
     </label>
     <div class="w-full relative">
@@ -48,9 +49,9 @@ const internalModelValue = computed({
           :placeholder="placeholder"
           :option="option"
           v-model="internalModelValue"
-          class="border pl-3 py-2 placeholder:text:base  border-gray-300 text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
       </input>
-      <span v-if="type === 'password'" class="absolute top-2/4 right-4 -translate-y-2/4 text-xs cursor-pointer"
+      <span v-if="type === 'password'" class="z-20 absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer bg-white"
             @click="changeVisibility">
         {{
           dynamicType === 'password' ? 'AFFICHER' : 'MASQUER'

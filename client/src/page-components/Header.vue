@@ -10,7 +10,6 @@ import Logo from "../components/Logo.vue";
       <div class="flex justify-between gap-12">
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
         <span class="cursor-pointer text-sm">SE CONNECTER</span>
-        <span class="cursor-pointer text-sm">AIDE</span>
         <span class="cursor-pointer text-sm">PANIER (0)</span>
       </div>
     </div>

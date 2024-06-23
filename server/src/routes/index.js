@@ -15,13 +15,13 @@ indexRouter.post("/signup", AuthController.signup);
 indexRouter.post("/login", AuthController.login);
 
 // User routes
-indexRouter.get("/users", UserController.getAllUsers);
-indexRouter.get("/users/:id", UserController.getUser);
-indexRouter.post("/users", UserController.createUser);
-indexRouter.put("/users/:id", UserController.updateUser);
-indexRouter.delete("/users/:id", UserController.deleteUser);
-indexRouter.post("/users/role", UserController.userRole);
-indexRouter.get("/users/roles", UserController.getAllUserRole);
+// indexRouter.get("/users", UserController.getAllUsers);
+// indexRouter.get("/users/:id", UserController.getUser);
+// indexRouter.post("/users", UserController.createUser);
+// indexRouter.put("/users/:id", UserController.updateUser);
+// indexRouter.delete("/users/:id", UserController.deleteUser);
+// indexRouter.post("/users/role", UserController.userRole);
+// indexRouter.get("/users/roles", UserController.getAllUserRole);
 
 // Product routes
 indexRouter.post("/searchProduct", ProductController.search);

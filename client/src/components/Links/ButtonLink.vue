@@ -1,4 +1,7 @@
 <script setup>
+
+const sizingStyle = ` h-12 block text-center content-center`;
+
 defineProps({
   to: {
     type: String,
@@ -7,12 +10,18 @@ defineProps({
   text: {
     type: String,
     default: 'Action'
+  },
+  className: {
+    type: String,
+    default: "bg-black text-white"
   }
 })
 </script>
 
 <template>
-  <a :href="to" class="bg-black text-white h-12 block text-center content-center">{{ text }}</a>
+  <RouterLink :to="to" :class="className + sizingStyle">
+    {{ text }}
+  </RouterLink>
 </template>
 
 <style scoped>

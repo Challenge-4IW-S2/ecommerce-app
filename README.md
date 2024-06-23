@@ -13,7 +13,7 @@
 docker compose up -d --build
 ```
 
-### Création de modèles & migrations
+### Création de modèles, migrations et seeders (création de données automatique)
 
 *voir .sequelizerc dans ./server pour consulter la configuration*
 
@@ -33,6 +33,11 @@ Il existe cependant une commande pour générer automatiquement un modèle et sa
 
 ```bash
 docker compose exec server npx sequelize-cli model:generate --name nom-du-modele --attributes name:string,is_verified:boolean
+```
+
+Pour créer un seeder (création de données dans une table) :
+```bash
+docker compose exec server npx sequelize-cli seed:generate --name add-user-roles
 ```
 
 ### Exécuter les migrations

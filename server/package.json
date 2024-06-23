@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node --watch --trace-warnings index.js",
     "dev:nodemon": "nodemon -L index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "migrate": "docker compose exec server npx sequelize-cli db:migrate && docker compose exec server npx sequelize-cli db:seed:all",
+    "migrate-no-seed": "docker compose exec server npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -21,7 +23,8 @@
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "process": "^0.11.10",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "nodemon": "^3.1.2",

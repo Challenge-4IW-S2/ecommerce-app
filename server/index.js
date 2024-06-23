@@ -11,8 +11,9 @@ server.use("/", indexRouter);
 
 server.post('/signup',indexRouter);
 server.use("/login", indexRouter);
+server.use("/register", indexRouter);
 server.use("/users", indexRouter);
 server.use("/model", indexRouter);
 server.listen(port, "0.0.0.0", () => {
-  console.log("Server listening on http://localhost:8000");
+  console.log(`Server listening on http://localhost:${port}`);
 });

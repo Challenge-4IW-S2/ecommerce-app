@@ -1,21 +1,31 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import {z} from 'zod';
 export class AuthController {
     static signup(request, response) {
-        const parameters = {
-            email: request.body.email,
-            password: request.body.password,
-            firstname: request.body.firstname,
-            lastname: request.body.lastname,
-            phone: request.body.phone,
-            role: request.body.role
+
+        const parametersSchema = z.object({
+            email: z.string().email(),
+            password: z.string(),
+            firstname: z.string(),
+            lastname: z.string(),
+            phone: z.string(),
+            role: z.string(),
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            response.status(400).json({
+                message: 'Bad request',
+                errors: parsedParameters.error.issues
+            });
+            return;
         }
 
         const userRepository = new UserRepository();
-        userRepository.createUser(parameters).then(res => {
-            response.json({
+        userRepository.createUser(parsedParameters.data).then(res => {
+            response.status(201).json({
                 success: true,
                 message: 'User successfully created',
             });
@@ -24,6 +34,8 @@ export class AuthController {
                 success: false,
                 message: 'User not created, an error occurred',
                 e: error.message,
+                traceroute: error.stack.split('\n').map(line => line.trim()),
+                b: parsedParameters
             });
         })
     }

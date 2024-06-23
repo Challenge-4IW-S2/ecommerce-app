@@ -4,7 +4,7 @@ import Logo from "../components/Logo.vue";
 </script>
 
 <template>
-  <div class="border-t-2 border-primary mt-10 pt-10">
+  <div class="border-t-2 border-primary mt-10 pt-10 px-9">
     <div class="max-w-125 m-auto flex flex-col gap-16">
       <div class="flex justify-between">
         <div class="flex flex-col gap-8">
@@ -13,7 +13,7 @@ import Logo from "../components/Logo.vue";
           <a href="#">Mentions légales</a>
         </div>
         <div class="flex flex-col items-end gap-5">
-          <Logo></Logo>
+          <Logo />
           <div class="flex gap-11">
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M3 0.5C1.35503 0.5 0 1.85503 0 3.5V15.5C0 17.145 1.35503 18.5 3 18.5H15C16.645 18.5 18 17.145 18 15.5V3.5C18 1.85503 16.645 0.5 15 0.5H3ZM9 4.5H11C11 5.505 12.471 6.5 13 6.5V8.5C12.395 8.5 11.668 8.23416 11 7.78516V11.5C11 13.154 9.654 14.5 8 14.5C6.346 14.5 5 13.154 5 11.5C5 9.846 6.346 8.5 8 8.5V10.5C7.448 10.5 7 10.949 7 11.5C7 12.051 7.448 12.5 8 12.5C8.552 12.5 9 12.051 9 11.5V4.5Z" fill="#201F20"/>
