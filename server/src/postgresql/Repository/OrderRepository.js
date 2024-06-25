@@ -1,6 +1,5 @@
 import db from '../db.js';
 import OrderModel from '../models/Order.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class OrderRepository {
     constructor() {
@@ -25,7 +24,6 @@ export default class OrderRepository {
 
     async createOrder(order) {
         return await this.Order.create({
-            id: uuidv4(),
             user_id: order.user_id,
             total_price: order.total_price,
             status: order.status,

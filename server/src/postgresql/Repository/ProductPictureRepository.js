@@ -1,6 +1,5 @@
 import db from "../db";
 import ProductPictureModel from "../models/ProductPicture.js";
-import { v4 as uuidv4 } from "uuid";
 
 export default class ProductPictureRepository {
     constructor() {
@@ -25,7 +24,6 @@ export default class ProductPictureRepository {
 
     async createProductPicture(productPicture) {
         return await this.ProductPicture.create({
-            id: uuidv4(),
             product_id: productPicture.product_id,
             url: productPicture.url,
         });

@@ -7,7 +7,7 @@ export default function (connection) {
         {
             id: {
                 type: DataTypes.UUID,
-                primaryKey: true
+                primaryKey: true,
             },
             user_id: {
                 type: DataTypes.UUID,

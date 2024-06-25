@@ -1,7 +1,6 @@
 import db from '../db.js';
 import ProductModel from '../models/Product.js';
 import CategoryRepository from '../repository/CategoryRepository.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class ProductRepository {
     constructor() {
@@ -27,7 +26,6 @@ export default class ProductRepository {
 
     async createProduct(product) {
         return await this.Product.create({
-            id: uuidv4(),
             name: product.name,
             description: product.description,
             price_ht: product.price_ht,

@@ -1,6 +1,5 @@
 import db from '../db.js';
 import AdressModel from '../models/Address.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class AdressRepository {
     constructor() {
@@ -25,7 +24,6 @@ export default class AdressRepository {
 
     async createAdress(adress) {
         return await this.Adress.create({
-            id: uuidv4(),
             user_id: adress.user_id,
             street: adress.street,
             city: adress.city,

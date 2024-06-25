@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {z} from 'zod';
 export class AuthController {
+
     static signup(request, response) {
 
         const parametersSchema = z.object({

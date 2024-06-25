@@ -1,7 +1,6 @@
 import db from '../db.js';
 import UserModel from '../models/User.js';
 import UserRoleRepository from './UserRoleRepository.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class UserRepository {
     constructor() {
@@ -27,7 +26,6 @@ export default class UserRepository {
 
     async createUser(user) {
         return await this.User.create({
-            id: uuidv4(),
             email: user.email,
             password: user.password,
             firstname: user.firstname,

@@ -1,18 +1,9 @@
-import Router from "express";
 import { HelloController } from "../controllers/helloController.js";
 import { ProductController } from "../controllers/ProductController.js";
-import {AuthController} from "../controllers/AuthController.js";
-import {UtilitiesController} from "../controllers/UtilitiesController.js";
-export const indexRouter = Router();
+import { UtilitiesController } from "../controllers/UtilitiesController.js";
 
-indexRouter.get("/", HelloController.index);
 
-// Model routes :(structure d'un modèle)
-indexRouter.get('/model/:modelName', UtilitiesController.fetchModelStructure);
 
-//Auth
-indexRouter.post("/signup", AuthController.signup);
-indexRouter.post("/login", AuthController.login);
 
 // User routes
 // indexRouter.get("/users", UserController.getAllUsers);
@@ -24,4 +15,12 @@ indexRouter.post("/login", AuthController.login);
 // indexRouter.get("/users/roles", UserController.getAllUserRole);
 
 // Product routes
-indexRouter.post("/searchProduct", ProductController.search);
+export default function (router) {
+    router.get("/", HelloController.index);
+
+    // Model routes :(structure d'un modèle)
+    router.get('/model/:modelName', UtilitiesController.fetchModelStructure);
+
+    router.post("/searchProduct", ProductController.search);
+    return router;
+}
