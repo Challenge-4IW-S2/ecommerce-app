@@ -3,6 +3,7 @@ import { ProductController } from "../controllers/ProductController.js";
 import { UserController } from "../controllers/UserController.js";
 import {AuthController} from "../controllers/AuthController.js";
 import {UtilitiesController} from "../controllers/UtilitiesController.js";
+import {Router} from "express";
 export const indexRouter = Router();
 
 
