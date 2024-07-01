@@ -13,6 +13,11 @@ server.post('/signup',indexRouter);
 server.use("/login", indexRouter);
 server.use("/users", indexRouter);
 server.use("/model", indexRouter);
+
+// Product routes
+server.use("/products", indexRouter);
+server.use("/products/:slug", indexRouter);
+server.use("/searchProduct", indexRouter);
 server.listen(port, "0.0.0.0", () => {
   console.log("Server listening on http://localhost:8000");
 });
