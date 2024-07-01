@@ -1,14 +1,16 @@
 <script setup>
 
 import Logo from "../components/Logo.vue";
+import ButtonLink from "../components/Links/ButtonLink.vue";
 </script>
 
 <template>
   <div class="m-9 flex flex-col gap-14">
     <div class="flex justify-between">
       <Logo color="primary"></Logo>
-      <div class="flex justify-between gap-12">
+      <div class="flex justify-between gap-12 items-center">
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
+        <ButtonLink class-name="bg-black text-white p-4"  text="CRÉÉR UN COMPTE" />
         <span class="cursor-pointer text-sm">SE CONNECTER</span>
         <span class="cursor-pointer text-sm">PANIER (0)</span>
       </div>

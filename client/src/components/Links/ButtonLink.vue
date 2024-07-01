@@ -1,6 +1,6 @@
 <script setup>
 
-const sizingStyle = ` h-12 block text-center content-center`;
+const sizingStyle = ` block text-center content-center`;
 
 defineProps({
   to: {

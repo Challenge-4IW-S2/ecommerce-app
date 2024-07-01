@@ -16,6 +16,8 @@ defineProps({
 </template>
 
 <style scoped>
-
+button[disabled=""] {
+  opacity: 0.5;
+}
 </style>
 

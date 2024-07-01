@@ -59,7 +59,7 @@ const connect = async () => {
           <a href="#" class="text-xs font-medium border-b border-black w-fit">Récupérer mon compte</a>
           <Button text="Connexion" type="submit"></Button>
           <ButtonLink
-              class-name="bg-transparent text-black border border-black"
+              class-name="bg-transparent text-black border border-black h-12"
               to="/register"
               text="Créer un compte"
           />

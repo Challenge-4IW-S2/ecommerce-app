@@ -3,6 +3,7 @@ import Search from './Search.vue';
 import SmallCart from './Cart/SmallCart.vue';
 import Cart from './Cart/Cart.vue';
 import BurgerMenu from './BurgerMenu.vue';
+import ButtonLink from "./Links/ButtonLink.vue";
 </script>
 
 <template>

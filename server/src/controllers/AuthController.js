@@ -5,40 +5,62 @@ import {z} from 'zod';
 export class AuthController {
 
     static signup(request, response) {
-
         const parametersSchema = z.object({
-            email: z.string().email(),
-            password: z.string(),
             firstname: z.string(),
             lastname: z.string(),
-            phone: z.string(),
-            role: z.string(),
+            email: z.string().email(),
+            confirmEmail: z.string().email(),
+            password: z.string(),
+            confirmPassword: z.string(),
         });
 
         const parsedParameters = parametersSchema.safeParse(request.body);
         if (!parsedParameters.success) {
-            response.status(400).json({
-                message: 'Bad request',
-                errors: parsedParameters.error.issues
-            });
+            response.status(400);
             return;
         }
 
+        if (parsedParameters.data.email !== parsedParameters.data.confirmEmail) {
+            response.status(400);
+            return;
+        }
+
+        if (parsedParameters.data.password !== parsedParameters.data.confirmPassword) {
+            response.status(400);
+            return;
+        }
+
+        const userData = {
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            email: request.body.email,
+            password: request.body.password,
+            role: 'ROLE_USER',
+            phone: null
+        };
+
         const userRepository = new UserRepository();
-        userRepository.createUser(parsedParameters.data).then(res => {
-            response.status(201).json({
-                success: true,
-                message: 'User successfully created',
+        userRepository.createUser(userData)
+            .then(() => {
+                response.status(201).json({
+                    message: 'Compte créé'
+                })
+            })
+            .catch(err => {
+                const isNotUnique = err.errors[0].validatorKey === 'not_unique';
+
+                const message = isNotUnique
+                    ? 'Un compte existe déjà avec cet email'
+                    : 'Une erreur est survenue';
+
+                const code = isNotUnique
+                    ? 409
+                    : 500;
+
+                response.status(code).json({
+                    message: message
+                });
             });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not created, an error occurred',
-                e: error.message,
-                traceroute: error.stack.split('\n').map(line => line.trim()),
-                b: parsedParameters
-            });
-        })
     }
     static async login(request, response) {
         const parameters = {
