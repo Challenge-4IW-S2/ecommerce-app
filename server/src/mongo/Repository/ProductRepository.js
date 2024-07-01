@@ -62,6 +62,7 @@ export default class ProductRepository {
                 is_active: 1,
                 category: 1,
                 pictures: 1,
+                slug: 1,
             })
             .match({
                 is_active: true
@@ -71,7 +72,7 @@ export default class ProductRepository {
         return { productsResults, totalPagesResults };
     }
 
-    getProduct(id) {
+    getProduct(slug) {
         return this.Product.aggregate()
         .lookup({
             from: 'categories',
@@ -93,9 +94,10 @@ export default class ProductRepository {
             is_active: 1,
             category: 1,
             pictures: 1,
+            slug: 1,
         })
         .match({
-            _id: id,
+            slug: slug,
             is_active: true
         })
     }
@@ -122,6 +124,7 @@ export default class ProductRepository {
             is_active: 1,
             category: 1,
             pictures: 1,
+            slug: 1,
         })
         .match({
             $or: [

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 defineProps({
     product: Object,
 });
@@ -12,15 +13,19 @@ const openModal = () => {
 
 <template>
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
-    <a :href="`/product/${product.name}/${product._id}`" class="flex flex-col relative z-0">
-        <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`">
-        <button @click="openModal"
+
+    <div class="flex flex-col relative">
+        <RouterLink :to="`/${product.slug}/`" class="flex flex-col">
+            <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`">
+        </RouterLink>
+        <button @click.stop="openModal"
             class="bg-black h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-6">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 14 14">
                 <path stroke="#fff" d="M.335 6.5h13.333M7.505.335v13.334" />
             </svg>
         </button>
-    </a>
+    </div>
+
     <div v-if="isModalOpen" class="fixed inset-0 z-20 flex flex-col justify-center">
         <div class="bg-white pb-10 shadow-lg flex flex-col font-light mx-2">
             <button @click="openModal" class="self-end mt-5 mr-5">

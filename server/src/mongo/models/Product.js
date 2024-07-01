@@ -27,7 +27,7 @@ const productSchema = new Schema({
         required: true,
         default: true,
     },
-    token: {
+    slug: {
         type: String,
         required: true,
         lowercase: true,

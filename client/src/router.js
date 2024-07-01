@@ -19,7 +19,7 @@ const routes = [
     { path: '/admin/users/:id', component: DashboardUserEdit },
     {path: '/admin/add-user', component: DashboardAddUser},
     { path: '/products', component: ProductsView},
-    { path: '/product/:name/:id', component: ProductView}
+    { path: '/:slug', component: ProductView},
 ]
 
 const router = createRouter({

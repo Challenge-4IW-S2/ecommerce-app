@@ -23,8 +23,8 @@ export class ProductController {
     static async getProduct(request, response) {
         try {
             const productRepositoryMongo = new ProductRepositoryMongo();
-            const id = request.params.id;
-            await productRepositoryMongo.getProduct(id).then((data) => {
+            const slug = request.params.slug;
+            await productRepositoryMongo.getProduct(slug).then((data) => {
                 response.json({
                     data,
                 });
