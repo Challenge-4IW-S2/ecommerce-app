@@ -1,6 +1,6 @@
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from './pages/Home.vue'
+import HomeView from './pages/Homepage.vue'
 import LoginView from './pages/Login.vue'
 import RegisterView from './pages/Register.vue'
 import DashboardUsersView from './pages/Dashboard/users/Users.vue'

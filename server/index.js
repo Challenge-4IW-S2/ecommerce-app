@@ -1,23 +1,16 @@
 import express from "express";
 import cors from "cors";
-import { indexRouter } from "./src/routes/index.js";
-import "./src/mongo/mongodb.js";
+import RouteLoader from "./RouteLoader.js";
 
-const server = express();
+const app = express();
 const port = 8000;
-server.use(cors());
-server.use(express.json());
-server.use("/", indexRouter);
 
-server.post('/signup',indexRouter);
-server.use("/login", indexRouter);
-server.use("/users", indexRouter);
-server.use("/model", indexRouter);
+app.use(cors());
+app.use(express.json());
 
-// Product routes
-server.use("/products", indexRouter);
-server.use("/products/:slug", indexRouter);
-server.use("/searchProduct", indexRouter);
-server.listen(port, "0.0.0.0", () => {
-  console.log("Server listening on http://localhost:8000");
+const routes = await RouteLoader('src/routes/*.js');
+app.use('/', routes);
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server listening on http://localhost:${port}`);
 });

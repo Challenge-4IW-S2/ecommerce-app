@@ -3,10 +3,11 @@ import Search from './Search/Search.vue';
 import SmallCart from './Cart/SmallCart.vue';
 import Cart from './Cart/Cart.vue';
 import BurgerMenu from './BurgerMenu.vue';
+import ButtonLink from "./Links/ButtonLink.vue";
 </script>
 
 <template>
-    <header class="flex py-4 mt-11 gap-24 justify-center items-center xl:justify-between xl:px-4 xl:gap-[60px]">
+    <header class="flex py-4 mt-11 gap-24 justify-center items-center xl:justify-between mx-9 xl:gap-[60px]">
         <!-- svg logo -->
         <a href="/" class="">
             <svg width="102" height="22" viewBox="0 0 102 22" fill="none" xmlns="http://www.w3.org/2000/svg">

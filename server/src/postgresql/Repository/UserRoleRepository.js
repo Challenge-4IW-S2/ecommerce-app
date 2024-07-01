@@ -1,6 +1,5 @@
 import db from '../db.js'; 
 import UserRoleModel from '../models/UserRole.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class UserRoleRepository {
     constructor() {
@@ -34,7 +33,6 @@ export default class UserRoleRepository {
 
     async createUserRole(name) {
         return await this.UserRole.create({
-            id: uuidv4(),
             name: name
         });
     }

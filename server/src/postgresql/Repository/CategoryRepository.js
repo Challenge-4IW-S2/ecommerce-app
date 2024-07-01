@@ -1,6 +1,5 @@
 import db from '../db.js';
 import CategoryModel from '../models/Category.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class CategoryRepository {
     constructor() {
@@ -34,7 +33,6 @@ export default class CategoryRepository {
 
     async createCategory(category) {
         return await this.Category.create({
-            id: uuidv4(),
             name: category.name
         });
     }

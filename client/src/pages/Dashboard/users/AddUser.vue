@@ -9,7 +9,7 @@ const modelStructure = ref([]);
 const modelName = 'User';
 
 const getRoles = async () => {
-  const response = await ky.get("http://localhost:8000/users/roles").json();
+  const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/roles`).json();
   return response;
 };
 const getModelStructure = async () => {
@@ -42,7 +42,7 @@ const getModelStructure = async () => {
   }
 };
 const handleFormSubmit = async (formData) => {
-  const data = await ky.post("http://localhost:8000/signup", {
+  const data = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
     json: formData,
   }).json();
   console.log(data);

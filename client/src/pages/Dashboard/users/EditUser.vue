@@ -14,7 +14,7 @@ const inputs = ref([])
 const id = computed(() => route.params.id);
 const getRoleOptions = async () => {
   try {
-    const response = await ky.get("http://localhost:8000/users/role").json();
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/role`).json();
     if (response) {
       console.log(response)
       return response.map((role) => {
@@ -31,7 +31,7 @@ const getRoleOptions = async () => {
   }
 };
 const getModelStructure = async () => {
-  const [structure] = await ky.get(`http://localhost:8000/users/${id.value}`).json();
+  const [structure] = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/${id.value}`).json();
   console.log(structure)
   if (structure) {
     console.log(structure)
@@ -66,11 +66,11 @@ const fetchData = async () => {
   console.log("Fetching data")
   try {
     //Recuperer le user passer dans l'url
-    const response = await ky.get(`http://localhost:8000/users/${id.value}`).json();
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/${id.value}`).json();
     if (response) {
       data.value = response;
       if (data.value.role) {
-        const user_roles = await ky.post("http://localhost:8000/users/role", {
+        const user_roles = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/users/role`, {
           json: { role: data.value.role }
         }).json();
         inputs.value = Object.keys(data.value).map(async (key) => {

@@ -1,31 +1,66 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import {z} from 'zod';
 export class AuthController {
+
     static signup(request, response) {
-        const parameters = {
-            email: request.body.email,
-            password: request.body.password,
-            firstname: request.body.firstname,
-            lastname: request.body.lastname,
-            phone: request.body.phone,
-            role: request.body.role
+        const parametersSchema = z.object({
+            firstname: z.string(),
+            lastname: z.string(),
+            email: z.string().email(),
+            confirmEmail: z.string().email(),
+            password: z.string(),
+            confirmPassword: z.string(),
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            response.status(400);
+            return;
         }
 
+        if (parsedParameters.data.email !== parsedParameters.data.confirmEmail) {
+            response.status(400);
+            return;
+        }
+
+        if (parsedParameters.data.password !== parsedParameters.data.confirmPassword) {
+            response.status(400);
+            return;
+        }
+
+        const userData = {
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            email: request.body.email,
+            password: request.body.password,
+            role: 'ROLE_USER',
+            phone: null
+        };
+
         const userRepository = new UserRepository();
-        userRepository.createUser(parameters).then(res => {
-            response.json({
-                success: true,
-                message: 'User successfully created',
+        userRepository.createUser(userData)
+            .then(() => {
+                response.status(201).json({
+                    message: 'Compte créé'
+                })
+            })
+            .catch(err => {
+                const isNotUnique = err.errors[0].validatorKey === 'not_unique';
+
+                const message = isNotUnique
+                    ? 'Un compte existe déjà avec cet email'
+                    : 'Une erreur est survenue';
+
+                const code = isNotUnique
+                    ? 409
+                    : 500;
+
+                response.status(code).json({
+                    message: message
+                });
             });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not created, an error occurred',
-                e: error.message,
-            });
-        })
     }
     static async login(request, response) {
         const parameters = {
