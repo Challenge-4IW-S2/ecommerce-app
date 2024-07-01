@@ -1,5 +1,5 @@
 <script setup>
-import Search from './Search.vue';
+import Search from './Search/Search.vue';
 import SmallCart from './Cart/SmallCart.vue';
 import Cart from './Cart/Cart.vue';
 import BurgerMenu from './BurgerMenu.vue';
@@ -9,7 +9,7 @@ import ButtonLink from "./Links/ButtonLink.vue";
 <template>
     <header class="flex py-4 mt-11 gap-24 justify-center items-center xl:justify-between mx-9 xl:gap-[60px]">
         <!-- svg logo -->
-        <a href="#" class="">
+        <a href="/" class="">
             <svg width="102" height="22" viewBox="0 0 102 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0.0334005H3.13598V18.535H10.6712V21.6077H0V0.0334005Z" fill="black" />
                 <path
@@ -55,7 +55,7 @@ import ButtonLink from "./Links/ButtonLink.vue";
                 <BurgerMenu />
             </div>
             <div class="p-0 gap-6 items-center hidden xl:flex uppercase text-sm">
-                <a href="#">Se connecter</a>
+                <a href="/login">Se connecter</a>
                 <a href="#">Aide</a>
                 <Cart />
             </div>

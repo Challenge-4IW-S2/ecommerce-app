@@ -87,9 +87,10 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
-      token: {
+      slug: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       category_id: {
         type: DataTypes.UUID,

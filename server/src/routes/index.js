@@ -1,6 +1,9 @@
 import { HelloController } from "../controllers/helloController.js";
 import { ProductController } from "../controllers/ProductController.js";
-import { UtilitiesController } from "../controllers/UtilitiesController.js";
+import { UserController } from "../controllers/UserController.js";
+import {AuthController} from "../controllers/AuthController.js";
+import {UtilitiesController} from "../controllers/UtilitiesController.js";
+export const indexRouter = Router();
 
 
 
@@ -16,6 +19,8 @@ import { UtilitiesController } from "../controllers/UtilitiesController.js";
 
 // Product routes
 export default function (router) {
+    // TODO: CES ROUTES SONT A EXTERNALISER DANS UN FICHIER SEPARE
+    //  EXCEPTÉ POUR LE '/' QUI DOIT RESTER ICI
     router.get("/", HelloController.index);
 
     // Model routes :(structure d'un modèle)

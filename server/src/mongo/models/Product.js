@@ -27,7 +27,7 @@ const productSchema = new Schema({
         required: true,
         default: true,
     },
-    token: {
+    slug: {
         type: String,
         required: true,
         lowercase: true,
@@ -35,7 +35,17 @@ const productSchema = new Schema({
     category_id: {
         type: 'UUID',
         required: true,
-    }
+    },
+    created_at: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
+    updated_at: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
 });
 
 const Product = model('Product', productSchema);
