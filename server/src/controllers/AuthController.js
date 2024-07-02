@@ -7,6 +7,7 @@ const MAX_ATTEMPTS = 3;
 const LOCK_TIME = 15 * 60 * 1000;
 
 import {z} from 'zod';
+import e from "express";
 
 export class AuthController {
 
@@ -114,12 +115,12 @@ export class AuthController {
 
            // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresponseIn: "30 days", algorithm: "HS256"});
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresIn: "30 days", algorithm: "HS256"});
             response.cookie('JWT', token, {httpOnly: true, signed: true, secure: true, sameSite: 'none'});
             response.status(200).send(user);
 
         } catch (error) {
-            response.status(500).send('Erreur de serveur');
+            response.status(500).send(error.toString());
         }
     }
 

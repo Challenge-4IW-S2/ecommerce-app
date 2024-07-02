@@ -97,7 +97,6 @@ const connect = async () => {
       const data = await response.json();
     }
   } catch (error) {
-    c
     msgError.value = 'Votre email ou votre mot de passe sont incorrects.';
   }
 };
