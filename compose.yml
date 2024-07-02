@@ -54,7 +54,7 @@ services:
     stdin_open: true
     working_dir: /home/node
     entrypoint: sh -c
-    command: '"npm install && npm run dev"'
+    command: '"npm install && npm run dev && npx sequelize-cli db:migrate:undo && npx sequelize-cli db:migrate  " '
     volumes:
       - ./server:/home/node
     depends_on:

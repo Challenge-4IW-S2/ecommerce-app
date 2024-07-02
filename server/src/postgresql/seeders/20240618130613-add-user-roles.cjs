@@ -28,6 +28,11 @@ module.exports = {
             name: 'ROLE_STORE_KEEPER',
             created_at: new Date(),
             updated_at: new Date()
+        },
+        {
+            name: 'ROLE_COMPTA',
+            created_at: new Date(),
+            updated_at: new Date()
         }
     ], {});
   },

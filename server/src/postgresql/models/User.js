@@ -63,8 +63,7 @@ export default function (connection) {
         }
     );
 
-    // Refactor la fonction des deux hooks ?
-    User.addHook("beforeCreate", async function (user) {
+     User.addHook("beforeCreate", async function (user) {
         const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
         user.password = hash;
     });

@@ -1,5 +1,6 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
+import User from "../postgresql/models/User.js";
 
 export class UserController {
     static async getAllUsers(request, response) {
@@ -36,6 +37,31 @@ export class UserController {
             });
         })
     }
+    static async updatePutUser(request, response)
+    {
+        const parameters = {
+            email: request.body.email,
+            password: request.body.password,
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            phone: request.body.phone,
+            role: request.body.role
+        }
+        const userRepository = new UserRepository();
+        try {
+            const id = request.params.id;
+            const nbDeleted = await userRepository.destroy(id);
+           const user = await userRepository.createUser({ id, ...parameters});
+           response.status(nbDeleted === 1 ? 200 : 201).json(user);
+        } catch (e) {
+            response.json({
+                success: false,
+                message: 'User not updated, an error occurred',
+                e: e.message,
+            });
+        }
+    }
+
     static async updateUser(request, response) {
         const parameters = {
             email: request.body.email,
@@ -47,23 +73,25 @@ export class UserController {
         }
         const userRepository = new UserRepository();
         userRepository.updateUser(request.params.id, parameters).then(res => {
-            response.json({
-                success: true,
-                message: 'User successfully updated',
-            });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not updated, an error occurred',
-                e: error.message,
-            });
-        })
+           response.json({
+               success: true,
+               message: 'User successfully updated',
+           });
+       }).catch(error => {
+           response.json({
+               success: false,
+               message: 'User not updated, an error occurred',
+               e: error.message,
+           });
+       })
     }
     static async deleteUser(request, response) {
         const userRepository = new UserRepository();
+        // verifier si admin ou si himself
         userRepository.deleteUser(request.params.id).then(res => {
             response.json({
                 success: true,
+                status: 204,
                 message: 'User successfully deleted',
             });
         }).catch(error => {
@@ -75,7 +103,7 @@ export class UserController {
         })
     }
 
-    static async userRole(request, response) {
+    static async getUserRole(request, response) {
         const userRoleRepository = new UserRoleRepository();
         const role = await userRoleRepository.findByPk(request.body.role);
         if (!role) return response.status(404).send("User role not found");

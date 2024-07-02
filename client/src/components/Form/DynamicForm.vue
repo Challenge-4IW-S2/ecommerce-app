@@ -1,65 +1,41 @@
 <script setup>
-import Input from "../Inputs/Input.vue";
-import Select from "../Inputs/Select.vue";
-import {computed, defineEmits, onMounted, reactive, ref} from "vue";
+import { useRoute } from 'vue-router';
 import Button from "../Buttons/Button.vue";
+import { useEntityForm } from "../../composables/useEntityForm";
+import Select from "../Inputs/Select.vue";
+import RadioInput from "../Inputs/RadioInput.vue";
+import Input from "../Inputs/Input.vue";
+const route = useRoute();
+const entityType = route.params.entityType;// 'user', 'product', etc.
+const entityId = route.params.id;
 
-const props = defineProps({
-  inputs: {
-    Array,
-    default: () => []
-  },
-});
-const emit = defineEmits(['submit']);
-const formData = reactive({});
+const { formData, errors, entityStructure, handleSubmit, handleDelete } = useEntityForm(entityType, entityId);
 
-
-const filteredInputs = computed(() => {
-  //if(PAGE === 'add'){
-  return props.inputs.filter(input => input.type !== 'DATE' && input.name !== 'id' && input.name !== 'is_verified');
-  //}else{
-  //}
-});
-const handleSubmit = (event) => {
-  event.preventDefault();
-  emit('submit', formData);
-};
-const filterProps = (input) => {
-  if (input.is === 'select') {
-      delete input.type;  // Remove the type property
-      return {
-        id: input.name,
-        title: input.name,
-        options: input.options,
-        vInput: formData[input.name],
-      }
-    } else {
-    return {
-        id: input.name,
-        title: input.name,
-        type: input.type,
-        placeholder: input.name,
-        //error: input.error,
-      vInput: formData[input.name],
-    }
-  }
-};
 </script>
 <template>
-  <form @submit="handleSubmit">
+  <form @submit.prevent="handleSubmit">
     <div class="grid gap-6 mb-6 md:grid-cols-2">
-     <div v-for="input in filteredInputs" :key="input.name" >
-       <component
-           :is="input.is === 'select' ? Select : Input"
-           v-bind="filterProps(input)"
-           v-model="formData[input.name]"
-       />
-     </div>
+      <div v-for="input in entityStructure" :key="input.name">
+        <component
+            :is="input.is === 'select' ? Select : input.type === 'checkbox' ? RadioInput : Input"
+            :type="input.type"
+            v-model="formData[input.name]"
+            :id="input.name"
+            :name="input.name"
+            :placeholder="input.name"
+            :options="input.options "
+            :checked="input.type === 'checkbox' ? formData[input.name] : undefined"
+        />
+        <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
+      </div>
     </div>
     <div class="flex justify-end">
-      <Button text="Ajouter" />
+      <Button text="Submit" />
+      <Button v-if="entityId" text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />
     </div>
   </form>
 </template>
+
 <style scoped>
+/* Styles spécifiques */
 </style>

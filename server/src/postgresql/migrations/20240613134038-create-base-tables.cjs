@@ -1,6 +1,7 @@
 'use strict';
 
 const {DataTypes} = require("sequelize");
+const { v4 } = require('uuid');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -207,6 +208,7 @@ module.exports = {
       }
     });
 
+
     // Model : Address
     await queryInterface.createTable('addresses', {
       id: {
@@ -375,14 +377,14 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('wishlists');
-    await queryInterface.dropTable('orders');
-    await queryInterface.dropTable('comments');
-    await queryInterface.dropTable('addresses');
-    await queryInterface.dropTable('users');
-    await queryInterface.dropTable('product_pictures');
-    await queryInterface.dropTable('products');
-    await queryInterface.dropTable('user_roles');
-    await queryInterface.dropTable('categories');
+    await queryInterface.dropTable('wishlists', { cascade: true });
+    await queryInterface.dropTable('orders', { cascade: true });
+    await queryInterface.dropTable('comments', { cascade: true });
+    await queryInterface.dropTable('addresses', { cascade: true });
+    await queryInterface.dropTable('users', { cascade: true });
+    await queryInterface.dropTable('product_pictures', { cascade: true });
+    await queryInterface.dropTable('products', { cascade: true });
+    await queryInterface.dropTable('user_roles', { cascade: true });
+    await queryInterface.dropTable('categories', { cascade: true });
   }
 };

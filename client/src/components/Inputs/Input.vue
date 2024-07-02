@@ -34,13 +34,17 @@ const internalModelValue = computed({
     emit('update:modelValue', value)
   }
 });
-
 </script>
 
 <template>
   <div>
+<<<<<<< HEAD
+    <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-black">
+      {{ id }}
+=======
     <label :for="id" class="block mb-2 text-sm text-gray-900">
       {{ title }}
+>>>>>>> develop
     </label>
     <div class="w-full relative">
       <input

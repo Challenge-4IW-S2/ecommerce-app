@@ -179,7 +179,7 @@ function getButtonClass(color) {
                   <button
                       v-for="(action, actionIndex) in actions"
                       :key="actionIndex"
-                      @click="action.method(param.id)"
+                      @click="action.method(param)"
                       :class="[getButtonClass(action.color), 'text-white px-2 py-1 rounded']"
                   >
                     {{ action.label }}

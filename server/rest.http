@@ -36,8 +36,8 @@ POST http://localhost:8000/login
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
-  "password": "testpassword"
+  "email": "test@example.fr",
+  "password": "Testpassword&1"
 }
 
 ### Any request to the user routes
@@ -56,10 +56,14 @@ Content-Type: application/json
 }
 
 ### Get all roles
-GET localhost:8000/users/roles
+GET localhost:8000/role
+
 
 ###
-POST localhost:8000/users
+GET localhost:8000/users/d7c8ce2f-9d2c-4939-b5f6-f6bc19c7cfd4
+
+###
+POST localhost:8000/signup
 Content-Type: application/json
 
 {
@@ -72,11 +76,18 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
+PUT localhost:8000/users/12199d2f-d66d-467d-8fa2-690a93e7542f
 Content-Type: application/json
 
 {
-  "email": "atest@example.fr"
+  "id": "12199d2f-d66d-467d-8fa2-690a93e7542f",
+  "email": "testons@example.com",
+  "password": "Testpassword&1",
+  "role": ["ROLE_USER"],
+  "firstname":"Test",
+  "lastname": "Tester",
+  "phone": "0606060606",
+  "deleted": false
 }
 ###
 DELETE localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
