@@ -15,6 +15,7 @@ indexRouter.get('/model/:modelName', UtilitiesController.fetchModelStructure);
 //Auth
 indexRouter.post("/signup", validateBody(CreationUserSchema),AuthController.signup);
 indexRouter.post("/login", AuthController.login);
+indexRouter.post("/mail", validateBody(CreationMail),AuthController.sendMail)
 
 // User routes
 indexRouter.get("/users", UserController.getAllUsers);
