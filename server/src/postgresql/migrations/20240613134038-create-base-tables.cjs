@@ -6,12 +6,18 @@ const { v4 } = require('uuid');
 module.exports = {
   async up (queryInterface, Sequelize) {
 
+    /*
+     * postgres possède une fonctionnalité qui permet de générer des UUIDs : gen_random_uuid()
+     * https://www.postgresql.org/docs/17/functions-uuid.html
+     */
+
     // Model : Category
     await queryInterface.createTable('categories', {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
-        allowNull: false
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       name: {
         type: DataTypes.STRING(45),
@@ -33,7 +39,9 @@ module.exports = {
     await queryInterface.createTable('user_roles', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       name: {
         type: DataTypes.STRING(45),
@@ -51,20 +59,14 @@ module.exports = {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
-    const roles = [
-      { id: v4(), name: 'ROLE_USER' },
-      { id: v4(), name: 'ROLE_STORE_KEEPER' },
-      { id: v4(), name: 'ROLE_ADMIN' },
-      { id: v4(), name: 'ROLE_COMPTA' },
-    ];
-
-    await queryInterface.bulkInsert('user_roles', roles);
 
     // Model : Product
     await queryInterface.createTable('products', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       name: {
         type: DataTypes.STRING,
@@ -86,9 +88,10 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
-      token: {
+      slug: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       category_id: {
         type: DataTypes.UUID,
@@ -114,7 +117,9 @@ module.exports = {
     await queryInterface.createTable('product_pictures', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       url: {
         type: DataTypes.STRING,
@@ -144,7 +149,9 @@ module.exports = {
     await queryInterface.createTable('users', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       email: {
         type: DataTypes.STRING,
@@ -206,7 +213,9 @@ module.exports = {
     await queryInterface.createTable('addresses', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       user_id: {
         type: DataTypes.UUID,
@@ -248,7 +257,9 @@ module.exports = {
     await queryInterface.createTable('comments', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       comment: {
         type: DataTypes.TEXT,
@@ -294,7 +305,9 @@ module.exports = {
     await queryInterface.createTable('orders', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       user_id: {
         type: DataTypes.UUID,
@@ -332,7 +345,9 @@ module.exports = {
     await queryInterface.createTable('wishlists', {
       id: {
         type: DataTypes.UUID,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        defaultValue: Sequelize.fn('gen_random_uuid')
       },
       user_id: {
         type: DataTypes.UUID,

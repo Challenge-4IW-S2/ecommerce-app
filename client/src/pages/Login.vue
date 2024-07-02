@@ -62,7 +62,7 @@ const sendLockNotification = (email) => {
 
 const connect = async () => {
   try {
-    const response = await ky.post("http://localhost:8000/login", {
+    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
       json: {
         email: email.value,
         password: password.value,

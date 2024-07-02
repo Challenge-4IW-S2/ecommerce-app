@@ -1,6 +1,5 @@
 import db from '../db.js';
 import CommentModel from '../models/Comment.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class CommentRepository {
     constructor() {
@@ -25,7 +24,6 @@ export default class CommentRepository {
 
     async createComment(comment) {
         return await this.Comment.create({
-            id: uuidv4(),
             comment: comment.comment,
             rating: comment.rating,
             is_active: comment.is_active,

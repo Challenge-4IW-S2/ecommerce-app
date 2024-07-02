@@ -8,7 +8,8 @@ export default function (connection) {
         {
             id: {
                 type: DataTypes.UUID,
-                primaryKey: true
+                primaryKey: true,
+                defaultValue: DataTypes.UUIDV4
             },
             comment: {
                 type: DataTypes.TEXT,

@@ -29,6 +29,8 @@ services:
 
   client:
     image: node:20.0.0-alpine
+    environment:
+      - VITE_API_BASE_URL=${API_BASE_URL}
     user: node
     entrypoint: sh -c
     working_dir: /home/node

@@ -1,24 +1,24 @@
 import express from "express";
 import cors from "cors";
-import { indexRouter } from "./src/routes/index.js";
 import "./src/mongo/mongodb.js";
 import cookieParser from "cookie-parser";
+import RouteLoader from "./RouteLoader.js";
 
-const server = express();
+const app = express();
 const port = 8000;
-server.use(cookieParser(process.env.JWT_SECRET));
+
+app.use(cookieParser(process.env.JWT_SECRET));
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.APP_BASE_URL,
   credentials: true
 };
-server.use(cors(corsOptions));
-server.use(express.json());
-server.use("/", indexRouter);
+app.use(cors(corsOptions));
 
-server.post('/signup',indexRouter);
-server.use("/login", indexRouter);
-server.use("/users", indexRouter);
-server.use("/model", indexRouter);
-server.listen(port, "0.0.0.0", () => {
-  console.log("Server listening on http://localhost:8000");
+app.use(express.json());
+
+const routes = await RouteLoader('src/routes/*.js');
+app.use('/', routes);
+
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server listening on http://localhost:${port}`);
 });

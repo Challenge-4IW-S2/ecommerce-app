@@ -13,7 +13,7 @@
 docker compose up -d --build
 ```
 
-### Création de modèles & migrations
+### Création de modèles, migrations et seeders (création de données automatique)
 
 *voir .sequelizerc dans ./server pour consulter la configuration*
 
@@ -26,6 +26,7 @@ Une fois le modèle créé, il faut créer une migration (à remplir soi-même p
 ```bash
 docker compose exec server npx sequelize-cli migration:create --name effet-de-ma-migration
 ```
+*IL EST NECESSAIRE DE CHANGER L'EXTENSION EN .cjs*
 
 Pour modifier un modèle existant, il est nécessaire de modifier le fichier dans ```./server/src/postgresql/models/{nom}.js``` ET de créer une nouvelle migration ajoutant les modifications dans ```up()``` et le rollback dans ```down()```
 
@@ -35,10 +36,23 @@ Il existe cependant une commande pour générer automatiquement un modèle et sa
 docker compose exec server npx sequelize-cli model:generate --name nom-du-modele --attributes name:string,is_verified:boolean
 ```
 
+Pour créer un seeder (création de données dans une table) :
+```bash
+docker compose exec server npx sequelize-cli seed:generate --name add-user-roles
+```
+*IL EST NECESSAIRE DE CHANGER L'EXTENSION EN .cjs*
+
+
 ### Exécuter les migrations
 
 ```bash
-docker compose exec server npx sequelize-cli db:migrate
+docker compose exec server npm run migrate
+```
+
+### Exécuter les seeders
+
+```bash
+docker compose exec server npm run seed
 ```
 
 

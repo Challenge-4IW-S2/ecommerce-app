@@ -8,8 +8,9 @@ export default function (connection) {
         {
             id: {
                 type: DataTypes.UUID,
-                primaryKey: true
-            },
+                primaryKey: true,
+                defaultValue: DataTypes.UUIDV4
+            }, 
             email: {
                 type: DataTypes.STRING,
                 unique: true,

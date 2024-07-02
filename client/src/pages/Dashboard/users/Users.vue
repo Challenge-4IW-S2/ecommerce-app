@@ -18,7 +18,7 @@ const actions = ref([
   {
     label: 'Supprimer',
     method: (row) => {
-      const response = ky.delete(`http://localhost:8000/user/${row.id}`);
+      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`);
       location.reload();
     },
     color: 'red',
@@ -63,12 +63,12 @@ const actions = ref([
 
 const fetchData = async () => {
   try {
-    const response = await ky.get("http://localhost:8000/users").json();
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users`).json();
     console.log(response)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
-      const user_roles = await ky.post("http://localhost:8000/role",{
+      const user_roles = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/role`,{
         json: {
           role: role[0]
         },

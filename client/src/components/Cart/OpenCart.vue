@@ -20,13 +20,13 @@ defineProps({
         <span class="text-custom-gray text-center mb-2">
             Vous pouvez consulter tous les produits disponibles et acheter dans le magasin.
         </span>
-        <Button text="Voir le magasin" bgColor="custom-red" textColor="white" customStyle="mb-4" />
+        <Button text="Voir le magasin" bgColor="principal" textColor="white" customStyle="mb-4" />
         <!-- todo un foreach avec les produits -->
         <SmallCartCard imgName="placeholderimage.webp" productName="Lorem ipsum adazd zefzeefez dzadadzdaz"
             productPrice="120,99" />
         <div class="mt-auto w-full flex flex-col text-xl font-bold items-center">
             <span class="self-end">Total : 120,99€</span>
-            <Button text="Commander" bgColor="custom-red" textColor="white" />
+            <Button text="Commander" bgColor="principal" textColor="white" />
             <a href="#" class="text-base font-normal underline">Voir le panier</a>
         </div>
     </div>
