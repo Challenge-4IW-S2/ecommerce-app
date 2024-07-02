@@ -9,11 +9,8 @@ const modelStructure = ref([]);
 const modelName = 'User';
 
 const getRoles = async () => {
-<<<<<<< HEAD
-  //const response = await ky.get("http://localhost:8000/users/roles").json();
-=======
   const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/roles`).json();
->>>>>>> develop
+
   return response;
 };
 const getModelStructure = async () => {
