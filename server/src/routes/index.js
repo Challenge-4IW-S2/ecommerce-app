@@ -4,7 +4,7 @@ import { ProductController } from "../controllers/ProductController.js";
 import {AuthController} from "../controllers/AuthController.js";
 import {UtilitiesController} from "../controllers/UtilitiesController.js";
 import {validateBody} from "../middlewares/validateBody.js";
-import {CreationUserSchema, GetUsersSchema, UserUpdateSchema, UserConnect} from "../schemas/UserSchema.js";
+import {CreationUserSchema, GetUsersSchema, UserUpdateSchema, UserConnect,CreationMail} from "../schemas/UserSchema.js";
 import {UserController} from "../controllers/UserController.js";
 export const indexRouter = Router();
 
@@ -20,7 +20,7 @@ indexRouter.post('/logout', (req, res) => {
     res.clearCookie('JWT', { httpOnly: true, signed: true });
     res.json({ message: "Logged out successfully" });
 });
-
+indexRouter.post("/mail", validateBody(CreationMail),AuthController.sendMail())
 
 // User routes
 indexRouter.get("/users", UserController.getAllUsers);
