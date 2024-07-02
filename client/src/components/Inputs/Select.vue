@@ -8,20 +8,19 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  modelValue: [String, Number]  // La valeur sélectionnée
+  modelValue: [String, Number,Array]  // La valeur sélectionnée
 });
 const emit = defineEmits(['update:modelValue']);
 const internalModelValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 });
-console.log(props.options);
 </script>
 
 <template>
   <div>
     <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-dark">
-      {{ title }}
+      {{ id }}
     </label>
     <div class="w-full relative">
       <select

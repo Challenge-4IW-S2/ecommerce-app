@@ -37,7 +37,7 @@ export class UserController {
             });
         })
     }
-    static async updateUser(request, response)
+    static async updatePutUser(request, response)
     {
         const parameters = {
             email: request.body.email,
@@ -50,11 +50,8 @@ export class UserController {
         const userRepository = new UserRepository();
         try {
             const id = request.params.id;
-            console.log(id)
             const nbDeleted = await userRepository.destroy(id);
-            console.log(nbDeleted)
            const user = await userRepository.createUser({ id, ...parameters});
-            console.log(user)
            response.status(nbDeleted === 1 ? 200 : 201).json(user);
         } catch (e) {
             response.json({
@@ -63,18 +60,30 @@ export class UserController {
                 e: e.message,
             });
         }
-       /* userRepository.updateUser(request.params.id, parameters).then(res => {
-            response.json({
-                success: true,
-                message: 'User successfully updated',
-            });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not updated, an error occurred',
-                e: error.message,
-            });
-        })*/
+    }
+
+    static async updateUser(request, response) {
+        const parameters = {
+            email: request.body.email,
+            password: request.body.password,
+            firstname: request.body.firstname,
+            lastname: request.body.lastname,
+            phone: request.body.phone,
+            role: request.body.role
+        }
+        const userRepository = new UserRepository();
+        userRepository.updateUser(request.params.id, parameters).then(res => {
+           response.json({
+               success: true,
+               message: 'User successfully updated',
+           });
+       }).catch(error => {
+           response.json({
+               success: false,
+               message: 'User not updated, an error occurred',
+               e: error.message,
+           });
+       })
     }
     static async deleteUser(request, response) {
         const userRepository = new UserRepository();

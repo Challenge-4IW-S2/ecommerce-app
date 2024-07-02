@@ -1,7 +1,7 @@
 <!-- views/User/AddUser.vue -->
 <script setup>
 import { ref, onMounted } from "vue";
-import { fetchModelStructure } from "../../functions/model.js";
+import { fetchModelStructure } from "../../../functions/model.js";
 import DynamicForm from "../../../components/Form/DynamicForm.vue";
 import Button from "../../../components/Buttons/Button.vue";
 import ky from "ky";
@@ -49,7 +49,6 @@ onMounted(() => {
   getModelStructure();
 });
 </script>
-
 <template>
   <div>
     <h1 class="text-center text-3xl">Ajouter un utilisateur</h1>

@@ -2,27 +2,62 @@
 import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
 import ky from "ky";
-import { useRoute, useRouter } from "vue-router";
+import {  useRouter } from "vue-router";
 const router = useRouter()
-const route = useRoute()
 // Définir les données dynamiques
 const data = ref( [] )
 // Définir les actions dynamiques
 const actions = ref([
   {
-    label: 'Edit',
+    label: 'Modifier',
     method: (row) => {
-      router.push(`/admin/users/${row}`)
+      router.push(`/admin/user/${row.id}`)
     },
     color: 'blue',
   },
   {
-    label: 'Delete',
+    label: 'Supprimer',
     method: (row) => {
-      const response = ky.delete(`http://localhost:8000/users/${row}`);
+      const response = ky.delete(`http://localhost:8000/user/${row.id}`);
       location.reload();
     },
     color: 'red',
+  },
+  {
+    label: 'Exporter',
+    method: async (row) => {
+      try {
+        const csv = Object.keys(row).map(key => `${key},${row[key]}`).join('\n');
+        if (window.showSaveFilePicker) {
+          const fileHandle = await window.showSaveFilePicker({
+            suggestedName: `${row.lastname}-${row.firstname}.csv`,
+            types: [
+              {
+                description: 'Fichier CSV',
+                accept: {
+                  'text/csv': ['.csv'],
+                },
+              },
+            ],
+          });
+          const writable = await fileHandle.createWritable();
+          await writable.write(new Blob([csv], { type: 'text/csv' }));
+          await writable.close();
+        }else {
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          console.log(row.name)
+          a.download = `${row.name}.csv`;
+          a.click();
+          URL.revokeObjectURL(url); // libérer le blob
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'exportation du CSV:', error);
+      }
+    },
+    color: 'green',
   },
 ]);
 
@@ -33,7 +68,7 @@ const fetchData = async () => {
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
-      const user_roles = await ky.post("http://localhost:8000/users/role",{
+      const user_roles = await ky.post("http://localhost:8000/role",{
         json: {
           role: role[0]
         },

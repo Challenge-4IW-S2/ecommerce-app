@@ -43,3 +43,7 @@ export const UserDeleteSchema = z.object({
     id: z.string().uuid(),
 })
 
+export const UserConnect = z.object({
+    email: z.string().email(),
+    password: z.string().min(12,).regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{12,}/),
+})

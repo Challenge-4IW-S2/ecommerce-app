@@ -14,8 +14,8 @@ const routes = [
     { path: '/register', component: RegisterView },
    // { path: '/admin', component: DashboardView },
     { path: '/admin/users', component: DashboardUsersView },
-    { path: '/admin/users/:id', component: DashboardUserEdit },
-    {path: '/admin/add-user', component: DashboardAddUser}
+    { path: '/admin/:entityType/:id', component: DashboardUserEdit },
+    {path: '/admin/add-:entityType', component: DashboardUserEdit}
 ]
 
 const router = createRouter({

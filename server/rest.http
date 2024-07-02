@@ -56,10 +56,14 @@ Content-Type: application/json
 }
 
 ### Get all roles
-GET localhost:8000/users/roles
+GET localhost:8000/role
+
 
 ###
-POST localhost:8000/users
+GET localhost:8000/users/d7c8ce2f-9d2c-4939-b5f6-f6bc19c7cfd4
+
+###
+POST localhost:8000/signup
 Content-Type: application/json
 
 {
@@ -72,12 +76,12 @@ Content-Type: application/json
 }
 
 ###
-PUT localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
+PUT localhost:8000/users/12199d2f-d66d-467d-8fa2-690a93e7542f
 Content-Type: application/json
 
 {
-  "id": "13aeb22a-4fd4-475b-955a-829ad1f889f9",
-  "email": "test@example.fr",
+  "id": "12199d2f-d66d-467d-8fa2-690a93e7542f",
+  "email": "testons@example.com",
   "password": "Testpassword&1",
   "role": ["ROLE_USER"],
   "firstname":"Test",

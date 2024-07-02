@@ -55,6 +55,7 @@ module.exports = {
       { id: v4(), name: 'ROLE_USER' },
       { id: v4(), name: 'ROLE_STORE_KEEPER' },
       { id: v4(), name: 'ROLE_ADMIN' },
+      { id: v4(), name: 'ROLE_COMPTA' },
     ];
 
     await queryInterface.bulkInsert('user_roles', roles);
