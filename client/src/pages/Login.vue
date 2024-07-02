@@ -6,12 +6,12 @@ import ky from "ky";
 import {computed, ref} from "vue";
 import Swal from "sweetalert2";
 import {  useRouter } from "vue-router";
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
 const router = useRouter()
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
-let row = jwt_decode(document.cookie) // decode the cookie
+// let row = jwt_decode(document.cookie) // decode the cookie
 let loginAttempts = {};
 const MAX_ATTEMPTS = 3;
 const LOCK_TIME = 15 * 60 * 1000;
