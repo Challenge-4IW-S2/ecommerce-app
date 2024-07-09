@@ -1,4 +1,4 @@
-import UserRepository from "../postgresql/Repository/UserRepository.js";
+import UserRepository from "../postgresql/repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 

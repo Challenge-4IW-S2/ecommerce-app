@@ -1,6 +1,6 @@
 import db from '../db.js';
 import ProductModel from '../models/Product.js';
-import CategoryRepository from '../repository/CategoryRepository.js';
+import CategoryRepository from './CategoryRepository.js';
 
 export default class ProductRepository {
     constructor() {
