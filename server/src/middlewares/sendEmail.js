@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
-import ejs from ejs;
 
 
 const mailTransport = nodemailer.createTransport({
+	service: 'gmail',
 	host: process.env.MAIL_HOST,
 	port: process.env.MAIL_PORT,
 	secure: false, // TODO: upgrade later with STARTTLS
@@ -12,16 +12,13 @@ const mailTransport = nodemailer.createTransport({
 	},
 });
 
-const sendEmail = async ({ receipients, subject, message, template }) => {
-  const html = await ejs.renderFile(__dirname + '/views/' + template + '.ejs', message, { async: true })
-	return await mailTransport.sendMail({
-		from: process.env.MAIL_SENDER_DEFAULT, 
-		to: receipients,
-		subject: subject,
-    template:template,
-		text: html,
-		html: html, 
-	});
-}
+export const sendEmail  = async (mailDetails, callback) => {
+		return
+	try {
+			const info = await mailTransport.sendMail(mailDetails)
+			callback(info);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
-module.exports = { sendEmail };

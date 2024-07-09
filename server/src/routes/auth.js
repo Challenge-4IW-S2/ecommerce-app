@@ -6,6 +6,8 @@ export default function (router) {
     router.post("/login", AuthController.login);
     router.post("/signup", AuthController.signup);
     router.post('/logout', AuthController.logout);
+   // router.post('/forgot-password', AuthController.forgotPassword);
+    router.post('/email',AuthController.email);
     return router;
 }
 

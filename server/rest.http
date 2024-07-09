@@ -69,10 +69,10 @@ Content-Type: application/json
 {
   "email": "test@example.fr",
   "password": "Testpassword&1",
-  "role": ["ROLE_USER"],
   "firstname":"Test",
   "lastname": "Tester",
-  "phone": "0606060606"
+  "confirmEmail": "test@example.fr",
+  "confirmPassword": "Testpassword&1"
 }
 
 ###
@@ -94,3 +94,29 @@ DELETE localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
 
 ### Structure of models
 GET localhost:8000/model/User
+
+
+### Send mail
+
+POST localhost:8000/email
+
+### Create category
+POST localhost:8000/category
+Content-Type: application/json
+
+{
+  "name": "Clips-ins"
+}
+
+### Create product
+POST localhost:8000/product
+Content-Type: application/json
+
+{
+  "name": "Clips-ins",
+  "description": "Description",
+  "price_ttc": 10,
+  "price_ht": 8,
+  "slug": "clips-ins",
+  "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
+}

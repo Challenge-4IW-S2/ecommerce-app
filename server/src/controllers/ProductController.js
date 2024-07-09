@@ -51,4 +51,31 @@ export class ProductController {
             });
         }
     }
+
+    static async createProduct(request, response) {
+        try {
+            const parameters = {
+                name: request.body.name,
+                price_ttc: request.body.price_ttc,
+                price_ht: request.body.price_ht,
+                slug: request.body.slug,
+                description: request.body.description,
+                category_id: request.body.category_id,
+            }
+            console.log(parameters)
+            const productRepository = new ProductRepository();
+            await productRepository.createProduct(parameters).then((response => {
+                    response.json({
+                        success: true,
+                        message: 'Product successfully created',
+                });
+            }))
+        } catch (error) {
+            response.json({
+                success: false,
+                message: 'Product not created, an error occurred',
+                e: error.message,
+            });
+        }
+    }
 }

@@ -39,7 +39,7 @@ const internalModelValue = computed({
 <template>
   <div>
     <label :for="id" class="block mb-2 text-sm font-bold uppercase text-gray-900 dark:text-black">
-      {{ title ?? id }}
+      {{ title }}
     </label>
     <div class="w-full relative">
       <input

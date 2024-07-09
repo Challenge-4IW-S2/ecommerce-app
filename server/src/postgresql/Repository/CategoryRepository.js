@@ -10,7 +10,7 @@ export default class CategoryRepository {
         return await this.Category.findAll();
     }
 
-    async findById(id) {
+    async findByPk(id) {
         return await this.Category.findByPk(id);
     }
 

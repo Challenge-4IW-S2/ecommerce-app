@@ -1,13 +1,14 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import {sendEmail} from "../middlewares/sendEmail.js"
+import { attackAttemptTemplate } from "../mailsTemplates/attackAttemptMail.js";
+import {z} from 'zod';
 
 let loginAttempts = {};
 const MAX_ATTEMPTS = 3;
 const LOCK_TIME = 15 * 60 * 1000;
 
-import {z} from 'zod';
-import e from "express";
 
 export class AuthController {
 
@@ -98,7 +99,19 @@ export class AuthController {
 
                 if (loginAttempts[parameters.email].count >= MAX_ATTEMPTS) {
                     loginAttempts[parameters.email].lockUntil = now + LOCK_TIME;
-                    sendLockNotification(parameters.email); // Implémentez cette fonction pour envoyer un email de notification
+                    console.log(loginAttempts[parameters.email].lockUntil )
+                    const message = "Hi there, you were emailed me through nodemailer"
+                    const options = {
+                        from: "TESTING <sender@gmail.com>", // sender address
+                        to: "someone@gmail.com", // receiver email
+                        subject: "Send email in Node.JS with Nodemailer using Gmail account", // Subject line
+                        text: message,
+                        html: attackAttemptTemplate(message),
+                    }
+                    await sendEmail(options, (info) => {
+                        console.log("Email sent successfully");
+                        console.log("MESSAGE ID: ", info.messageId);
+                    });
                 }
 
                 return response.status(401).send('Email ou mot de passe incorrect');
@@ -131,6 +144,21 @@ export class AuthController {
         });
         response.json({
             message: "Logged out successfully"
+        });
+    }
+
+    static async email(request, response) {
+        const message = "Hi there, you were emailed me through nodemailer"
+        const options = {
+            from: "TESTING <sender@gmail.com>", // sender address
+            to: "luzaya.pro@gmail.com", // receiver email
+            subject: "Send email in Node.JS with Nodemailer using Gmail account", // Subject line
+            text: message,
+            html: attackAttemptTemplate(message),
+        }
+        await sendEmail(options, (info) => {
+            console.log("Email sent successfully");
+            console.log("MESSAGE ID: ", info.messageId);
         });
     }
 
