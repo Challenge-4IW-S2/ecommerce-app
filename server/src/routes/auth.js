@@ -6,6 +6,12 @@ export default function (router) {
     router.post("/login", AuthController.login);
     router.post("/signup", AuthController.signup);
     router.post('/logout', AuthController.logout);
+
+    // TODO: Check auth middleware
+    router.post('/forgot-password', AuthController.forgotPassword);
+    router.post('/change-password', AuthController.changePassword);
+
+    router.post('/delete-account', AuthController.deleteAccount);
     return router;
 }
 

@@ -54,6 +54,7 @@ export class AuthController {
                 })
             })
             .catch(err => {
+                // TODO: Erreur isNotUnique ?
                 const isNotUnique = err.errors[0].validatorKey === 'not_unique';
 
                 const message = isNotUnique
@@ -69,6 +70,7 @@ export class AuthController {
                 });
             });
     }
+
     static async login(request, response) {
 
         const parameters = {
@@ -80,7 +82,7 @@ export class AuthController {
         if (loginAttempts[parameters.email] && loginAttempts[parameters.email].lockUntil > now) {
             return response.status(403).send('Votre compte a été temporairement verrouillé en raison de trop nombreuses tentatives de connexion infructueuses. Veuillez réessayer plus tard.');
         }
-        try{
+        try {
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
             if (!user) return response.status(401).send("Email or password incorrect");
@@ -134,4 +136,22 @@ export class AuthController {
         });
     }
 
+
+
+    static forgotPassword(request, response) {
+        // TODO: À faire avec sendEmail()
+    }
+
+    static changePassword(request, response) {
+        const parameters = {
+            oldPassword: request.body.oldPassword,
+            newPassword: request.body.newPassword,
+            confirmNewPassword: request.body.confirmNewPassword
+        };
+    }
+
+    // TODO: Check auth
+    static deleteAccount(request, response) {
+
+    }
 }

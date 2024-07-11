@@ -132,7 +132,7 @@ const connect = async () => {
         <Button text="Connexion" type="submit"></Button>
         <ButtonLink
             class="bg-transparent text-black border border-black"
-            to="linktodefine"
+            to="register"
             text="Créer un compte"></ButtonLink>
       </div>
     </form>
