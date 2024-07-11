@@ -15,9 +15,7 @@ const corsOptions = {
   credentials: true
 };
 app.use(cors(corsOptions));
-
 app.use(express.json());
-
 const routes = await RouteLoader('src/routes/*.js');
 app.use('/', routes);
 
