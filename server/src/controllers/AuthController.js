@@ -1,14 +1,9 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {sendEmail} from "../middlewares/sendEmail.js"
-import { attackAttemptTemplate } from "../mailsTemplates/attackAttemptMail.js";
+import {sendEmail} from "../middlewares/sendEmail.js";
 import {z} from 'zod';
-
-let loginAttempts = {};
-const MAX_ATTEMPTS = 3;
-const LOCK_TIME = 15 * 60 * 1000;
-
+const loginAttempts = {}
 
 export class AuthController {
 
@@ -46,15 +41,18 @@ export class AuthController {
             role: 'ROLE_USER',
             phone: null
         };
+       // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
             .then(() => {
-                response.status(201).json({
+                response.status(201).json(sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte,<br> <button> BACK </button>'),{
                     message: 'Compte créé'
                 })
+
             })
             .catch(err => {
+
                 const isNotUnique = err.errors[0].validatorKey === 'not_unique';
 
                 const message = isNotUnique
@@ -76,62 +74,47 @@ export class AuthController {
             email: request.body.email,
             password:  request.body.password,
         }
-        const now = Date.now();
-
-        if (loginAttempts[parameters.email] && loginAttempts[parameters.email].lockUntil > now) {
-            return response.status(403).send('Votre compte a été temporairement verrouillé en raison de trop nombreuses tentatives de connexion infructueuses. Veuillez réessayer plus tard.');
-        }
+        const now = Date.now()
         try{
+            if (!loginAttempts[parameters.email]) {
+                loginAttempts[parameters.email] = { attempts: 0, lastAttempt: Date.now() };
+            }
+            const userAttempts = loginAttempts[parameters.email];
+            if (userAttempts.attempts >= 3) {
+                const timeSinceLastAttempt = Date.now() - userAttempts.lastAttempt;
+                if (timeSinceLastAttempt < 300000) { // Temporisation de 5 minutes
+                    return response.status(429).send('Trop de tentatives, veuillez réessayer plus tard.');
+                } else {
+                    userAttempts.attempts = 0;
+                }
+            }
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
-            if (!user) return response.status(401).send("Email or password incorrect");
-
-            if (!(await bcrypt.compare(parameters.password, user.password))) {
-                return response.status(401).send( "Email or password incorrect");
-            }
-
-            if (!user || !(await bcrypt.compare(parameters.password, user.password))) {
-                if (!loginAttempts[parameters.email]) {
-                    loginAttempts[parameters.email] = { count: 1, lockUntil: 0 };
-                } else {
-                    loginAttempts[parameters.email].count++;
+            if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
+                loginAttempts[parameters.email].attempts += 1;
+                if (loginAttempts[parameters.email].attempts >= 3) {
+                    await sendEmail('progrdnvictor@gmail.com', 'Luzaya.fr; Action requise : Tentative de connexion\n',  'Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte. <br> <a href="">Souhaitez vous changer votre mot de passe ? </a>')
                 }
-
-                if (loginAttempts[parameters.email].count >= MAX_ATTEMPTS) {
-                    loginAttempts[parameters.email].lockUntil = now + LOCK_TIME;
-                    console.log(loginAttempts[parameters.email].lockUntil )
-                    const message = "Hi there, you were emailed me through nodemailer"
-                    const options = {
-                        from: "TESTING <sender@gmail.com>", // sender address
-                        to: "someone@gmail.com", // receiver email
-                        subject: "Send email in Node.JS with Nodemailer using Gmail account", // Subject line
-                        text: message,
-                        html: attackAttemptTemplate(message),
-                    }
-                    await sendEmail(options, (info) => {
-                        console.log("Email sent successfully");
-                        console.log("MESSAGE ID: ", info.messageId);
-                    });
-                }
-
-                return response.status(401).send('Email ou mot de passe incorrect');
+                //'Luzaya.fr; Action requise : Tentative de connexion\n', 'Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte. <br> <a href="">Souhaitez vous changer votre mot de passe ? </a>'
+                return response.status(401).send("Email or password incorrect");
             }
-
-            loginAttempts[parameters.email] = { count: 0, lockUntil: 0 };
+            loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
-            const passwordChangeDate = new Date(user.passwordLastChanged);
-            const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
-            if (now > passwordExpiryDate) {
-                return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
-            }
+                // const passwordChangeDate = new Date(user.passwordLastChanged);
+                // const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
+                /* if (now > passwordExpiryDate) {
+                     return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
+                 }*/
 
-           // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
+                // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresIn: "30 days", algorithm: "HS256"});
-            response.cookie('JWT', token, {httpOnly: true, signed: true, secure: true, sameSite: 'none'});
-            response.status(200).send(user);
-
+                const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET, {
+                    expiresIn: "30 days",
+                    algorithm: "HS256"
+                });
+                response.cookie('JWT', token, {httpOnly: true, signed: true, secure: true, sameSite: 'none'});
+                response.status(200).send(user);
         } catch (error) {
             response.status(500).send(error.toString());
         }
@@ -147,19 +130,5 @@ export class AuthController {
         });
     }
 
-    static async email(request, response) {
-        const message = "Hi there, you were emailed me through nodemailer"
-        const options = {
-            from: "TESTING <sender@gmail.com>", // sender address
-            to: "luzaya.pro@gmail.com", // receiver email
-            subject: "Send email in Node.JS with Nodemailer using Gmail account", // Subject line
-            text: message,
-            html: attackAttemptTemplate(message),
-        }
-        await sendEmail(options, (info) => {
-            console.log("Email sent successfully");
-            console.log("MESSAGE ID: ", info.messageId);
-        });
-    }
 
 }

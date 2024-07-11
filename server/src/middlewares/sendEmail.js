@@ -1,24 +1,18 @@
-import nodemailer from 'nodemailer';
-
-
-const mailTransport = nodemailer.createTransport({
-	service: 'gmail',
-	host: process.env.MAIL_HOST,
-	port: process.env.MAIL_PORT,
-	secure: false, // TODO: upgrade later with STARTTLS
-	auth: {
-		user: process.env.MAIL_USER,
-		pass: process.env.MAIL_PASSWORD,
-	},
-});
-
-export const sendEmail  = async (mailDetails, callback) => {
-		return
+import {Resend} from "resend";
+import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
+//process.env.MAIL_KEY
+const resend = new Resend('re_NoVRWYHG_Ddp3RdkrWoet3sFgAe1iMpep');
+export const sendEmail = async (to, subject, mail) => {
 	try {
-			const info = await mailTransport.sendMail(mailDetails)
-			callback(info);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
+		await resend.emails.send({
+			from: 'onboarding@resend.dev',
+			to: 'progrdnvictor@gmail.com',
+			subject: 'Hello World',
+			html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
+		});
+		console.log("Email sent successfully");
+	} catch (err) {
+		console.error("Mail sending failed", err);
+		throw new Error("Mail sending failed");
+	}
+};

@@ -36,8 +36,8 @@ POST http://localhost:8000/login
 Content-Type: application/json
 
 {
-  "email": "test@example.fr",
-  "password": "Testpassword&1"
+  "email": "test@example.cor",
+  "password": "Testpassword1"
 }
 
 ### Any request to the user routes
@@ -67,7 +67,7 @@ POST localhost:8000/signup
 Content-Type: application/json
 
 {
-  "email": "test@example.fr",
+  "email": "test@example.com",
   "password": "Testpassword&1",
   "firstname":"Test",
   "lastname": "Tester",

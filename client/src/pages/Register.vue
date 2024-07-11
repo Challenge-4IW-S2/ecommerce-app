@@ -62,7 +62,7 @@ const canSubmit = computed(() => {
 
 const register = async () => {
   try {
-    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
+    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}signup`, {
       json: {
         ...parameters
       },

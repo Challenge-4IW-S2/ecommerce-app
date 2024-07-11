@@ -15,6 +15,7 @@ const msgError = ref('')
 
 const connect = async () => {
   try {
+    console.log(`${import.meta.env.VITE_API_BASE_URL}login`)
     const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}login`, {
       json: {
         email: email.value,
