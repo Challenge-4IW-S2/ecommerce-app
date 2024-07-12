@@ -7,13 +7,14 @@ import DashboardUsersView from './pages/Dashboard/users/Users.vue'
 import DashboardUserEdit from './pages/Dashboard/users/EditUser.vue'
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
+import DashboardView from './pages/Dashboard/dashboard.vue'
 
 
 const routes = [
     { path: '/', component: HomeView },
     { path: '/login', component: LoginView },
     { path: '/register', component: RegisterView },
-   // { path: '/admin', component: DashboardView },
+    { path: '/admin', component: DashboardView },
     { path: '/admin/users', component: DashboardUsersView },
     { path: '/admin/:entityType/:id', component: DashboardUserEdit },
     {path: '/admin/add-:entityType', component: DashboardUserEdit},
