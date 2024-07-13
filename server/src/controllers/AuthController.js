@@ -8,6 +8,7 @@ const LOCK_TIME = 15 * 60 * 1000;
 
 import {z} from 'zod';
 import e from "express";
+import ResetPasswordTokenRepository from "../postgresql/Repository/ResetPasswordTokenRepository.js";
 
 export class AuthController {
 
@@ -138,8 +139,42 @@ export class AuthController {
 
 
 
-    static forgotPassword(request, response) {
-        // TODO: À faire avec sendEmail()
+    static async forgotPassword(request, response) {
+        const parametersSchema = z.object({
+            email: z.string().email(),
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            return response.status(400).send();
+        }
+
+        const userRepository = new UserRepository();
+        const user = await userRepository.findOne('email', parsedParameters.data.email);
+        if (!user) {
+            return response.status(404).send();
+        }
+
+        const resetPasswordTokenRepository = new ResetPasswordTokenRepository();
+
+        //check if 5mn has passed since last reset password token
+        const lastResetPasswordToken = await resetPasswordTokenRepository.findByOtherField({
+            'user_id': user.id
+        }, ['created_at', 'DESC']);
+
+        if (lastResetPasswordToken) {
+            const now = new Date();
+            const diff = now - lastResetPasswordToken.createdAt;
+            // 5 * 60 -> 5mn (*1000 en ms)
+            if (diff < 5 * 60 * 1000) {
+                return response.status(429).send();
+            }
+        }
+
+        const resetPasswordToken = await resetPasswordTokenRepository.createResetPasswordToken(user)
+
+        // TODO: envoyer mail avec reset password (response temporaire ici donc)
+        response.json(resetPasswordToken);
     }
 
     static changePassword(request, response) {
