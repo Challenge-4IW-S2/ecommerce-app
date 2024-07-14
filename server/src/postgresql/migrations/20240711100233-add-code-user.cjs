@@ -9,8 +9,10 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    //code
-    //date mdp modify
+    await queryInterface.addColumn('users', 'code', {
+      type: Sequelize.NUMBER,
+      allowNull: true,
+    })
   },
 
   async down (queryInterface, Sequelize) {
