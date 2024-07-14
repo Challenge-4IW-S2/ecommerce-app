@@ -118,8 +118,17 @@ export class AuthController {
 
            // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresIn: "30 days", algorithm: "HS256"});
-            response.cookie('JWT', token, {httpOnly: true, signed: true, secure: true, sameSite: 'none'});
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+                expiresIn: "30 days",
+                algorithm: "HS256"
+            });
+
+            response.cookie('JWT', token, {
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: 'none'
+            });
             response.status(200).send(user);
 
         } catch (error) {
@@ -177,16 +186,31 @@ export class AuthController {
         response.json(resetPasswordToken);
     }
 
-    static changePassword(request, response) {
-        const parameters = {
-            oldPassword: request.body.oldPassword,
-            newPassword: request.body.newPassword,
-            confirmNewPassword: request.body.confirmNewPassword
-        };
+    static checkResetPasswordToken(request, response) {
+        const token = request.params.token;
+        const resetPasswordTokenRepository = new ResetPasswordTokenRepository();
+
+        const resetPasswordToken = resetPasswordTokenRepository.findByOtherField({
+            token: token
+        })
+
+        if (!resetPasswordToken) {
+            return response.status(404).send();
+        }
+
+        if (resetPasswordToken.used || resetPasswordToken.expires_at > new Date()) {
+            return response.status(403).send();
+        }
+
+        response.status(200).send();
     }
 
     // TODO: Check auth
     static deleteAccount(request, response) {
-
+        return response.json({
+            c: 'bon'
+        }).send()
     }
+
+
 }
