@@ -47,4 +47,11 @@ export default class AdressRepository {
             }
         });
     }
+    async deleteAdressFromUser(id) {
+        return await this.Adress.destroy({
+            where: {
+                user_id: id
+            }
+        });
+    }
 }

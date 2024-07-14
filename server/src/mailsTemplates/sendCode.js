@@ -1,4 +1,4 @@
-export const sendCode = (text) => {
+export const sendCode = (code) => {
     return
     `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html dir="ltr" lang="en">
@@ -22,7 +22,7 @@ export const sendCode = (text) => {
                     <tr>
                         <td>
                             <p style="font-size:32px;line-height:40px;margin:0 auto;color:#000;display:inline-block;font-family:HelveticaNeue-Bold;font-weight:700;letter-spacing:6px;padding-bottom:8px;padding-top:8px;width:100%;text-align:center">
-                            ${text}
+                            ${code}
                             </p>
                         </td>
                     </tr>

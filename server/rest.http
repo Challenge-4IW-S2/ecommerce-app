@@ -67,7 +67,7 @@ POST localhost:8000/signup
 Content-Type: application/json
 
 {
-  "email": "test@example.com",
+  "email": "test@exampla.com",
   "password": "Testpassword&1",
   "firstname":"Test",
   "lastname": "Tester",
@@ -90,11 +90,10 @@ Content-Type: application/json
   "deleted": false
 }
 ###
-DELETE localhost:8000/users/13aeb22a-4fd4-475b-955a-829ad1f889f9
+DELETE localhost:8000/user/8c9b7e53-a973-476a-a86f-18d6f7e9215f
 
 ### Structure of models
 GET localhost:8000/model/User
-
 
 ### Send mail
 
@@ -120,3 +119,7 @@ Content-Type: application/json
   "slug": "clips-ins",
   "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
 }
+
+
+### Get Address by user
+GET localhost:8000/address/8c9b7e53-a973-476a-a86f-18d6f7e9215f

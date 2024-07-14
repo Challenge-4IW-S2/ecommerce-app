@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {sendEmail} from "../middlewares/sendEmail.js";
 import {z} from 'zod';
+import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
 const loginAttempts = {}
 
 export class AuthController {
@@ -93,9 +94,8 @@ export class AuthController {
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
                 loginAttempts[parameters.email].attempts += 1;
                 if (loginAttempts[parameters.email].attempts >= 3) {
-                    await sendEmail('progrdnvictor@gmail.com', 'Luzaya.fr; Action requise : Tentative de connexion\n',  'Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte. <br> <a href="">Souhaitez vous changer votre mot de passe ? </a>')
+                    await sendEmail('progrdnvictor@gmail.com', 'Luzaya.fr; Action requise : Tentative de connexion\n', attackAttemptTemplate('Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte.') )
                 }
-                //'Luzaya.fr; Action requise : Tentative de connexion\n', 'Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte. <br> <a href="">Souhaitez vous changer votre mot de passe ? </a>'
                 return response.status(401).send("Email or password incorrect");
             }
             loginAttempts[parameters.email].attempts = 0;

@@ -1,6 +1,6 @@
 import UserRepository from "../postgresql/Repository/UserRepository.js";
 import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
-import User from "../postgresql/models/User.js";
+import AdressRepository from "../postgresql/Repository/AdressRepository.js";
 
 export class UserController {
     static async getAllUsers(request, response) {
@@ -26,12 +26,12 @@ export class UserController {
         const userRepository = new UserRepository();
         userRepository.createUser(parameters).then(res => {
             response.json({
-                success: true,
+                status: 200,
                 message: 'User successfully created',
             });
         }).catch(error => {
             response.json({
-                success: false,
+                status: false,
                 message: 'User not created, an error occurred',
                 e: error.message,
             });
@@ -55,7 +55,7 @@ export class UserController {
            response.status(nbDeleted === 1 ? 200 : 201).json(user);
         } catch (e) {
             response.json({
-                success: false,
+                status: 201,
                 message: 'User not updated, an error occurred',
                 e: e.message,
             });
@@ -74,12 +74,12 @@ export class UserController {
         const userRepository = new UserRepository();
         userRepository.updateUser(request.params.id, parameters).then(res => {
            response.json({
-               success: true,
+               status: 200,
                message: 'User successfully updated',
            });
        }).catch(error => {
            response.json({
-               success: false,
+               status: false,
                message: 'User not updated, an error occurred',
                e: error.message,
            });
@@ -87,20 +87,23 @@ export class UserController {
     }
     static async deleteUser(request, response) {
         const userRepository = new UserRepository();
+        const userAddressRepository = new AdressRepository();
+        //DELETE ADDRESS
         // verifier si admin ou si himself
-        userRepository.deleteUser(request.params.id).then(res => {
-            response.json({
-                success: true,
-                status: 204,
-                message: 'User successfully deleted',
-            });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'User not deleted, an error occurred',
-                e: error.message,
-            });
-        })
+        try {
+            const nbDeleted = await userRepository.deleteUser(request.params.id);
+            if (nbDeleted === 1) {
+                const deleteAdress = await userAddressRepository.deleteAdressFromUser(request.params.id);
+                console.log("deleteAdress")
+                console.log(deleteAdress)
+                return response.status(deleteAdress === 1 ? 204 : 404);
+            } else {
+                response.sendStatus(404);
+            }
+        }catch (e){
+            return response.status(404).send("User not deleted, an error occurred");
+        }
+
     }
 
     static async getUserRole(request, response) {

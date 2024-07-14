@@ -15,9 +15,11 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const entityStructure = ref([]);
     const errors = ref({});
     const isEditing = ref(Boolean(entityId));
+    const addressOptions = ref([]);
+
     const getRoleOptions = async () => {
         try {
-            const response = await ky.get("http://localhost:8000/role").json();
+            const response = await ky.get(`${BASE_URL}role`).json();
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -27,16 +29,25 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             return [];
         }
     };
+    const getAdressOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}address/${entityId}`).json();
+            console.log("response:",response)
+            addressOptions.value = response;
+            return response;
+        } catch (error) {
+            console.error('Failed to fetch addresses:', error);
+            return [];
+        }
+    };
 
 
     const fetchEntityStructure = async () => {
         try {
             unwantedFields.push('id');
             let response = {};
-            console.log(`http://localhost:8000/${entityType}/${entityId || ''}`)
             if (entityId) {
-                 response = await ky.get(`http://localhost:8000/${entityType}/${entityId || ''}`).json();
-                console.log("response:",response)
+                 response = await ky.get(`${BASE_URL}${entityType}/${entityId || ''}`).json();
             }else {
                 const [structure] = await Promise.all([fetchModelStructure(entityType.charAt(0).toUpperCase() + entityType.slice(1))]);
                 response = structure;
@@ -50,6 +61,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 let roleOptions = [];
                 if (entityType === 'user') {
                     roleOptions = await getRoleOptions();
+                    await getAdressOptions();
                 }
                 entityStructure.value = Object.keys(cleanedResponse).map(key => {
                 const field = {
@@ -62,7 +74,10 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     field.is = 'select';
                     field.options = roleOptions;
                 }
-                return field;
+                    console.log("field:",field)
+
+
+                    return field;
             });
             initializeFormData();
         } catch (error) {
@@ -100,13 +115,9 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             try {
                 const method = isEditing.value ? 'patch' : 'post';
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
-                console.log("metod:",method)
-                console.log("cleanedData:",cleanedData)
-                console.log(`${BASE_URL}${entityType}/${entityId || ''}`)
                 const response = await ky[method](`${BASE_URL}${entityType}/${entityId || ''}`, {
                     json: cleanedData
                 }).json();
-                console.log("response:",response)
                 await sweetalert.fire({
                     icon: "success",
                     title: "Success",
@@ -128,7 +139,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const handleDelete = async () => {
         if (entityId) {
             try {
-                await ky.delete(`http://localhost:8000/${entityType}/${entityId}`).json();
+                await ky.delete(`${BASE_URL}${entityType}/${entityId}`).json();
                 console.log(`${entityType} deleted successfully`);
             } catch (error) {
                 console.error(`Failed to delete ${entityType}:`, error);
@@ -165,6 +176,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
         formData,
         errors,
         entityStructure,
+        addressOptions,
         handleSubmit,
         handleDelete,
     };

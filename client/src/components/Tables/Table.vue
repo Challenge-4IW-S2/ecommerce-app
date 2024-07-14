@@ -22,12 +22,10 @@ const props = defineProps({
   }
 });
 
-// Variables réactives pour gérer l'état mutable
 const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 
-// Gestion des lignes sélectionnées
 const selectedRows = ref([]);
 
 // Calcul des données filtrées en fonction de la recherche
@@ -63,11 +61,10 @@ const isAllSelected = computed({
 
 // Méthode pour basculer la sélection de toutes les lignes
 const toggleSelectAll = () => {
-  isAllSelected.value = !isAllSelected.value; // Utilisation de la propriété set de computed
+  isAllSelected.value = !isAllSelected.value;
 };
 
 
-// Assurez-vous que `toggleRowSelection` ne modifie pas directement une propriété `computed`
 const toggleRowSelection = (rowId) => {
   if (selectedRows.value.includes(rowId)) {
     selectedRows.value = selectedRows.value.filter(id => id !== rowId);
@@ -90,14 +87,12 @@ function getButtonClass(color) {
   }
 }
 
-// Pagination : aller à la page suivante
+// Pagination
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
-
-// Pagination : revenir à la page précédente
 const previousPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
@@ -122,11 +117,12 @@ const deleteSelected = async () => {
   try {
     const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
     const selectedIds = selectedData.map(row => row.id);
-    console.log(`${import.meta.env.VITE_API_BASE_URL}${props.title}s`)
-    /*const response = await ky(`${import.meta.env.VITE_API_BASE_URL}${props.title}s`, {
-      method: 'DELETE',
-      json: { ids: selectedIds }
-    }).json();$/ */
+    for (let i = 0; i < selectedIds.length; i++) {
+      console.log(`${import.meta.env.VITE_API_BASE_URL}${props.title.toLowerCase()}/${selectedIds[i]}`)
+      const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}${props.title.toLowerCase()}/${selectedIds[i]}`).json();
+      console.log(selectedIds[i])
+      console.log(response)
+    }
   } catch (error) {
     console.error('Erreur lors de la suppression des éléments sélectionnés:', error);
   }
@@ -134,10 +130,8 @@ const deleteSelected = async () => {
 </script>
 
 <template>
-  <!-- Start block -->
   <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-      <!-- Start coding here -->
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
           <div class="w-full md:w-1/2">
@@ -232,5 +226,4 @@ const deleteSelected = async () => {
       </div>
     </div>
   </section>
-  <!-- End block -->
 </template>
