@@ -17,7 +17,6 @@ const bagSchema = new Schema({
             productId: {
                 type: 'UUID',
                 required: true,
-                default: null,
             },
             quantity: {
                 type: Number,
@@ -27,12 +26,10 @@ const bagSchema = new Schema({
             color: {
                 type: String,
                 required: true,
-                default: null,
             },
             size: {
                 type: String,
                 required: true,
-                default: null,
             },
         }
     ],

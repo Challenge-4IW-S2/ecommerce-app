@@ -1,25 +1,27 @@
 import { defineStore } from "pinia";
+import ky from "ky";
 
 export const useUserStore = defineStore('user', {
     state: () => ({
-        user: JSON.parse(sessionStorage.getItem('userId')) || null,
+        user: JSON.parse(sessionStorage.getItem('sessionId')) || null,
     }),
     actions: {
-        setUser(userId) {
-            if (userId != null) {
-                this.user = userId;
-                sessionStorage.setItem('userId', JSON.stringify(userId));
+        async initSessionAndBag(sessionId) {
+            try {
+                if ((this.user === null && this.createAt === null) || 
+                    (this.user !== null && this.createAt === null) ||
+                    (this.user === null && this.createAt !== null)) {
+                    this.user = sessionId;
+                    sessionStorage.setItem('sessionId', JSON.stringify(sessionId));
+                    await ky.post(`${import.meta.env.VITE_API_BASE_URL}/init-bag`, {
+                        json: { 
+                            sessionId: sessionId
+                        }
+                    }).json();
+                }
+            } catch(error) {
+                console.error(error);
             }
         },
-        updateUser(userId) {
-            if (userId != null) {
-                this.user = userId;
-                sessionStorage.setItem('userId', JSON.stringify(userId));
-            }
-        },
-        clearUser() {
-            this.user = null;
-            sessionStorage.removeItem('userId');
-        }
     }
 })
