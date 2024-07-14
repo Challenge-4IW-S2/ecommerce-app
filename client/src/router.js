@@ -19,6 +19,8 @@ const routes = [
     {path: '/admin/add-:entityType', component: DashboardUserEdit},
     { path: '/products', component: ProductsView},
     { path: '/:slug', component: ProductView},
+    { path: '/change-password', component: ProductView},
+    { path: '/change-password/:slug', component: ProductView},
 ]
 
 const router = createRouter({

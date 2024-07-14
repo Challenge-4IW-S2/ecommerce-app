@@ -101,9 +101,39 @@ const connect = async () => {
   }
 };
 
+const checkAuth = async () => {
+  try {
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/test-auth`, {
+      credentials: 'include',
+
+    }).json();
+    console.log(response);
+    console.log('logged');
+  } catch (error) {
+    console.log(error)
+    console.log('err');
+  }
+}
+
+const logout = async () => {
+  try {
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/logout`, {credentials: 'include'}).json();
+    console.log(response);
+    console.log('logged out');
+  } catch (error) {
+    console.log(error)
+    console.log('err');
+  }
+}
+
 </script>
 
 <template>
+  <!--     create a button that try the get route /check-auth on api (TO TEST JWT-->
+
+  <button @click="checkAuth">Check Auth</button>&nbsp;
+  <button @click="logout">logout</button>
+
   <div class="w-125 m-auto flex flex-col gap-16 mt-20">
     <h1>
       Connectez-vous à votre compte
