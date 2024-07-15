@@ -146,8 +146,6 @@ export class AuthController {
         });
     }
 
-
-
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({
             email: z.string().email(),
@@ -205,10 +203,9 @@ export class AuthController {
         response.status(200).send();
     }
 
-    // TODO: Check auth
     static deleteAccount(request, response) {
         return response.json({
-            c: 'bon'
+            message: 'Logged'
         }).send()
     }
 
