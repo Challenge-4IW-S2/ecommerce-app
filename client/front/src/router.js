@@ -19,6 +19,8 @@ const routes = [
     //{ path: '/admin/:entityType/:id', component: DashboardUserEdit },
     //{ path: '/admin/add-:entityType', component: DashboardUserEdit},
     { path: '/products', component: ProductsView},
+    { path: '/change-password', component: ProductView},
+    { path: '/change-password/:slug', component: ProductView},
     // { path: '/:slug', component: ProductView},
     // route pour les 404
     { path: '/:catchAll(.*)*', component: PageNotFound }

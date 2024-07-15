@@ -8,6 +8,7 @@ const LOCK_TIME = 15 * 60 * 1000;
 
 import {z} from 'zod';
 import e from "express";
+import ResetPasswordTokenRepository from "../postgresql/Repository/ResetPasswordTokenRepository.js";
 
 export class AuthController {
 
@@ -54,6 +55,7 @@ export class AuthController {
                 })
             })
             .catch(err => {
+                // TODO: Erreur isNotUnique ?
                 const isNotUnique = err.errors[0].validatorKey === 'not_unique';
 
                 const message = isNotUnique
@@ -69,6 +71,7 @@ export class AuthController {
                 });
             });
     }
+
     static async login(request, response) {
 
         const parameters = {
@@ -80,7 +83,7 @@ export class AuthController {
         if (loginAttempts[parameters.email] && loginAttempts[parameters.email].lockUntil > now) {
             return response.status(403).send('Votre compte a été temporairement verrouillé en raison de trop nombreuses tentatives de connexion infructueuses. Veuillez réessayer plus tard.');
         }
-        try{
+        try {
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
             if (!user) return response.status(401).send("Email or password incorrect");
@@ -115,8 +118,17 @@ export class AuthController {
 
            // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {expiresIn: "30 days", algorithm: "HS256"});
-            response.cookie('JWT', token, {httpOnly: true, signed: true, secure: true, sameSite: 'none'});
+            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+                expiresIn: "30 days",
+                algorithm: "HS256"
+            });
+
+            response.cookie('JWT', token, {
+                httpOnly: true,
+                signed: true,
+                secure: true,
+                sameSite: 'none'
+            });
             response.status(200).send(user);
 
         } catch (error) {
@@ -133,5 +145,69 @@ export class AuthController {
             message: "Logged out successfully"
         });
     }
+
+    static async forgotPassword(request, response) {
+        const parametersSchema = z.object({
+            email: z.string().email(),
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            return response.status(400).send();
+        }
+
+        const userRepository = new UserRepository();
+        const user = await userRepository.findOne('email', parsedParameters.data.email);
+        if (!user) {
+            return response.status(404).send();
+        }
+
+        const resetPasswordTokenRepository = new ResetPasswordTokenRepository();
+
+        //check if 5mn has passed since last reset password token
+        const lastResetPasswordToken = await resetPasswordTokenRepository.findByOtherField({
+            'user_id': user.id
+        }, ['created_at', 'DESC']);
+
+        if (lastResetPasswordToken) {
+            const now = new Date();
+            const diff = now - lastResetPasswordToken.createdAt;
+            // 5 * 60 -> 5mn (*1000 en ms)
+            if (diff < 5 * 60 * 1000) {
+                return response.status(429).send();
+            }
+        }
+
+        const resetPasswordToken = await resetPasswordTokenRepository.createResetPasswordToken(user)
+
+        // TODO: envoyer mail avec reset password (response temporaire ici donc)
+        response.json(resetPasswordToken);
+    }
+
+    static checkResetPasswordToken(request, response) {
+        const token = request.params.token;
+        const resetPasswordTokenRepository = new ResetPasswordTokenRepository();
+
+        const resetPasswordToken = resetPasswordTokenRepository.findByOtherField({
+            token: token
+        })
+
+        if (!resetPasswordToken) {
+            return response.status(404).send();
+        }
+
+        if (resetPasswordToken.used || resetPasswordToken.expires_at > new Date()) {
+            return response.status(403).send();
+        }
+
+        response.status(200).send();
+    }
+
+    static deleteAccount(request, response) {
+        return response.json({
+            message: 'Logged'
+        }).send()
+    }
+
 
 }
