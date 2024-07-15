@@ -9,15 +9,17 @@ export default () => async (request, response, next) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userRepository = new UserRepository();
-        request.user = await userRepository.findByPk(decoded.userId);
-        return response.json({ user: request.user }).send();
+
+        const user = await userRepository.findByPk(decoded.userId);
+        if (!user || !user.is_verified || user.deleted) {
+            return response.sendStatus(401);
+        }
+
+        request.user = user;
+
         next();
     } catch (e) {
-        console.error(e.message);
-        return response.status(401).json({
-            e: e.message
-        }).send()
-        // return response.sendStatus(401);
+        return response.sendStatus(401);
     }
     next();
 }
