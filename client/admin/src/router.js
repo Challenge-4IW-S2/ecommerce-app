@@ -1,6 +1,6 @@
 import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 
-import HomeView from './pages/Homepage.vue'
+import DashboardView from './pages/Dashboard.vue'
 // import LoginView from './pages/Login.vue'
 // import RegisterView from './pages/Register.vue'
 import UsersView from './pages/users/Users.vue'
@@ -10,7 +10,7 @@ import UserEdit from './pages/users/EditUser.vue'
 
 
 const routes = [
-    { path: '/', component: HomeView },
+    { path: '/', component: DashboardView },
     // { path: '/login', component: LoginView },
     // { path: '/register', component: RegisterView },
      { path: '/users', component: UsersView },
