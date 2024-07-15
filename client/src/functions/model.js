@@ -3,8 +3,6 @@ import {z} from "zod";
 
 export function fetchModelStructure(modelName) {
     try {
-        console.log("Fetching model structure...");
-        console.log(`${import.meta.env.VITE_API_BASE_URL}model/${modelName}`)
         return ky.get(`${import.meta.env.VITE_API_BASE_URL}model/${modelName}`).json();
     } catch (error) {
         console.error("Error fetching model structure:", error);
@@ -37,6 +35,15 @@ export function getEntitySchema (entityType){
                 price: z.number().positive("Price must be positive"),
                 description: z.string().optional(),
             });
+        case 'address':
+           return  z.object({
+                street: z.string("Street is required"),
+                city: z.string("City is required"),
+                zip_code: z.string("Zip code is required"),
+                country: z.string("Country is required"),
+                user_id: z.string().uuid(),
+            })
+
         default:
             return z.object({});
     }

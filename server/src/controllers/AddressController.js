@@ -25,9 +25,30 @@ export class AddressController {
         }
     }
 
-    static async getAddress(req, res) {
+    static async getAllAddressByUserId(req, res) {
         const adressRepository = new AdressRepository();
-        const address = await adressRepository.findByOtherField("user_id",req.params.id);
+        const address = await adressRepository.findByOtherField("user_id",req.params.userId);
         res.json(address);
     }
+
+    static async getAddress(req, res) {
+        const adressRepository = new AdressRepository();
+        const address = await adressRepository.findById(req.params.id);
+        res.json(address);
+    }
+
+    static async createAddress(req, res) {
+        const parameters = {
+            user_id: req.body.user_id,
+            street: req.body.street,
+            city: req.body.city,
+            zip_code: req.body.zip_code,
+            country: req.body.country
+    }
+        const adressRepository = new AdressRepository();
+        const address = await adressRepository.createAdress(parameters);
+        res.status(address ? 200 : 201);
+    }
+
+
 }

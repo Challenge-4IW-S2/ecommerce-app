@@ -197,7 +197,7 @@ const deleteSelected = async () => {
               </td>
               <td class="px-4 py-3 flex items-center space-x-3">
                 <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
-                        :class="getButtonClass(action.color)" class="py-2 px-4 text-sm font-medium rounded-lg">
+                        :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white  font-medium rounded-lg">
                   {{ action.label }}
                 </button>
               </td>

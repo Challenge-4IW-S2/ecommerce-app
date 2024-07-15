@@ -15,7 +15,9 @@ const props = defineProps({
   },
   error: String,
   option: String,
-  modelValue: String
+  modelValue: String,
+  disabled: Boolean
+
 })
 
 let dynamicType = ref(props.type);
@@ -48,7 +50,9 @@ const internalModelValue = computed({
           :placeholder="placeholder"
           :option="option"
           v-model="internalModelValue"
-          class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+          :disabled="disabled"
+          class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          >
       </input>
       <span v-if="type === 'password'" class="z-20 absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer bg-white"
             @click="changeVisibility">

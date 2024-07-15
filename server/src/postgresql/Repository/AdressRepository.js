@@ -15,7 +15,7 @@ export default class AdressRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.Adress.findOne({
+        return await this.Adress.findAll({
             where: {
                 [field]: value
             }

@@ -7,38 +7,51 @@ import RadioInput from "../Inputs/RadioInput.vue";
 import Input from "../Inputs/Input.vue";
 import AdressCard from "../Cards/AdressCard.vue";
 import * as test from "node:test";
+import {ref} from "vue";
 const route = useRoute();
 const entityType = route.params.entityType;// 'user', 'product', etc.
 const entityId = route.params.id;
 const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOptions } = useEntityForm(entityType, entityId,import.meta.env.VITE_API_BASE_URL);
+
 </script>
 <template>
-  <form @submit.prevent="handleSubmit">
-    <div class="grid gap-6 mb-6 md:grid-cols-2">
-      <div v-for="input in entityStructure" :key="input.name">
-        <component
-            :is="input.is === 'select' ? Select : input.type === 'checkbox' ? RadioInput : Input"
-            :type="input.type"
-             v-model="formData[input.name]"
-            :id="input.name"
-            :title="input.name"
-            :name="input.name"
-            :placeholder="input.name"
-            :options="input.options "
-            :checked="input.type === 'checkbox' ? formData[input.name] : undefined"
-        />
-        <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
+    <form @submit.prevent="handleSubmit">
+      <div class="grid gap-6 mb-6 md:grid-cols-2">
+        <div v-for="input in entityStructure" :key="input.name">
+          <component
+              :is="input.is === 'select' ? Select : input.type === 'checkbox' ? RadioInput : Input"
+              :type="input.type"
+               v-model="formData[input.name]"
+              :id="input.name"
+              :title="input.name"
+              :name="input.name"
+              :placeholder="input.name"
+              :options="input.options "
+              :checked="input.type === 'checkbox' ? formData[input.name] : undefined"
+          />
+          <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
+        </div>
       </div>
-      <div v-if="entityType === 'user'  ">
-        <AdressCard  />
-
+        <div v-if="entityType === 'user' && entityId">
+          <div v-if="addressOptions.length > 0">
+            <div class="flex justify-between">
+              <h2 class="text-lg font-bold">Addresses</h2>
+              <router-link :to="`/admin/add-address/${entityId}`" class="text-sm underline font-normal">Ajouter une adresse</router-link>
+            </div>
+            <AdressCard
+                :address="addressOptions"
+                :userId="entityId"
+            />
+          </div>
+          <div v-else>
+            <p>No address found</p>
+          </div>
+        </div>
+      <div class="flex justify-end">
+        <Button text="Submit" />
+        <Button v-if="entityId" text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />
       </div>
-    </div>
-    <div class="flex justify-end">
-      <Button text="Submit" />
-      <Button v-if="entityId" text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />
-    </div>
-  </form>
+    </form>
 </template>
 
 <style scoped>

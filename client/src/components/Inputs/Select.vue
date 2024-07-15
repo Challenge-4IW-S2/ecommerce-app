@@ -1,5 +1,5 @@
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import Input from "./Input.vue";
 
 const props = defineProps({
@@ -11,6 +11,7 @@ const props = defineProps({
   },
   modelValue: [String, Number,Array]  // La valeur sélectionnée
 });
+const selectedValue = ref(props.modelValue);
 const emit = defineEmits(['update:modelValue']);
 const internalModelValue = computed({
   get: () => props.modelValue,
@@ -36,6 +37,7 @@ const internalModelValue = computed({
         </option>
       </select>
     </div>
+
   </div>
 </template>
 <style scoped>

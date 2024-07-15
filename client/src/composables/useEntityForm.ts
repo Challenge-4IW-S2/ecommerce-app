@@ -15,7 +15,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const entityStructure = ref([]);
     const errors = ref({});
     const isEditing = ref(Boolean(entityId));
-    const addressOptions = ref([]);
+    let addressOptions = ref([]);
 
     const getRoleOptions = async () => {
         try {
@@ -31,16 +31,19 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
     const getAdressOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}address/${entityId}`).json();
-            console.log("response:",response)
-            addressOptions.value = response;
-            return response;
+            const response = await ky.get(`${BASE_URL}address/${entityId}/addresses`).json();
+            return response.map(address => ({
+                id: address.id,
+               street: address.street,
+               city: address.city,
+                postal_code: address.postal_code,
+                country: address.country,
+            }));
         } catch (error) {
             console.error('Failed to fetch addresses:', error);
             return [];
         }
     };
-
 
     const fetchEntityStructure = async () => {
         try {
@@ -55,13 +58,15 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     acc[field.name] = field.defaultValue || '';
                     return acc;
                 }, {});
+            }
 
-                }
                 const cleanedResponse = filterUnwantedFields(response, unwantedFields);
                 let roleOptions = [];
-                if (entityType === 'user') {
+                if (entityType === 'user' ) {
                     roleOptions = await getRoleOptions();
-                    await getAdressOptions();
+                   if(entityId) {
+                       addressOptions.value = await getAdressOptions();
+                   }
                 }
                 entityStructure.value = Object.keys(cleanedResponse).map(key => {
                 const field = {
@@ -74,9 +79,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     field.is = 'select';
                     field.options = roleOptions;
                 }
-                    console.log("field:",field)
-
-
                     return field;
             });
             initializeFormData();
@@ -96,7 +98,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             const cleanedData = filterUnwantedFields(formData, unwantedFields);
             entitySchema.value.parse(cleanedData);
             errors.value = {};
-            console.log(errors.value)
             return true;
         } catch (err) {
             if (err instanceof z.ZodError) {
@@ -111,7 +112,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
 
     const handleSubmit = async () => {
-       // if (validateForm()) {
             try {
                 const method = isEditing.value ? 'patch' : 'post';
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
@@ -131,9 +131,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 });
                 console.error('Failed to submit form:', error);
             }
-       /* } else {
-            console.log('Validation errors:', errors.value);
-        }*/
     };
 
     const handleDelete = async () => {
@@ -171,7 +168,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             if (entityId) fetchEntityStructure();
         }
     );
-
     return {
         formData,
         errors,

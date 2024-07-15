@@ -13,7 +13,7 @@ import DashboardOrdersView from './pages/Dashboard/Tables/Orders.vue'
 import DashboardCommentsView from './pages/Dashboard/Tables/Comments.vue'
 import DashboardAddressesView from './pages/Dashboard/Tables/Addresses.vue'
 import DashboardUserRolesView from './pages/Dashboard/Tables/UserRoles.vue'
-
+import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
 
 const routes = [
     { path: '/', component: HomeView },
@@ -27,7 +27,6 @@ const routes = [
     { path: '/admin/orders', component: DashboardOrdersView},
    // { path: 'admin/settings', component: DashboardSettingsView},
     { path: '/admin/comments', component: DashboardCommentsView},
-    { path: '/admin/categories', component: DashboardCategoriesView},
     { path: '/admin/addresses', component: DashboardAddressesView},
     { path: '/admin/userroles', component: DashboardUserRolesView},
 
@@ -36,12 +35,14 @@ const routes = [
 
     { path: '/admin/:entityType/:id', component: DashboardEdit },
     { path: '/admin/add-:entityType', component: DashboardEdit},
+    { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
+    { path: '/admin/add-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit address
     { path: '/products', component: ProductsView},
     { path: '/:slug', component: ProductView},
 ]
 
 const router = createRouter({
-    history: createWebHistory(), // for browser history
+    history: createWebHistory(),
     routes,
 })
 
