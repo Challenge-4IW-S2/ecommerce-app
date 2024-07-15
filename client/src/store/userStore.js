@@ -23,5 +23,22 @@ export const useUserStore = defineStore('user', {
                 console.error(error);
             }
         },
+
+        async updateSessionId(oldSessionId, newSessionId) {
+            try {
+                if (this.user === oldSessionId) {
+                    this.user = newSessionId;
+                    sessionStorage.setItem('sessionId', JSON.stringify(newSessionId));
+                    await ky.put(`${import.meta.env.VITE_API_BASE_URL}/update-bag-session-id`, {
+                        json: {
+                            oldSessionId,
+                            newSessionId
+                        }
+                    }).json();
+                }
+            } catch(error) {
+                console.error(error);
+            }
+        },
     }
 })

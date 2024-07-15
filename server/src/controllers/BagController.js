@@ -1,4 +1,4 @@
-import BagRepository from "../mongo/Repository/BagRepository.js";
+import BagRepository from "../mongo/repository/BagRepository.js";
 
 export class BagController {
     static async getBag(request, response) {

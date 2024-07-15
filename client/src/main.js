@@ -16,3 +16,4 @@ const userStore = useUserStore();
 
 // create a sessionId and bag for the user when the app is loaded
 userStore.initSessionAndBag(uuidv4());
+console.log(userStore.user);
