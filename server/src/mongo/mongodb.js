@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
-// import CategoryRepository from './Repository/CategoryRepository.js';
-// import ProductRepository from './Repository/ProductRepository.js';
-import ProductPictureRepository from './Repository/ProductImageRepository.js';
+// import CategoryRepository from './repository/CategoryRepository.js';
+// import ProductRepository from './repository/ProductRepository.js';
+import ProductPictureRepository from './repository/ProductImageRepository.js';
 // import { randomUUID } from 'crypto';
 
 mongoose.connect(process.env.MONGO_URL).then(() => {

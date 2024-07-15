@@ -1,5 +1,5 @@
-import UserRepository from "../postgresql/Repository/UserRepository.js";
-import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
+import UserRepository from "../postgresql/repository/UserRepository.js";
+import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 import User from "../postgresql/models/User.js";
 
 export class UserController {
