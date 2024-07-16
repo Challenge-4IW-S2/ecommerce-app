@@ -71,19 +71,14 @@ export class UserController {
             phone: request.body.phone,
             role: request.body.role
         }
-        const userRepository = new UserRepository();
-        userRepository.updateUser(request.params.id, parameters).then(res => {
-           response.json({
-               status: 200,
-               message: 'User successfully updated',
-           });
-       }).catch(error => {
-           response.json({
-               status: false,
-               message: 'User not updated, an error occurred',
-               e: error.message,
-           });
-       })
+        try {
+            const userRepository = new UserRepository();
+            const [nbUpdated] = userRepository.updateUser(request.params.id, parameters);
+            if (nbUpdated === 1) return response.sendStatus(200);
+            response.sendStatus(404);
+        } catch (e) {
+            response.sendStatus()
+        }
     }
     static async deleteUser(request, response) {
         const userRepository = new UserRepository();
@@ -135,7 +130,6 @@ export class UserController {
     static async getAllUserRole(request, response) {
         const userRoleRepository = new UserRoleRepository();
         const roles = await userRoleRepository.findAll();
-        console.log(roles)
         response.json(roles);
     }
 }

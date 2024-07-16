@@ -8,6 +8,8 @@ const entityType = route.params.entityType; // 'user', 'product', etc.
 const entityId = route.params.id;
 
 
+
+
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const entityId = route.params.id;
     <div class="flex justify-end">
       <router-link to="`/admin/entityTypes`" class="bg-black px-4 text-white h-12 block text-center content-center">Retour</router-link>
     </div>
-    <DynamicForm />
+    <DynamicForm :entityType="entityType" :entityId="entityId"/>
   </div>
 </template>
 

@@ -46,45 +46,46 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
 
     const fetchEntityStructure = async () => {
-        try {
-            unwantedFields.push('id');
-            let response = {};
-            if (entityId) {
-                 response = await ky.get(`${BASE_URL}${entityType}/${entityId || ''}`).json();
-            }else {
-                const [structure] = await Promise.all([fetchModelStructure(entityType.charAt(0).toUpperCase() + entityType.slice(1))]);
-                response = structure;
-                response = structure.reduce((acc, field) => {
-                    acc[field.name] = field.defaultValue || '';
-                    return acc;
-                }, {});
-            }
+            try {
+                unwantedFields.push('id');
+                let response = {};
+                if (entityId) {
+                    response = await ky.get(`${BASE_URL}${entityType}/${entityId || ''}`).json();
+                } else {
+                    const [structure] = await Promise.all([fetchModelStructure(entityType.charAt(0).toUpperCase() + entityType.slice(1))]);
+                    response = structure;
+                    response = structure.reduce((acc, field) => {
+                        acc[field.name] = field.defaultValue || '';
+                        return acc;
+                    }, {});
+                }
 
                 const cleanedResponse = filterUnwantedFields(response, unwantedFields);
                 let roleOptions = [];
-                if (entityType === 'user' ) {
+                if (entityType === 'user') {
                     roleOptions = await getRoleOptions();
-                   if(entityId) {
-                       addressOptions.value = await getAdressOptions();
-                   }
+                    if (entityId) {
+                        addressOptions.value = await getAdressOptions();
+                    }
                 }
                 entityStructure.value = Object.keys(cleanedResponse).map(key => {
-                const field = {
-                    name: key,
-                    value: cleanedResponse[key],
-                    type: getTypeForKey(key, cleanedResponse[key])
-                };
-                // Ajouter les options pour les champs de type select
-                if (key === 'role') {
-                    field.is = 'select';
-                    field.options = roleOptions;
-                }
+                    const field = {
+                        name: key,
+                        value: cleanedResponse[key],
+                        type: getTypeForKey(key, cleanedResponse[key])
+                    };
+                    // Ajouter les options pour les champs de type select
+                    if (key === 'role') {
+                        field.is = 'select';
+                        field.options = roleOptions;
+                    }
                     return field;
-            });
-            initializeFormData();
-        } catch (error) {
-            console.error('Failed to fetch entity structure:', error);
-        }
+                });
+                initializeFormData();
+            } catch (error) {
+                console.error('Failed to fetch entity structure:', error);
+            }
+
     };
 
     const initializeFormData = () => {
@@ -112,6 +113,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
 
     const handleSubmit = async () => {
+            if (!validateForm()) return;
             try {
                 const method = isEditing.value ? 'patch' : 'post';
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);

@@ -8,8 +8,9 @@ export default function (router) {
     router.get("/user/:id", UserController.getUser, validateBody(GetUsersSchema));
     router.put("/users/:id", validateBody(UserUpdateSchema) ,UserController.updateUser);
     router.delete("/user/:id",UserController.deleteUser);
-    router.get("/role", UserController.getAllUserRole);
+   // router.get("/role", UserController.getAllUserRole);
     router.patch("/user/:id", UserController.updateUser);
+
 
     return router;
 }

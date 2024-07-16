@@ -36,7 +36,7 @@ const routes = [
     { path: '/admin/:entityType/:id', component: DashboardEdit },
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
-    { path: '/admin/add-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit address
+    { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit address
     { path: '/products', component: ProductsView},
     { path: '/:slug', component: ProductView},
 ]

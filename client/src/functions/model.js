@@ -1,5 +1,6 @@
 import ky from "ky";
 import {z} from "zod";
+import Swal from "sweetalert2";
 
 export function fetchModelStructure(modelName) {
     try {
@@ -36,16 +37,40 @@ export function getEntitySchema (entityType){
                 description: z.string().optional(),
             });
         case 'address':
-           return  z.object({
-                street: z.string("Street is required"),
-                city: z.string("City is required"),
-                zip_code: z.string("Zip code is required"),
-                country: z.string("Country is required"),
+            return z.object({
+                street: z.string({ required_error: "Street is required"}).min(5, { message: "Street must be at least 5 characters long" }),
+                city: z.string("City is required")
+                    .regex(/^[a-zA-Z\s]+$/, {message: "City must contain only letters" }),
+                postal_code: z.string()
+                    .regex(/^\d{5}$/, { message: "Postal code must contain exactly 5 digits" }),
+                country: z.string("Country is required")
+                    .regex(/^[a-zA-Z\s]+$/, { message: "Country must contain only letters" }),
                 user_id: z.string().uuid(),
-            })
-
+            }).required();
         default:
             return z.object({});
     }
 
 }
+export const  handleHttpResponse = async (response) => {
+    switch (response.status) {
+        case 200:
+        case 201:
+           return await Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Operation successful',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false
+           });
+        case 404:
+            return Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Resource not found',
+            });
+        default:
+            return { success: false, message: 'An error occurred' };
+    }
+};

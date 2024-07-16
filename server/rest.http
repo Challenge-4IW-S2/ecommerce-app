@@ -123,3 +123,26 @@ Content-Type: application/json
 
 ### Get Address by user
 GET localhost:8000/address/8c9b7e53-a973-476a-a86f-18d6f7e9215f
+
+### Create Address
+POST localhost:8000/address
+Content-Type: application/json
+
+{
+  "user_id": "1adac9b1-7f47-4ea2-b79e-ff01c9641991",
+  "street": "1 rue de la paix",
+  "postal_code": "75000",
+  "city": "Paris",
+  "country": "France"
+}
+
+### Update Address
+PATCH localhost:8000/address/a0d6a17c-1a31-4988-a5d3-e485b2583c69
+Content-Type: application/json
+
+{
+  "postal_code":"77120"
+}
+
+### Delete Address
+DELETE localhost:8000/address/a0d6a17c-1a31-4988-a5d3-e485b2583c69

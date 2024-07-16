@@ -1,5 +1,8 @@
 <script setup>
 
+import ky from "ky";
+import router from "../../router.js";
+
 const props = defineProps({
   title: {
     type: String,
@@ -14,6 +17,17 @@ const props = defineProps({
     required: true
   }
 });
+const deleteAddress = async (id) => {
+  try {
+    if (!confirm('Are you sure you want to delete this address?')) {
+      return;
+    }
+    await ky.delete(`${import.meta.env.VITE_API_BASE_URL}address/${id}`);
+    router.go();
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <template>
@@ -28,9 +42,8 @@ const props = defineProps({
         <span>{{ address.country || 'France' }}</span>
         <div class="flex gap-44 self-center">
 
-          <router-link :to="`/admin/add-address/${address.id}/${userId}`" class="text-sm underline font-normal">Edit</router-link>
-          <router-link :to="`/admin/add-address/${userId}`" class="text-sm underline font-normal">Delete</router-link>
-
+          <router-link :to="`/admin/edit-address/${address.id}/${userId}`" class="text-sm underline font-normal">Edit</router-link>
+          <button @click.prevent="deleteAddress(address.id)" class="text-sm underline font-normal">Delete</button>
         </div>
       </div>
     </div>

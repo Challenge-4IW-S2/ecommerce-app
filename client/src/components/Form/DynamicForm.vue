@@ -6,13 +6,19 @@ import Select from "../Inputs/Select.vue";
 import RadioInput from "../Inputs/RadioInput.vue";
 import Input from "../Inputs/Input.vue";
 import AdressCard from "../Cards/AdressCard.vue";
-import * as test from "node:test";
-import {ref} from "vue";
-const route = useRoute();
-const entityType = route.params.entityType;// 'user', 'product', etc.
-const entityId = route.params.id;
-const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOptions } = useEntityForm(entityType, entityId,import.meta.env.VITE_API_BASE_URL);
-
+import {toRefs} from "vue";
+const props = defineProps({
+  entityType: {
+    type: String,
+    required: true
+  },
+  entityId: {
+    type: String,
+    required: false
+  }
+});
+const { entityType, entityId } = toRefs(props);
+const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOptions } = useEntityForm(entityType.value, entityId.value,import.meta.env.VITE_API_BASE_URL);
 </script>
 <template>
     <form @submit.prevent="handleSubmit">

@@ -3,9 +3,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import ky from 'ky';
 import Input from "../../components/Inputs/Input.vue";
-import { fetchModelStructure, filterUnwantedFields } from "../../functions/model.js";
-
-// Définir les props
+import {fetchModelStructure, filterUnwantedFields} from "../../functions/model.js";
+import {useFormHandler} from '../../composables/useFormHandler';
+import Button from "../../components/Buttons/Button.vue";
 const props = defineProps({
   userId: {
     type: String,
@@ -16,57 +16,70 @@ const props = defineProps({
 const route = useRoute();
 const router = useRouter();
 const entityId = route.params.id;
-console.log('entityId:', entityId);
+
 const formStructure = ref([]);
-const formData = ref({});
-const unwantedFields = ['createdAt', 'updatedAt', 'id'];
+ const url = entityId
+    ? `${import.meta.env.VITE_API_BASE_URL}address/${entityId}`
+    : `${import.meta.env.VITE_API_BASE_URL}address`;
 
 const goBack = () => {
   router.go(-1);
 };
 
-// Fonction pour récupérer la structure du modèle et initialiser les données du formulaire
-const fetchStructure = async (modelName) => {
+const {
+  formData,
+  validationErrors,
+  serverError,
+  isSubmitting,
+  handleSubmit,
+  resetErrors
+} = useFormHandler('address', {user_id: props.userId},url);
+const fetchEntityStructure = async (modelName) => {
   try {
-    const structure = await fetchModelStructure(modelName);
-    formStructure.value = structure.filter(field => !unwantedFields.includes(field.name));
-    const defaultValues = structure.reduce((acc, field) => {
-      if (!unwantedFields.includes(field.name)) {
-        acc[field.name] = field.defaultValue || '';
-      }
-      return acc;
-    }, {});
-    formData.value = { ...defaultValues, user_id: props.userId };
-
+    const unwantedFields = ['createdAt', 'updatedAt', 'id'];
+    let response = {};
     if (entityId) {
-      const addressData = await ky.get(`${import.meta.env.VITE_API_BASE_URL}address/${entityId}/`).json();
-      formData.value = { ...formData.value, ...addressData };
-      console.log('formData:', formData.value)
+      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}address/${entityId}/`).json();
+    } else {
+      const structure = await fetchModelStructure(modelName);
+      response = structure.reduce((acc, field) => {
+        acc[field.name] = field.defaultValue || '';
+        return acc;
+      }, {});
     }
+
+    const cleanedResponse = filterUnwantedFields(response, unwantedFields);
+    formStructure.value = Object.keys(cleanedResponse).map(key => {
+      const field = {
+        name: key,
+        value: cleanedResponse[key],
+        type: getTypeForKey(key, cleanedResponse[key])
+      };
+      return field;
+    });
+
+    initializeFormData();
   } catch (error) {
-    console.error('Failed to fetch model structure:', error);
+    console.error('Failed to fetch entity structure:', error);
   }
 };
 
-const handleSubmit = async () => {
-  try {
-    if (entityId) {
-      await ky.patch(`${import.meta.env.VITE_API_BASE_URL}address/${entityId}`, {
-        json: formData.value
-      }).json();
-    } else {
-      await ky.post(`${import.meta.env.VITE_API_BASE_URL}address`, {
-        json: formData.value
-      }).json();
-    }
-    router.go(-1);
-  } catch (error) {
-    console.error('Failed to submit address:', error);
-  }
+const initializeFormData = () => {
+  formStructure.value.forEach(field => {
+    formData.value[field.name] = field.value || '';
+    formData.value['user_id'] = props.userId;
+  });
+};
+
+const getTypeForKey = (key, value) => {
+  if (key.includes('email')) return 'email';
+  if (key.includes('password')) return 'password';
+  if (key.includes('phone')) return 'tel';
+  return 'text';
 };
 
 onMounted(() => {
-  fetchStructure('Address');
+  fetchEntityStructure('Address');
 });
 </script>
 
@@ -74,30 +87,32 @@ onMounted(() => {
   <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
     <h1 class="text-center text-3xl">{{ entityId ? 'Modifier' : 'Ajouter' }} une adresse</h1>
     <p class="text-center">Remplissez le formulaire ci-dessous pour {{ entityId ? 'modifier' : 'ajouter' }} une adresse</p>
-    <div class="flex justify-end">
-      <button @click="goBack" class="bg-black px-4 text-white h-12 block text-center content-center">Retour</button>
+    <div class="flex justify-end mb-4">
+      <button @click="goBack" class="bg-black px-4 text-white h-12">Retour</button>
     </div>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit(url,entityId ? 'PATCH' : 'POST')">
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div v-for="field in formStructure" :key="field.name" class="mb-4">
           <Input
+              :id="field.name"
               :title="field.name"
               :name="field.name"
               :placeholder="field.name"
               v-model="formData[field.name]"
-              :type="field.name.includes('email') ? 'email' : field.name.includes('password') ? 'password' : field.name.includes('phone') ? 'tel' : 'text'"
               :disabled="field.name === 'user_id'"
-
           />
-        </div>
-        <div class="flex justify-end">
-          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-600">Submit</button>
+          <div v-if="validationErrors[field.name]" class="text-red-500 text-sm">
+            {{ validationErrors[field.name]}}
+          </div>
         </div>
       </div>
+      <div v-if="serverError" class="text-red-500 text-sm mt-2">
+        {{ serverError }}
+      </div>
+      <Button text="Submit" :disabled="isSubmitting"/>
     </form>
   </div>
 </template>
-
 <style scoped>
 /* Styles spécifiques */
 </style>
