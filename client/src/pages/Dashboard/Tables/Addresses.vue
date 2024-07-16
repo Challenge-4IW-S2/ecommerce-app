@@ -12,7 +12,7 @@ const { data, actions } = useEntityTable(baseUrl,route, entityPath, []);
 <template>
   <div>
     <h1>Addresses Dashboard</h1>
-    <Table :params="data" :actions="actions" />
+    <Table :params="data" :actions="actions" :title="'Address'" />
   </div>
 </template>
 

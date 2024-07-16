@@ -32,9 +32,13 @@ export function getEntitySchema (entityType){
             });
         case 'product':
             return z.object({
-                name: z.string().nonempty("Product name is required"),
-                price: z.number().positive("Price must be positive"),
+                name: z.string("Product name is required").min(3, "Product name must be at least 3 characters long"),
                 description: z.string().optional(),
+                category_id: z.string(),
+                slug: z.string().min(3, "Slug must be at least 3 characters long"),
+                price_ttc: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
+                price_ht: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
+                is_active: z.boolean().optional(),
             });
         case 'address':
             return z.object({
@@ -47,6 +51,16 @@ export function getEntitySchema (entityType){
                     .regex(/^[a-zA-Z\s]+$/, { message: "Country must contain only letters" }),
                 user_id: z.string().uuid(),
             }).required();
+
+        case 'userRole':
+            return z.object({
+                name: z.string("Role is required")
+            });
+        case 'category':
+            return z.object({
+                name: z.string("Category is required")
+            });
+
         default:
             return z.object({});
     }

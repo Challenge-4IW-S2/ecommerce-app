@@ -32,6 +32,7 @@ export default class ProductRepository {
             price_ttc: product.price_ttc,
             is_active: product.is_active,
             token: product.token,
+            slug: product.slug,
             category_id: await this.CategoryRepository.getCategoryId(product.category)
         });
     }

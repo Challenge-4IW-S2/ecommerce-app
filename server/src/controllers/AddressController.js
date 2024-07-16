@@ -21,9 +21,7 @@ export class AddressController {
     static async deleteAddress(req, res) {
         const adressRepository = new AdressRepository();
         const nbDeleted = await adressRepository.deleteAdress(req.params.id);
-        console.log(nbDeleted)
         if (nbDeleted === 1) {
-            console.log("deleteAdress")
             res.sendStatus(204);
         } else {
             res.sendStatus(404);

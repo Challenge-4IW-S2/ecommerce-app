@@ -2,24 +2,20 @@ import Category from "../postgresql/models/Category.js";
 import CategoryRepository from "../postgresql/Repository/CategoryRepository.js";
 
 export class CategoryController {
-    static async createCategory(request, response) {
+    static async createCategory(request, response,next) {
         const parameters = {
             name: request.body.name,
         }
-        const categoryRepository = new CategoryRepository();
-        categoryRepository.createCategory(parameters).then(res => {
-            response.json({
-                success: true,
-                message: 'Category successfully created',
-            });
-        }).catch(error => {
-            response.json({
-                success: false,
-                message: 'Category not created, an error occurred',
-                e: error.message,
-            });
-        })
+        try {
+            const categoryRepository = new CategoryRepository();
+            const category = categoryRepository.createCategory(parameters)
+            response.status(201).json(category);
+
+        }catch (e){
+            next(e)
+        }
     }
+
     static async getAllCategories(request, response) {
         const categoryRepository = new CategoryRepository();
         const categories = await categoryRepository.findAll();
@@ -31,7 +27,7 @@ export class CategoryController {
         if (!category) return response.status(404).send("Category not found");
         response.json(category);
     }
-    static async updatePutCategory(request, response)
+    static async updatePutCategory(request, response,next)
     {
         const parameters = {
             name: request.body.name,
@@ -43,11 +39,7 @@ export class CategoryController {
             const category = await categoryRepository.createCategory({ id, ...parameters});
             response.status(nbDeleted === 1 ? 200 : 201).json(category);
         } catch (e) {
-            response.json({
-                success: false,
-                message: 'Category not updated, an error occurred',
-                e: e.message,
-            });
+            next(e)
         }
     }
     static async updatePatchCategory(request, response) {
@@ -56,10 +48,8 @@ export class CategoryController {
         }
         const categoryRepository = new CategoryRepository();
         try {
-            const id = request.params.id;
-            const nbUpdated = await categoryRepository.updateCategory(id, parameters);
-            const category = await categoryRepository.findByPk(id);
-            response.status(nbUpdated === 1 ? 200 : 404).json(category);
+            const [nbUpdated,category] = await categoryRepository.updateCategory(request.params.id,parameters);
+            if (nbUpdated === 1) return response.json(category[0]);
         } catch (e) {
             response.json({
                 success: false,
@@ -68,14 +58,14 @@ export class CategoryController {
             });
         }
     }
-    static async deleteCategory(request, response) {
-        const categoryRepository = new CategoryRepository();
-        const id = request.params.id;
-        const nbDeleted = await categoryRepository.deleteCategory(id);
-        response.status(nbDeleted === 1 ? 200 : 404).json({
-            success: nbDeleted === 1,
-            message: nbDeleted === 1 ? 'Category successfully deleted' : 'Category not found'
-        });
+    static async deleteCategory(request, response,next) {
+        try {
+            const categoryRepository = new CategoryRepository();
+            const nbDeleted = await categoryRepository.deleteCategory(request.params.id);
+            response.status(nbDeleted === 1 ? 200 : 404).json()
+        }catch (e) {
+            next(e)
+        }
     }
 
 }

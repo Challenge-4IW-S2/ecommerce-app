@@ -1,5 +1,6 @@
 import UserRole from "../postgresql/models/UserRole.js";
 import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
+import AdressRepository from "../postgresql/Repository/AdressRepository.js";
 
 export class UserRoleController{
     static async getAllUserRole(req, res) {
@@ -11,39 +12,47 @@ export class UserRoleController{
             res.status(400).json({ message: error.message });
         }
     }
-    static async createUserRole(req, res) {
+    static async createUserRole(req, res,next) {
         try {
+            const params = {
+                name: req.body.name,
+            };
             const userRoleRepository = new UserRoleRepository();
-            const userRole = await userRoleRepository.createUserRole(req.body);
+            const userRole = await userRoleRepository.createUserRole(params.name);
             res.status(201).json(userRole);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async getUserRole(req, res) {
+    static async getUserRole(req, res,next) {
         try {
-            const userRole = await UserRole.findByPk(req.params.id);
-            res.status(200).json(userRole);
+            const userRoleRepository = new UserRoleRepository();
+            const userRole = await userRoleRepository.findByPk(req.params.id);
+            res.json(userRole);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error)
         }
     }
-    static async updateUserRole(req, res) {
+    static async updateUserRole(req, res,next) {
         try {
-            const userRole = await UserRole.findByPk(req.params.id);
-            await userRole.update(req.body);
-            res.status(200).json(userRole);
+            const params = {
+                name: req.body.name,
+            };
+            const userRoleRepository = new UserRoleRepository();
+            const [nbUpdated,userRole] = await userRoleRepository.updateUserRole(req.params.id,params.name);
+            if (nbUpdated === 1) return res.json(userRole[0]);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async deleteUserRole(req, res) {
+    static async deleteUserRole(req, res,next) {
         try {
-            const userRole = await UserRole.findByPk(req.params.id);
-            await userRole.destroy();
-            res.status(204).end();
+            const userRoleRepository = new UserRoleRepository();
+            const nbDeleted = await userRoleRepository.deleteUserRole(req.params.id);
+            res.sendStatus(nbDeleted === 1 ? 204 : 400);
+
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
 }

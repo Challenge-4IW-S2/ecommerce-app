@@ -63,16 +63,16 @@ GET localhost:8000/role
 GET localhost:8000/users/d7c8ce2f-9d2c-4939-b5f6-f6bc19c7cfd4
 
 ###
-POST localhost:8000/signup
+POST localhost:8000/user
 Content-Type: application/json
 
 {
-  "email": "test@exampla.com",
+  "email": "tesddo@ex.cop",
   "password": "Testpassword&1",
+  "role": "ROLE_USER",
   "firstname":"Test",
   "lastname": "Tester",
-  "confirmEmail": "test@example.fr",
-  "confirmPassword": "Testpassword&1"
+  "phone": "0606060606"
 }
 
 ###
@@ -90,7 +90,7 @@ Content-Type: application/json
   "deleted": false
 }
 ###
-DELETE localhost:8000/user/8c9b7e53-a973-476a-a86f-18d6f7e9215f
+DELETE localhost:8000/user/16b96df0-7b8e-4902-bd4f-3e1ca8313fe8
 
 ### Structure of models
 GET localhost:8000/model/User
@@ -114,10 +114,10 @@ Content-Type: application/json
 {
   "name": "Clips-ins",
   "description": "Description",
-  "price_ttc": 10,
-  "price_ht": 8,
+  "price_ttc": "10",
+  "price_ht": "8",
   "slug": "clips-ins",
-  "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
+  "category_id": "test"
 }
 
 
@@ -146,3 +146,16 @@ Content-Type: application/json
 
 ### Delete Address
 DELETE localhost:8000/address/a0d6a17c-1a31-4988-a5d3-e485b2583c69
+
+### Create Product
+POST localhost:8000/product
+Content-Type: application/json
+
+{
+  "name": "Clips-ins",
+  "description": "Description",
+  "price_ttc": "10",
+  "price_ht": "8",
+  "slug": "clips-ins",
+  "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
+}

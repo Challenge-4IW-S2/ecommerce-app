@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../db.js";
 import ProductPictureModel from "../models/ProductPicture.js";
 
 export default class ProductPictureRepository {

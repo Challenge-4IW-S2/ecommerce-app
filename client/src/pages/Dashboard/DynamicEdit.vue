@@ -7,9 +7,6 @@ const route = useRoute();
 const entityType = route.params.entityType; // 'user', 'product', etc.
 const entityId = route.params.id;
 
-
-
-
 </script>
 
 <template>

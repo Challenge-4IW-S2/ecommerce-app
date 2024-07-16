@@ -1,65 +1,36 @@
 import OrderRepository from "../postgresql/Repository/OrderRepository.js";
 
 export class OrderController{
-    static async getAllOrders(req, res){
+    static async getAllOrders(req, res,next){
         try {
             const orderRepository = new OrderRepository();
             const orders = await orderRepository.findAll();
-            res.status(200).json(orders);
+            res.json(orders);
 
         } catch (error) {
-            res.status(500).send(error.message);
+            next(error);
         }
     }
-    static async createOrder(req, res){
+    static async createOrder(req, res,next){
         try {
             const orderRepository = new OrderRepository();
             const order = await orderRepository.createOrder(req.body);
             res.status(201).json(order);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async getOrder(req, res){
+    static async getOrder(req, res,next){
         try {
             const orderRepository = new OrderRepository();
-            const order = await orderRepository.findByPk(req.params.id);
-            res.status(200).json(order);
+            const order = await orderRepository.findById(req.params.id);
+            if (order) {
+                res.json(order);
+            } else {
+                res.sendStatus(404);
+            }
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async updateOrder(req, res){
-        try {
-            const orderRepository = new OrderRepository();
-            const order = await orderRepository.findByPk(req.params.id);
-            await order.update(req.body);
-            res.status(200).json(order);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
-
-
-    static async getOrderByUser(req, res){
-        try {
-            const orderRepository = new OrderRepository();
-            const order = await orderRepository.findByOtherField('user_id', req.params.id);
-            res.status(200).json(order);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
-    static async getOrderByStatus(req, res){
-        try {
-            const orderRepository = new OrderRepository();
-            const order = await orderRepository.findByOtherField('status', req.params.status);
-            res.status(200).json(order);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
-
-
-
 }

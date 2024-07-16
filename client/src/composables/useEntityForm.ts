@@ -5,7 +5,8 @@ import sweetalert from 'sweetalert2';
 import {
     fetchModelStructure,
     filterUnwantedFields,
-    getEntitySchema
+    getEntitySchema,
+    handleHttpResponse
 } from '../functions/model.js';
 
 const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active'];
@@ -16,10 +17,11 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const errors = ref({});
     const isEditing = ref(Boolean(entityId));
     let addressOptions = ref([]);
+    let categorieOption = ref([]);
 
     const getRoleOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}role`).json();
+            const response = await ky.get(`${BASE_URL}userRoles`).json();
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -41,6 +43,19 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             }));
         } catch (error) {
             console.error('Failed to fetch addresses:', error);
+            return [];
+        }
+    };
+
+    const getCategorieOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}categories`).json();
+            return response.map(categorie => ({
+                value: categorie.id,
+                label: categorie.name
+            }));
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
             return [];
         }
     };
@@ -68,16 +83,23 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                         addressOptions.value = await getAdressOptions();
                     }
                 }
+                if (entityType === 'product') {
+                    categorieOption = await getCategorieOptions();
+                }
                 entityStructure.value = Object.keys(cleanedResponse).map(key => {
                     const field = {
                         name: key,
                         value: cleanedResponse[key],
                         type: getTypeForKey(key, cleanedResponse[key])
                     };
-                    // Ajouter les options pour les champs de type select
                     if (key === 'role') {
                         field.is = 'select';
                         field.options = roleOptions;
+                        field.value = roleOptions.find(role => role.value === field.value)?.label;
+                    }
+                    if (key === 'category_id') {
+                        field.is = 'select';
+                        field.options = categorieOption;
                     }
                     return field;
                 });
@@ -107,6 +129,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     return acc;
                 }, {});
                 errors.value = errorMessages;
+                console.log(errors.value)
             }
             return false;
         }
@@ -114,7 +137,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
     const handleSubmit = async () => {
             if (!validateForm()) return;
-            try {
+        try {
                 const method = isEditing.value ? 'patch' : 'post';
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
                 const response = await ky[method](`${BASE_URL}${entityType}/${entityId || ''}`, {
@@ -125,6 +148,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     title: "Success",
                     text: `${entityType} ${isEditing.value ? 'updated' : 'created'} successfully`,
                 });
+
             } catch (error) {
                 await sweetalert.fire({
                     icon: "error",
@@ -147,7 +171,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
 
     const getTypeForKey = (key, value) => {
-        if (typeof value === 'number') return 'number';
+        if (typeof value === 'number' )  return 'number';
         if (typeof value === 'boolean') return 'checkbox';
         if (typeof value === 'string' && (key.includes('email') || key.includes('Email'))) return 'email';
         if (typeof value === 'string' && (key.includes('password') || key.includes('Password'))) return 'password';

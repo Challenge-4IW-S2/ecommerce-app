@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import ky from "ky";
+import router from "../../router.js";
 
 // Définir les props reçues par le composant
 const props = defineProps({
@@ -115,13 +116,14 @@ const exportSelectedRows = async () => {
 };
 const deleteSelected = async () => {
   try {
+    if (!confirm('Voulez-vous vraiment supprimer les éléments sélectionnés?')) return;
     const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
     const selectedIds = selectedData.map(row => row.id);
     for (let i = 0; i < selectedIds.length; i++) {
-      console.log(`${import.meta.env.VITE_API_BASE_URL}${props.title.toLowerCase()}/${selectedIds[i]}`)
-      const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}${props.title.toLowerCase()}/${selectedIds[i]}`).json();
       console.log(selectedIds[i])
-      console.log(response)
+      const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}${props.title.toLowerCase()}/${selectedIds[i]}`).json();
+
+      router.go();
     }
   } catch (error) {
     console.error('Erreur lors de la suppression des éléments sélectionnés:', error);
@@ -195,19 +197,24 @@ const deleteSelected = async () => {
               <td class="px-4 py-3" v-for="param in Object.keys(item)" :key="param">
                 {{ item[param] }}
               </td>
+              {{ item.delete }}
               <td class="px-4 py-3 flex items-center space-x-3">
-                <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
-                        :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white  font-medium rounded-lg">
-                  {{ action.label }}
-                </button>
+                <template v-if="!item.deleted">
+                  <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
+                          :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white font-medium rounded-lg">
+                    {{ action.label }}
+                  </button>
+                </template>
+                <template v-else>
+                  <span class="text-gray-500">Actions not available</span>
+                </template>
               </td>
             </tr>
-            <tr v-if="!paginatedData.length">
+            <tr v-if="paginatedData.length === 0">
               <td class="px-4 py-3 text-center" >
                 No data found
               </td>
             </tr>
-
             </tbody>
           </table>
         </div>

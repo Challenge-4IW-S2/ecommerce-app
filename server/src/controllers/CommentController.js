@@ -1,48 +1,39 @@
 import CommentRepository from "../postgresql/Repository/CommentRepository.js";
 
 export class CommentController {
-    static async getAllComments(req, res) {
+    static async getAllComments(req, res,next) {
         try {
             const commentRepository = new CommentRepository();
             const comments = await commentRepository.findAll();
-            res.status(200).json(comments);
+            res.json(comments);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async createComment(req, res) {
+    static async createComment(req, res,next) {
         try {
             const commentRepository = new CommentRepository();
             const comment = await commentRepository.createComment(req.body);
             res.status(201).json(comment);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async getComment(req, res) {
+    static async getComment(req, res,next) {
         try {
             const comment = await Comment.findByPk(req.params.id);
-            res.status(200).json(comment);
+            res.json(comment);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            next(error);
         }
     }
-    static async updateComment(req, res) {
-        try {
-            const comment = await Comment.findByPk(req.params.id);
-            await comment.update(req.body);
-            res.status(200).json(comment);
-        } catch (error) {
-            res.status(400).json({ message: error.message });
-        }
-    }
-    static async deleteComment(req, res) {
+    static async deleteComment(req, res,next) {
         try {
             const comment = await Comment.findByPk(req.params.id);
             await comment.destroy();
-            res.status(204).end();
+            res.sendStatus(204);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+           next(error);
         }
     }
 }

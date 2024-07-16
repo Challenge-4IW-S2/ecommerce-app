@@ -32,7 +32,8 @@ const internalModelValue = computed({
           @change="$emit('update:modelValue', $event.target.value)"
           class="border p-3.5  pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
       >
-        <option v-for="option in options" :key="option.value" :value="option.value">
+        <option value="" disabled selected>Choose an option</option>
+        <option v-for="option in options" :key="option.label" :value="option.label">
           {{ option.label }}
         </option>
       </select>

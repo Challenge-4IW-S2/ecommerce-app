@@ -1,9 +1,10 @@
 import z from 'zod';
 export const ProductSchema = z.object({
-    name: z.string("Product name is required"),
+    name: z.string("Product name is required").min(3, "Product name must be at least 3 characters long"),
     description: z.string().optional(),
-    price_ht: z.number().positive("Price must be positive"),
-    price_ttc: z.number().positive("Price must be positive"),
-    slug: z.string("Slug is required"),
-    category_id: z.string().uuid(),
+    category_id: z.string(),
+    slug: z.string().min(3, "Slug must be at least 3 characters long"),
+    price_ttc: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
+    price_ht: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
+    is_active: z.boolean().optional(),
 })

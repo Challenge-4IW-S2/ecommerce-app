@@ -41,7 +41,8 @@ export default class CategoryRepository {
         return await this.Category.update(category, {
             where: {
                 id: id
-            }
+            },
+            returning: true
         });
     }
 
