@@ -1,9 +1,8 @@
 import { Model, DataTypes } from "sequelize";
-
+import denormalizeCategory from "../../denormalizations/category.js";
 
 export default function (connection) {
   class Category extends Model {}
-
   Category.init(
     {
         id: {
@@ -23,6 +22,10 @@ export default function (connection) {
         timestamps: true
     }
   );
+
+  Category.addHook('afterCreate', async (category) => {
+    await denormalizeCategory(category.id);
+  });
 
   return Category;
 };

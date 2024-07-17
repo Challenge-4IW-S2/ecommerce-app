@@ -5,9 +5,24 @@ export default class ProductRepository {
         this.Product = ProductModel;
     }
 
-    createProduct(product) {
-        return this.Product.create(product);
+    createOrUpdateProduct(product) {
+        return this.Product.findOne
+        ({
+            where: {
+                id: product.id
+            }
+        })
+        .then((foundProduct) => {
+            if (foundProduct) {
+                return foundProduct.update(product);
+            } else {
+                return this.createProduct(product);
+            }
+        });
     }
+    // createProduct(product) {
+    //     return this.Product.create(product);
+    // }
 
     async getAllProducts(page, order) {
 

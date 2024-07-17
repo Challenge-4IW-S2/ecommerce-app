@@ -8,9 +8,7 @@ export const useUserStore = defineStore('user', {
     actions: {
         async initSessionAndBag(sessionId) {
             try {
-                if ((this.user === null && this.createAt === null) || 
-                    (this.user !== null && this.createAt === null) ||
-                    (this.user === null && this.createAt !== null)) {
+                if (this.user === null) {
                     this.user = sessionId;
                     sessionStorage.setItem('sessionId', JSON.stringify(sessionId));
                     await ky.post(`${import.meta.env.VITE_API_BASE_URL}/init-bag`, {

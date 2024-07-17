@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { useUserStore } from './store/userStore'
+import { useUserStore } from './store/userStore.js'
 import { v4 as uuidv4 } from 'uuid'
 import './style.css'
 import App from './App.vue'

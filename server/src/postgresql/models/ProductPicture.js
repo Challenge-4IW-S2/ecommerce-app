@@ -1,8 +1,21 @@
 import { Model, DataTypes } from "sequelize";
+// const denormalizeProductPicture = require("../../denormalizations/productpicture.js");
 
 export default function (connection) {
 
-    class ProductPicture extends Model {}
+    class ProductPicture extends Model {
+        static addHooks(models) {
+            ProductPicture.addHook("afterCreate", (productPicture) => {
+                denormalizeProductPicture(productPicture.id);
+            });
+
+            ProductPicture.addHook("afterUpdate", (productPicture, { fields }) => {
+                if (fields.includes("url", "product_id")) {
+                    denormalizeProductPicture(productPicture.id);
+                }
+            });
+        }
+    }
 
     ProductPicture.init(
         {
