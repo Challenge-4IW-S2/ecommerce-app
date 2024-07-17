@@ -1,7 +1,6 @@
 import ProductRepositoryMongo from "../mongo/Repository/ProductRepository.js";
 import ProductRepository from "../postgresql/Repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/Repository/ProductPictureRepository.js";
-import {prependOnceListener} from "process";
 
 export class ProductController {
     static async index(request, response) {
