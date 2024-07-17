@@ -36,7 +36,8 @@ export default class AdressRepository {
         return await this.Adress.update(adress, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

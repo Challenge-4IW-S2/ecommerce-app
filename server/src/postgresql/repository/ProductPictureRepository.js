@@ -34,6 +34,7 @@ export default class ProductPictureRepository {
             where: {
                 id: id,
             },
+            individualHooks: true,
         });
     }
 

@@ -36,7 +36,8 @@ export default class CommentRepository {
         return await this.Comment.update(comment, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

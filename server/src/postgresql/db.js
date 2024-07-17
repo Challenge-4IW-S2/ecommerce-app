@@ -3,7 +3,6 @@ import Sequelize from 'sequelize';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath,pathToFileURL } from 'url';
-import CategoryRepository from './repository/CategoryRepository.js';
 
 const connection = new Sequelize(process.env.DATABASE_URL);
 

@@ -1,21 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-// const denormalizeProduct = require("../../denormalizations/product.js");
+import { denormalizeProduct } from "../../denormalizations/product.js";
 
 export default function (connection) {
 
-    class Product extends Model {
-        static addHooks(models) {
-            Product.addHook("afterCreate", (product) => {
-                denormalizeProduct(product.id);
-            });
-
-            Product.addHook("afterUpdate", (product, { fields }) => {
-                if (fields.includes("name", "description", "price_ht", "price_ttc", "is_active", "slug", "category_id")) {
-                    denormalizeProduct(product.id);
-                }
-            });
-        }
-    }
+    class Product extends Model {}
 
     Product.init(
         {
@@ -65,6 +53,14 @@ export default function (connection) {
             timestamps: true
         }
     );
+
+    Product.afterCreate(async (product) => {
+        await denormalizeProduct(product);
+    });
+
+    Product.afterUpdate(async (product) => {
+        await denormalizeProduct(product);
+    });
 
     return Product;
 }

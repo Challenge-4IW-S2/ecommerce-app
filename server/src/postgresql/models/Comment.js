@@ -1,4 +1,5 @@
 import { Model, DataTypes } from "sequelize";
+import { denormalizeComment } from "../../denormalizations/comment.js";
 
 export default function (connection) {
 
@@ -47,6 +48,14 @@ export default function (connection) {
             timestamps: true
         }
     );
+
+    Comment.afterCreate(async (comment) => {
+        await denormalizeComment(comment);
+    });
+
+    Comment.afterUpdate(async (comment) => {
+        await denormalizeComment(comment);
+    });
 
     return Comment;
 }

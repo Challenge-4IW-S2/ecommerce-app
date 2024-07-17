@@ -1,4 +1,5 @@
 import { Model, DataTypes } from "sequelize";
+import { denormalizeAddress } from "../../denormalizations/address.js";
 
 export default function (connection) {
     class Address extends Model {}
@@ -42,6 +43,14 @@ export default function (connection) {
             timestamps: true
         }
     );
+
+    Address.afterCreate(async (address) => {
+        await denormalizeAddress(address);
+    });
+
+    Address.afterUpdate(async (address) => {
+        await denormalizeAddress(address);
+    });
 
     return Address;
 }

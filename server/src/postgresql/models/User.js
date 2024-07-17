@@ -1,5 +1,7 @@
 import { Model, DataTypes } from "sequelize";
+import { denormalizeUser } from "../../denormalizations/user.js";
 import bcrypt from 'bcryptjs';
+
 export default function (connection) {
 
     class User extends Model {}
@@ -68,11 +70,19 @@ export default function (connection) {
         user.password = hash;
     });
 
+    User.afterCreate(async (user) => {
+        await denormalizeUser(user);
+    });
+
     User.addHook("beforeUpdate", async function (user, { fields }) {
         if (fields.includes("password")) {
             const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
             user.password = hash;
         }
+    });
+
+    User.afterUpdate(async (user) => {
+        await denormalizeUser(user);
     });
 
     return User;

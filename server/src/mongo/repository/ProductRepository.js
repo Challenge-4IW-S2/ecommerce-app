@@ -5,24 +5,20 @@ export default class ProductRepository {
         this.Product = ProductModel;
     }
 
-    createOrUpdateProduct(product) {
-        return this.Product.findOne
-        ({
-            where: {
-                id: product.id
-            }
-        })
-        .then((foundProduct) => {
-            if (foundProduct) {
-                return foundProduct.update(product);
-            } else {
-                return this.createProduct(product);
-            }
+    async createOrUpdateProduct(product) {
+        return this.Product.findByIdAndUpdate(product.id, {
+            name: product.name,
+            description: product.description,
+            price_ht: product.price_ht,
+            price_ttc: product.price_ttc,
+            is_active: product.is_active,
+            slug: product.slug,
+            category_id: product.category_id,
+        }, {
+            upsert: true,
+            new: true,
         });
     }
-    // createProduct(product) {
-    //     return this.Product.create(product);
-    // }
 
     async getAllProducts(page, order) {
 

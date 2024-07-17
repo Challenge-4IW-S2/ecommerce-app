@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import {denormalizeCategory} from "../../denormalizations/category.js";
+import { denormalizeCategory } from "../../denormalizations/category.js";
 
 export default function (connection) {
   class Category extends Model {}

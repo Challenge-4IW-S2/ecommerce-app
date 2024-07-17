@@ -5,22 +5,13 @@ export default class ProductPictureRepository {
         this.ProductPicture = ProductPicture;
     }
 
-    createOrUpdateProductPicture(productPicture) {
-        return this.ProductPicture.findOne
-        ({
-            where: {
-                id: productPicture.id
-            }
-        })
-        .then((foundProductPicture) => {
-            if (foundProductPicture) {
-                return foundProductPicture.update(productPicture);
-            } else {
-                return this.createProductPicture(productPicture);
-            }
+    async createOrUpdateProductPicture(productPicture) {
+        return this.ProductPicture.findByIdAndUpdate(productPicture.id, {
+            product_id: productPicture.product_id,
+            url: productPicture.url,
+        }, {
+            upsert: true,
+            new: true,
         });
     }
-    // createProductPicture(productPicture) {
-    //     return this.ProductPicture.create(productPicture);
-    // }
 }
