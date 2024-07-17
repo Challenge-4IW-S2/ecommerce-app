@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeAddress } from "../../denormalizations/address.js";
+import { denormalizeAddress, denormalizeAddressesDelete } from "../../denormalizations/address.js";
 
 export default function (connection) {
     class Address extends Model {}
@@ -50,6 +50,10 @@ export default function (connection) {
 
     Address.afterUpdate(async (address) => {
         await denormalizeAddress(address);
+    });
+
+    Address.beforeDestroy(async (address) => {
+        await denormalizeAddressesDelete(address);
     });
 
     return Address;

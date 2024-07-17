@@ -14,4 +14,8 @@ export default class ProductPictureRepository {
             new: true,
         });
     }
+
+    async deleteProductPicture(productPictureId) {
+        return this.ProductPicture.findByIdAndDelete(productPictureId);
+    }
 }

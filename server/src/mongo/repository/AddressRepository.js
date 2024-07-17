@@ -17,4 +17,8 @@ export default class AddressRepository {
             new: true,
         });
     }
+
+    async deleteAddress(addressId) {
+        return this.Address.findByIdAndDelete(addressId);
+    }
 }

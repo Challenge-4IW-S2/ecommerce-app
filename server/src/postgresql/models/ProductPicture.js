@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeProductPicture } from "../../denormalizations/productpicture.js";
+import { denormalizeProductPicture, denormalizeProductPictureDelete } from "../../denormalizations/productpicture.js";
 
 
 export default function (connection) {
@@ -40,6 +40,10 @@ export default function (connection) {
 
     ProductPicture.afterUpdate(async (productPicture) => {
         await denormalizeProductPicture(productPicture);
+    });
+
+    ProductPicture.beforeDestroy(async (productPicture) => {
+        await denormalizeProductPictureDelete(productPicture);
     });
 
     return ProductPicture;

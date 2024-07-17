@@ -16,4 +16,8 @@ export default class CommentRepository {
             new: true,
         });
     }
+
+    async deleteComment(commentId) {
+        return this.Comment.findByIdAndDelete(commentId);
+    }
 }

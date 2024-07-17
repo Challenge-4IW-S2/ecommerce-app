@@ -14,4 +14,8 @@ export default class WishlistRepository {
             new: true,
         });
     }
+
+    async deleteWishlist(wishlistId) {
+        return this.Wishlist.findByIdAndDelete(wishlistId);
+    }
 }

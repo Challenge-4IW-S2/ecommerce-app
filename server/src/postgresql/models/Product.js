@@ -1,5 +1,5 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeProduct } from "../../denormalizations/product.js";
+import { denormalizeProduct, denormalizeProductDelete } from "../../denormalizations/product.js";
 
 export default function (connection) {
 
@@ -60,6 +60,10 @@ export default function (connection) {
 
     Product.afterUpdate(async (product) => {
         await denormalizeProduct(product);
+    });
+
+    Product.beforeDestroy(async (product) => {
+        await denormalizeProductDelete(product.id);
     });
 
     return Product;

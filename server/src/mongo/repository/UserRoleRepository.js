@@ -13,4 +13,8 @@ export default class UserRoleRepository {
             new: true,
         });
     }
+
+    async deleteUserRole(userRoleId) {
+        return this.UserRole.findByIdAndDelete(userRoleId);
+    }
 }

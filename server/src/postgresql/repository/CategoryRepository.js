@@ -50,7 +50,8 @@ export default class CategoryRepository {
         return await this.Category.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }

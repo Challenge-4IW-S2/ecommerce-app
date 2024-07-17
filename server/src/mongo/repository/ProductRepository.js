@@ -20,6 +20,10 @@ export default class ProductRepository {
         });
     }
 
+    async deleteProduct(productId) {
+        return this.Product.findByIdAndDelete(productId);
+    }
+
     async getAllProducts(page, order) {
 
         // nombre total de pages ( ex : 100 / 10 = 10)

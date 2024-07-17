@@ -13,4 +13,8 @@ export default class CategoryRepository {
             new: true,
         });
     }
+
+    async deleteCategory(categoryId) {
+        return this.Category.findByIdAndDelete(categoryId);
+    }
 }
