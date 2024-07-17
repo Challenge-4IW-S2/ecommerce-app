@@ -18,6 +18,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const isEditing = ref(Boolean(entityId));
     let addressOptions = ref([]);
     let categorieOption = ref([]);
+    let images = ref([]);
 
     const getRoleOptions = async () => {
         try {
@@ -60,6 +61,20 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
         }
     };
 
+    const getProductPictureOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}productPicture/${entityId}/productPictures`).json();
+            return response.map(picture => ({
+                id: picture.id,
+                url: picture.url.replace(/^.*[\\\/]/, '')
+            }));
+        } catch (error) {
+            console.error('Failed to fetch pictures:', error);
+            return [];
+        }
+    }
+
+
     const fetchEntityStructure = async () => {
             try {
                 unwantedFields.push('id');
@@ -85,6 +100,9 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 }
                 if (entityType === 'product') {
                     categorieOption = await getCategorieOptions();
+                    if (entityId) {
+                        images.value = await getProductPictureOptions();
+                    }
                 }
                 entityStructure.value = Object.keys(cleanedResponse).map(key => {
                     const field = {
@@ -139,6 +157,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             if (!validateForm()) return;
         try {
                 const method = isEditing.value ? 'patch' : 'post';
+
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
                 const response = await ky[method](`${BASE_URL}${entityType}/${entityId || ''}`, {
                     json: cleanedData
@@ -198,6 +217,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
         formData,
         errors,
         entityStructure,
+        images,
         addressOptions,
         handleSubmit,
         handleDelete,

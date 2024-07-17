@@ -97,11 +97,11 @@ export class ProductController {
             const productRepository = new ProductRepository();
             const productPicture = new ProductPictureRepository();
 
-            const [nbDelete] =  await productRepository.deleteProduct(request.params.id)
+            const nbDelete =  await productRepository.deleteProduct(request.params.id)
             if (nbDelete === 1){
                 const productPictures = await productPicture.findByOtherField("product_id", request.params.id);
 
-                if (productPictures.length === 0) {
+                if (productPictures === null || productPictures.length === 0) {
                     return response.sendStatus(204);
                 }
 

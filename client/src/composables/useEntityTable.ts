@@ -3,8 +3,10 @@ import ky from "ky";
 import {  useRouter } from "vue-router";
 import { useTable } from "./useTable";
 
+
 export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], roleApiUrl = null) => {
-    const router = useRouter();const {
+    const router = useRouter();
+    const {
         data,
         searchQuery,
         selectedRows,
@@ -23,6 +25,7 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
         {
             label: 'Modifier',
             method: ({ row }) => {
+                console.log(row)
                 router.push(`/admin/${entityPath}/${row.id}`);
             },
             color: 'blue',
@@ -30,6 +33,7 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
         {
             label: 'Supprimer',
             method: async ({ row }) => {
+                console.log(row)
                 try {
                     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) {
                         return;

@@ -15,7 +15,7 @@ export default class ProductPictureRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.ProductPicture.findOne({
+        return await this.ProductPicture.findAll({
             where: {
                 [field]: value,
             },
@@ -34,6 +34,7 @@ export default class ProductPictureRepository {
             where: {
                 id: id,
             },
+            returning: true,
         });
     }
 

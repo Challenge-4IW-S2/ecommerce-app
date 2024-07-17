@@ -84,7 +84,7 @@ function getButtonClass(color) {
     case 'green':
       return 'bg-green-500 hover:bg-green-700';
     default:
-      return 'bg-gray-500 hover:bg-gray-700';
+      return 'bg-black hover:bg-black';
   }
 }
 
@@ -99,10 +99,38 @@ const previousPage = () => {
     currentPage.value--;
   }
 };
+const flattenObject = (obj, prefix = '') => {
+  let result = {};
+
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const pre = prefix.length ? prefix + '.' : '';
+      if (Array.isArray(obj[key])) {
+        obj[key].forEach((item, index) => {
+          Object.assign(result, flattenObject(item, `${pre}${key}[${index}]`));
+        });
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        Object.assign(result, flattenObject(obj[key], pre + key));
+      } else {
+        result[pre + key] = obj[key];
+      }
+    }
+  }
+
+  return result;
+};
+
 const exportSelectedRows = async () => {
   try {
     const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
-    const csvContent = selectedData.map(row => Object.values(row).join(',')).join('\n');
+    const flattenedData = selectedData.map(row => flattenObject(row));
+
+    const headers = Object.keys(flattenedData[0]).join(',');
+    const csvContent = [
+      headers,
+      ...flattenedData.map(row => Object.values(row).join(','))
+    ].join('\n');
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -129,6 +157,9 @@ const deleteSelected = async () => {
     console.error('Erreur lors de la suppression des éléments sélectionnés:', error);
   }
 };
+const canDeleteOrEdit = computed(() => {
+  return props.title !== 'orders' && props.title !== 'comments';
+});
 </script>
 
 <template>
@@ -156,10 +187,10 @@ const deleteSelected = async () => {
           </div>
           <div
               class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-            <router-link :to="to" class="bg-black text-white py-2 px-4 font-bold rounded hover:bg-black"> Add {{ title }}
+            <router-link v-if="canDeleteOrEdit " :to="to" class="bg-black text-white py-2 px-4 font-bold rounded hover:bg-black"> Add {{ title }}
             </router-link>
-            <div class="flex items-center space-x-3 w-full md:w-auto">
-              <button @click="deleteSelected"
+            <div class="flex items-center space-x-3 w-full md:w-auto" >
+              <button v-if="canDeleteOrEdit " @click="deleteSelected"
                       class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
                 Delete Selected
               </button>
@@ -191,17 +222,18 @@ const deleteSelected = async () => {
               <td class="p-4">
                 <input type="checkbox" :value="item.id" v-model="selectedRows">
               </td>
-              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white truncate">
                 {{ index + 1 }}
               </th>
-              <td class="px-4 py-3" v-for="param in Object.keys(item)" :key="param">
+              <td class="px-4 py-3 truncate" v-for="param in Object.keys(item)" :key="param">
                 {{ item[param] }}
               </td>
               {{ item.delete }}
               <td class="px-4 py-3 flex items-center space-x-3">
                 <template v-if="!item.deleted">
                   <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
-                          :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white font-medium rounded-lg">
+                          :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white font-medium "
+                       >
                     {{ action.label }}
                   </button>
                 </template>

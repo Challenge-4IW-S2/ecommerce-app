@@ -1,6 +1,4 @@
-import UserRole from "../postgresql/models/UserRole.js";
 import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
-import AdressRepository from "../postgresql/Repository/AdressRepository.js";
 
 export class UserRoleController{
     static async getAllUserRole(req, res) {

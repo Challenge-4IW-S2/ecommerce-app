@@ -9,7 +9,7 @@ const props = defineProps({
   },
   placeholder: String,
   type: {
-    validator: (value) => ['text', 'email', 'password', 'number', 'date', 'datetime-local', 'month', 'search', 'tel', 'time', 'url', 'week', 'color'].includes(value),
+    validator: (value) => ['text', 'email', 'password', 'number', 'date', 'datetime-local', 'month', 'search', 'tel', 'time', 'url','file', 'week', 'color'].includes(value),
     default: 'text'
   },
   error: String,
@@ -20,6 +20,7 @@ const props = defineProps({
 })
 
 let dynamicType = ref(props.type);
+
 let inputValue = ref(props.modelValue);
 
 function changeVisibility() {
@@ -27,14 +28,22 @@ function changeVisibility() {
       ? 'text'
       : 'password';
 }
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'update:file']);
 const internalModelValue = computed({
   get: () => inputValue.value,
   set: (value) => {
     inputValue.value = value;
-    emit('update:modelValue', value)
+    emit('update:modelValue', value);
   }
 });
+
+function handleFileChange(event) {
+  const files = event.target.files;
+  if (files.length > 0) {
+    emit('update:file', files[0]);
+  }
+
+}
 
 </script>
 
@@ -44,7 +53,7 @@ const internalModelValue = computed({
       {{ title }}
     </label>
     <div class="w-full relative">
-      <input
+      <input v-if="dynamicType !== 'file'"
           :id="id"
           :type="dynamicType"
           :placeholder="placeholder"
@@ -54,6 +63,24 @@ const internalModelValue = computed({
           class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           >
       </input>
+      <input v-else
+          :id="id"
+          :type="dynamicType"
+          :placeholder="placeholder"
+          :option="option"
+          v-model="internalModelValue"
+             :disabled="disabled"
+          accept=".jpg, .jpeg, .png, .svg"
+
+      class="border pr-1 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full
+           file:mr-4 file:py-2 file:px-4
+           file:border-0
+           file:text-sm file:font-semibold
+           file:bg-black file:text-white
+           hover:file:bg-black hover:file:text-white"
+
+          >
+
       <span v-if="type === 'password'" class="z-20 absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer bg-white"
             @click="changeVisibility">
         {{

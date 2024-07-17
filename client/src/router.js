@@ -14,6 +14,7 @@ import DashboardCommentsView from './pages/Dashboard/Tables/Comments.vue'
 import DashboardAddressesView from './pages/Dashboard/Tables/Addresses.vue'
 import DashboardUserRolesView from './pages/Dashboard/Tables/UserRoles.vue'
 import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
+import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
 
 const routes = [
     { path: '/', component: HomeView },
@@ -36,7 +37,8 @@ const routes = [
     { path: '/admin/:entityType/:id', component: DashboardEdit },
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
-    { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit address
+    { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
+    { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
     { path: '/products', component: ProductsView},
     { path: '/:slug', component: ProductView},
 ]

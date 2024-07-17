@@ -7,6 +7,7 @@ import RadioInput from "../Inputs/RadioInput.vue";
 import Input from "../Inputs/Input.vue";
 import AdressCard from "../Cards/AdressCard.vue";
 import {toRefs} from "vue";
+import ProductPicture from "../Carousel/ProductPicture.vue";
 const props = defineProps({
   entityType: {
     type: String,
@@ -18,7 +19,7 @@ const props = defineProps({
   }
 });
 const { entityType, entityId } = toRefs(props);
-const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOptions } = useEntityForm(entityType.value, entityId.value,import.meta.env.VITE_API_BASE_URL);
+const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOptions, images } = useEntityForm(entityType.value, entityId.value,import.meta.env.VITE_API_BASE_URL);
 </script>
 <template>
     <form @submit.prevent="handleSubmit">
@@ -53,6 +54,17 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
             <p>No address found</p>
           </div>
         </div>
+        <div v-if="entityType === 'product' && entityId">
+          <div class="flex justify-between">
+            <h2 class="text-lg font-bold">Images</h2>
+            <router-link :to="`/admin/add-productPicture/${entityId}`" class="text-sm underline font-normal">Ajouter une image</router-link>
+          </div>
+          <div class="grid gap-6 mt-4 md:grid-cols-2">
+            <div v-if="images.length > 0">
+              <ProductPicture :images="images" :product-id="entityId"  />
+            </div>
+            </div>
+          </div>
       <div class="flex justify-end">
         <Button text="Submit" />
         <Button v-if="entityId" text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />

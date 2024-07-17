@@ -1,6 +1,7 @@
 <script setup>
 import {computed, ref} from "vue";
 import Input from "./Input.vue";
+import {boolean} from "zod";
 
 const props = defineProps({
   id: String,          // L'identifiant unique du champ de sélection
@@ -9,7 +10,8 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  modelValue: [String, Number,Array]  // La valeur sélectionnée
+  modelValue: [String, Number,Array] , // La valeur sélectionnée
+  selected: Boolean
 });
 const selectedValue = ref(props.modelValue);
 const emit = defineEmits(['update:modelValue']);
@@ -17,6 +19,8 @@ const internalModelValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 });
+
+console.log(props.modelValue)
 </script>
 
 <template>
@@ -32,8 +36,9 @@ const internalModelValue = computed({
           @change="$emit('update:modelValue', $event.target.value)"
           class="border p-3.5  pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
       >
-        <option value="" disabled selected>Choose an option</option>
-        <option v-for="option in options" :key="option.label" :value="option.label">
+
+        <option v-for="option in options" :key="option.label" :value="option.label"
+                :selected="option.value === modelValue">
           {{ option.label }}
         </option>
       </select>

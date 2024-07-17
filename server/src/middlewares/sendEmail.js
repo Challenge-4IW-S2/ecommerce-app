@@ -6,8 +6,8 @@ export const sendEmail = async (to, subject,template) => {
 	try {
 		await resend.emails.send({
 			from: 'onboarding@resend.dev',
-			to: 'progrdnvictor@gmail.com',
-			subject: 'Hello World',
+			to: to,
+			subject: subject,
 			html: template
 		});
 		console.log("Email sent successfully");
@@ -16,3 +16,17 @@ export const sendEmail = async (to, subject,template) => {
 		throw new Error("Mail sending failed");
 	}
 };
+const testSendEmail = async () => {
+	const to = 'estelle27001@gmail.com'; // Replace with the recipient's email address
+	const subject = 'Test Email Subject'; // Replace with the email subject
+	const template = '<h1>Hello World</h1><p>This is a test email.</p>'; // Replace with your HTML template
+
+	try {
+		await sendEmail(to, subject, template);
+	} catch (error) {
+		console.error(error);
+	}
+};
+
+// Run the test
+testSendEmail();

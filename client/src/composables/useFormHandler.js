@@ -27,6 +27,7 @@ export function useFormHandler(entityType, initialData = {}) {
 
     const handleSubmit = async (url, method = 'POST') => {
         let response;
+        console.log(formData.value)
 
         if (!validate()) return;
         isSubmitting.value = true;

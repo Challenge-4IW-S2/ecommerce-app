@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 
 export function fetchModelStructure(modelName) {
     try {
+        console.log(`${import.meta.env.VITE_API_BASE_URL}model/${modelName}`)
         return ky.get(`${import.meta.env.VITE_API_BASE_URL}model/${modelName}`).json();
     } catch (error) {
         console.error("Error fetching model structure:", error);
@@ -60,6 +61,12 @@ export function getEntitySchema (entityType){
             return z.object({
                 name: z.string("Category is required")
             });
+
+        case 'productPicture':
+            return z.object({
+                product_id: z.string().uuid("Invalid product ID"),
+                url: z.string().url("Invalid URL format")
+            })
 
         default:
             return z.object({});

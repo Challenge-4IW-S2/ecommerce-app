@@ -12,7 +12,7 @@ export const sendCode = (code) => {
     <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:360px;background-color:#ffffff;border:1px solid #eee;border-radius:5px;box-shadow:0 5px 10px rgba(20,50,70,.2);margin-top:20px;margin:0 auto;padding:68px 0 130px">
         <tbody>
         <tr style="width:100%">
-            <td><img alt="Plaid" height="88" src="https://react-email-demo-dr9excyry-resend.vercel.app/static/plaid-logo.png" style="display:block;outline:none;border:none;text-decoration:none;margin:0 auto" width="212" />
+            <td><img alt="Plaid" height="88" src="./assets/Logo.jpg" style="display:block;outline:none;border:none;text-decoration:none;margin:0 auto" width="212" />
                 <p style="font-size:11px;line-height:16px;margin:16px 8px 8px 8px;color:#0a85ea;font-weight:700;font-family:HelveticaNeue,Helvetica,Arial,sans-serif;height:16px;letter-spacing:0;text-transform:uppercase;text-align:center">Verify Your Identity</p>
                 <h1 style="color:#000;display:inline-block;font-family:HelveticaNeue-Medium,Helvetica,Arial,sans-serif;font-size:20px;font-weight:500;line-height:24px;margin-bottom:0;margin-top:0;text-align:center">
                 Enter the following code to finish linking Luzaya

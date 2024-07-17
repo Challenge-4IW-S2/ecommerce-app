@@ -12,7 +12,7 @@ const { data, actions } = useEntityTable(baseUrl,route, entityPath, []);
 <template>
   <div>
     <h1>Comments Dashboard</h1>
-    <Table :params="data" :actions="actions" :to="`/admin/add-comment`" />
+    <Table :params="data" :actions="actions" :to="`/admin/add-comment`" :title="'comments'"/>
   </div>
 </template>
 

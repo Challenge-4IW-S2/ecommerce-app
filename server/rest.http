@@ -129,7 +129,7 @@ POST localhost:8000/address
 Content-Type: application/json
 
 {
-  "user_id": "1adac9b1-7f47-4ea2-b79e-ff01c9641991",
+  "user_id": "91bc76d8-3d82-4b04-94b5-f31f0d50dbc8",
   "street": "1 rue de la paix",
   "postal_code": "75000",
   "city": "Paris",
@@ -159,3 +159,6 @@ Content-Type: application/json
   "slug": "clips-ins",
   "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
 }
+
+### Get Product Picture by id
+GET localhost:8000/productPicture/aafb5b65-e13b-44a8-a143-c54e9a020ed9
