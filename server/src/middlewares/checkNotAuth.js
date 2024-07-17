@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import UserRepository from "../postgresql/Repository/UserRepository.js";
+import UserRepository from "../postgresql/repository/UserRepository.js";
 
 
 export default () => async (request, response, next) => {

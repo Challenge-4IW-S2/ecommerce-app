@@ -8,7 +8,7 @@ const LOCK_TIME = 15 * 60 * 1000;
 
 import {z} from 'zod';
 import e from "express";
-import ResetPasswordTokenRepository from "../postgresql/Repository/ResetPasswordTokenRepository.js";
+import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
 
 export class AuthController {
 
