@@ -12,7 +12,7 @@ let product = ref(null);
 
 const getProduct = async () => {
     try {
-        const response = await ky.get(`http://localhost:8000/product/${slug.value}`).json();
+        const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/product/${slug.value}`).json();
         if (response.data && response.data.length > 0) {
             product.value = response.data[0];
         } else {

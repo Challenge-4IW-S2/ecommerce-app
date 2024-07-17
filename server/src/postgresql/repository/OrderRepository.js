@@ -35,7 +35,8 @@ export default class OrderRepository {
         return await this.Order.update(order, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

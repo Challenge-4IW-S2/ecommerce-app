@@ -40,7 +40,8 @@ export default class ProductRepository {
         return await this.Product.update(product, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

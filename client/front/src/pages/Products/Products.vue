@@ -15,7 +15,7 @@ let order = ref('');
 // get all products API
 const getProducts = async (page, orderBy) => {
     try {
-        await ky.get("http://localhost:8000/products", {
+        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/products`, {
             searchParams: {
                 page: page,
                 order: orderBy,

@@ -39,7 +39,8 @@ export default class UserRepository {
         return await this.User.update(user, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

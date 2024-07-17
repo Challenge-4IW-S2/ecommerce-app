@@ -5,8 +5,23 @@ export default class ProductRepository {
         this.Product = ProductModel;
     }
 
-    createProduct(product) {
-        return this.Product.create(product);
+    async createOrUpdateProduct(product) {
+        return this.Product.findByIdAndUpdate(product.id, {
+            name: product.name,
+            description: product.description,
+            price_ht: product.price_ht,
+            price_ttc: product.price_ttc,
+            is_active: product.is_active,
+            slug: product.slug,
+            category_id: product.category_id,
+        }, {
+            upsert: true,
+            new: true,
+        });
+    }
+
+    async deleteProduct(productId) {
+        return this.Product.findByIdAndDelete(productId);
     }
 
     async getAllProducts(page, order) {

@@ -7,6 +7,11 @@ import {computed, ref} from "vue";
 import Swal from "sweetalert2";
 import {  useRouter } from "vue-router";
 // import jwt_decode from "jwt-decode";
+
+// For connect user bag
+import { useUserStore } from "../store/userStore";
+const userStore = useUserStore();
+
 const router = useRouter()
 const email = ref('')
 const password = ref('')
@@ -85,7 +90,7 @@ const connect = async () => {
        let cookie = response.cookie
         console.log(cookie)
         console.log(document.cookie)
-
+        userStore.updateSessionId(userStore.user, response.user.id)
           if (response.user.role === 'admin') {
             await router.push('/admin/dashboard')
           } else {

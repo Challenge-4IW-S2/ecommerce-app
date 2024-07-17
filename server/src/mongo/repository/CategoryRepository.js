@@ -5,7 +5,16 @@ export default class CategoryRepository {
         this.Category = CategoryModel;
     }
 
-    createCategory(category) {
-        return this.Category.create(category);
+    async createOrUpdateCategory(category) {
+        return this.Category.findByIdAndUpdate(category.id, {
+            name: category.name,
+        }, {
+            upsert: true,
+            new: true,
+        });
+    }
+
+    async deleteCategory(categoryId) {
+        return this.Category.findByIdAndDelete(categoryId);
     }
 }

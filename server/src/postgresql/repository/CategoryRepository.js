@@ -41,7 +41,8 @@ export default class CategoryRepository {
         return await this.Category.update(category, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 
@@ -49,7 +50,8 @@ export default class CategoryRepository {
         return await this.Category.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }
