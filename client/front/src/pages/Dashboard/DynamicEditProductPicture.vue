@@ -19,8 +19,8 @@ const entityId = route.params.id;
 
 const formStructure = ref([]);
  const url = entityId
-    ? `${import.meta.env.VITE_API_BASE_URL}productPicture/${entityId}`
-    : `${import.meta.env.VITE_API_BASE_URL}productPicture`;
+    ? `${import.meta.env.VITE_API_BASE_URL}/productPicture/${entityId}`
+    : `${import.meta.env.VITE_API_BASE_URL}/productPicture`;
 
 const goBack = () => {
   router.go(-1);
@@ -39,7 +39,7 @@ const fetchEntityStructure = async (modelName) => {
     const unwantedFields = ['createdAt', 'updatedAt', 'id'];
     let response = {};
     if (entityId) {
-      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}productPicture/${entityId}`).json();
+      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${entityId}`).json();
     } else {
       const structure = await fetchModelStructure(modelName);
       response = structure.reduce((acc, field) => {

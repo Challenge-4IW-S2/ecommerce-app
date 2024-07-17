@@ -38,7 +38,7 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
                     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) {
                         return;
                     }
-                    await ky.delete(`${baseUrl}${entityPath}/${row.id}`);
+                    await ky.delete(`${baseUrl}/${entityPath}/${row.id}`);
                     await fetchData();
                 } catch (error) {
                     console.error('Erreur lors de la suppression:', error);

@@ -7,7 +7,7 @@ import { useGeneratePDF } from "../../../composables/useGeneratorPDF.ts";
 
 const entityPath = 'order';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const route = `${import.meta.env.VITE_API_BASE_URL}orders`;
+const route = `${import.meta.env.VITE_API_BASE_URL}/orders`;
 
 
 const { data, actions } = useEntityTable(baseUrl,route, entityPath, [{
@@ -15,7 +15,7 @@ const { data, actions } = useEntityTable(baseUrl,route, entityPath, [{
   method: async ({ row }) => {
     const { generatePDF } = useGeneratePDF();
     try {
-      const response = await ky.get(`${baseUrl}order/${row.id}`).json();
+      const response = await ky.get(`${baseUrl}/order/${row.id}`).json();
       const { address, user, products, order } = response.invoice;
       generatePDF({ address, user, products, order });
 

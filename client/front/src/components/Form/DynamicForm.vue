@@ -40,12 +40,11 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
         </div>
       </div>
         <div v-if="entityType === 'user' && entityId">
-          <div v-if="addressOptions.length > 0">
             <div class="flex justify-between">
               <h2 class="text-lg font-bold">Addresses</h2>
               <router-link :to="`/admin/add-address/${entityId}`" class="text-sm underline font-normal">Ajouter une adresse</router-link>
             </div>
-            <AdressCard
+            <AdressCard v-if="addressOptions.length > 0"
                 :address="addressOptions"
                 :userId="entityId"
             />
@@ -53,7 +52,6 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
           <div v-else>
             <p>No address found</p>
           </div>
-        </div>
         <div v-if="entityType === 'product' && entityId">
           <div class="flex justify-between">
             <h2 class="text-lg font-bold">Images</h2>

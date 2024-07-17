@@ -22,7 +22,7 @@ const deleteAddress = async (id) => {
     if (!confirm('Are you sure you want to delete this address?')) {
       return;
     }
-    await ky.delete(`${import.meta.env.VITE_API_BASE_URL}address/${id}`);
+    await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/address/${id}`);
     router.go();
   } catch (error) {
     console.error(error);

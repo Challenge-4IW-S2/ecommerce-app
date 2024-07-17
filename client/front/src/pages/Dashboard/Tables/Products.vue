@@ -5,7 +5,7 @@ import { useEntityTable } from '../../../composables/useEntityTable.ts';
 const product = 'product';
 const entityPath = 'product';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const route = `${import.meta.env.VITE_API_BASE_URL}products`;
+const route = `${import.meta.env.VITE_API_BASE_URL}/products`;
 
 const { data, actions } = useEntityTable(baseUrl,route, entityPath, []);
 </script>

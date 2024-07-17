@@ -3,9 +3,9 @@ import Table from "../../../components/Tables/Table.vue";
 import {useEntityTable} from "../../../composables/useEntityTable.ts";
 
 const user = 'user';
-const roleApiUrl = `${import.meta.env.VITE_API_BASE_URL}role`;
+const roleApiUrl = `${import.meta.env.VITE_API_BASE_URL}/userRoles`;
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const route = `${import.meta.env.VITE_API_BASE_URL}users`;
+const route = `${import.meta.env.VITE_API_BASE_URL}/users`;
 const entityPath = 'user';
 
 //const { data, actions } = useEntityTable(baseUrl,route, entityPath,[], roleApiUrl);

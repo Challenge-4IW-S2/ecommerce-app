@@ -61,7 +61,7 @@ export class CategoryController {
     static async deleteCategory(request, response,next) {
         try {
             const categoryRepository = new CategoryRepository();
-            const nbDeleted = await categoryRepository.deleteCategory(request.params.id);
+            const [nbDeleted] = await categoryRepository.deleteCategory(request.params.id);
             response.status(nbDeleted === 1 ? 200 : 404).json()
         }catch (e) {
             next(e)

@@ -9,7 +9,7 @@ import {
     handleHttpResponse
 } from '../functions/model.js';
 
-const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active'];
+const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active', 'user_id', "product_id"];
 export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const formData = reactive({});
     const entitySchema = ref(getEntitySchema(entityType));
@@ -22,7 +22,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
     const getRoleOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}userRoles`).json();
+            const response = await ky.get(`${BASE_URL}/userRoles`).json();
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -34,7 +34,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     };
     const getAdressOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}address/${entityId}/addresses`).json();
+            const response = await ky.get(`${BASE_URL}/address/${entityId}/addresses`).json();
             return response.map(address => ({
                 id: address.id,
                street: address.street,
@@ -50,7 +50,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
     const getCategorieOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}categories`).json();
+            const response = await ky.get(`${BASE_URL}/categories`).json();
             return response.map(categorie => ({
                 value: categorie.id,
                 label: categorie.name
@@ -63,7 +63,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
     const getProductPictureOptions = async () => {
         try {
-            const response = await ky.get(`${BASE_URL}productPicture/${entityId}/productPictures`).json();
+            const response = await ky.get(`${BASE_URL}/productPicture/${entityId}/productPictures`).json();
             return response.map(picture => ({
                 id: picture.id,
                 url: picture.url.replace(/^.*[\\\/]/, '')
@@ -80,7 +80,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 unwantedFields.push('id');
                 let response = {};
                 if (entityId) {
-                    response = await ky.get(`${BASE_URL}${entityType}/${entityId || ''}`).json();
+                    response = await ky.get(`${BASE_URL}/${entityType}/${entityId || ''}`).json();
                 } else {
                     const [structure] = await Promise.all([fetchModelStructure(entityType.charAt(0).toUpperCase() + entityType.slice(1))]);
                     response = structure;
@@ -159,7 +159,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 const method = isEditing.value ? 'patch' : 'post';
 
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
-                const response = await ky[method](`${BASE_URL}${entityType}/${entityId || ''}`, {
+                const response = await ky[method](`${BASE_URL}/${entityType}/${entityId || ''}`, {
                     json: cleanedData
                 }).json();
                 await sweetalert.fire({
@@ -181,7 +181,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const handleDelete = async () => {
         if (entityId) {
             try {
-                await ky.delete(`${BASE_URL}${entityType}/${entityId}`).json();
+                await ky.delete(`${BASE_URL}/${entityType}/${entityId}`).json();
                 console.log(`${entityType} deleted successfully`);
             } catch (error) {
                 console.error(`Failed to delete ${entityType}:`, error);
