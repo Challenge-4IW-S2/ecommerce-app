@@ -209,5 +209,9 @@ export class AuthController {
         }).send()
     }
 
+    static authCheck(request, response) {
+        return response.sendStatus(200);
+    }
+
 
 }
