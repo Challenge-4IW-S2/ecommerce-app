@@ -1,6 +1,6 @@
-import ProductRepositoryMongo from "../mongo/Repository/ProductRepository.js";
-import ProductRepository from "../postgresql/Repository/ProductRepository.js";
-import ProductPictureRepository from "../postgresql/Repository/ProductPictureRepository.js";
+import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
+import ProductRepository from "../postgresql/repository/ProductRepository.js";
+import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
 
 export class ProductController {
     static async index(request, response) {

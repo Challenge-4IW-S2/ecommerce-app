@@ -1,4 +1,5 @@
 import { Model, DataTypes } from "sequelize";
+import { denormalizeOrder } from "../../denormalizations/order.js";
 
 export default function (connection) {
     class Order extends Model {}
@@ -38,6 +39,14 @@ export default function (connection) {
             timestamps: true
         }
     );
+
+    Order.afterCreate(async (order) => {
+        await denormalizeOrder(order);
+    });
+
+    Order.afterUpdate(async (order) => {
+        await denormalizeOrder(order);
+    });
 
     return Order;
 }

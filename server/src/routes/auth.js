@@ -1,12 +1,19 @@
 import {AuthController} from "../controllers/AuthController.js";
+import checkAuth from "../middlewares/checkAuth.js";
+import checkNotAuth from "../middlewares/checkNotAuth.js";
 
 export default function (router) {
-    // test middleware checkAuth (bidon mdr mais ça marche)
-    //router.get("/login", checkAuth(true), (req, res) => res.send("You are logged in"));
-    router.post("/login",AuthController.login);
-    router.post("/signup", AuthController.signup);
-    router.post('/logout', AuthController.logout);
-   // router.post('/forgot-password', AuthController.forgotPassword);
+    router.post("/signup", checkNotAuth(),AuthController.signup);
+
+    router.post("/login", checkNotAuth(), AuthController.login);
+    router.get('/logout', checkAuth(), AuthController.logout);
+
+    router.get('/test-auth', checkAuth(), AuthController.deleteAccount)
+
+    router.post('/forgot-password', checkNotAuth(), AuthController.forgotPassword);
+    router.get('/check-reset-password-token', checkNotAuth(), AuthController.checkResetPasswordToken);
+
+    router.post('/delete-account', checkAuth(), AuthController.deleteAccount);
     return router;
 }
 

@@ -7,18 +7,16 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pg-data:/var/lib/postgresql/data
-  
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - db
-
   mongodb:
     image: mongo
     ports:
-      - 127.0.0.1:27017:27017
+      - "127.0.0.1:27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -26,20 +24,45 @@ services:
       - db-data:/data/db
       - ./mongo/data:/home/data
     working_dir: /home/data
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - ENV=${ENV}
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - front
+      - admin
+    command: /bin/bash -c "if [ $ENV = 'dev' ]; then cp /etc/nginx/conf.d/nginx.conf.local /etc/nginx/nginx.conf; else cp /etc/nginx/conf.d/nginx.conf.droplet /etc/nginx/nginx.conf; fi && nginx -g 'daemon off;'"
 
-  client:
+  front:
     image: node:20.0.0-alpine
     environment:
       - VITE_API_BASE_URL=${API_BASE_URL}
     user: node
     entrypoint: sh -c
-    working_dir: /home/node
+    working_dir: /home/node/client/front
     command: '"npm install && npm run dev"'
     ports:
-      - 5173:5173
+      - "5173:5173"
     volumes:
-      - ./client:/home/node
-  
+      - ./client/front:/home/node/client/front
+  admin:
+    # Configuration pour le back-office, similaire à celle du client
+    image: node:20.0.0-alpine
+    environment:
+      - VITE_API_BASE_URL=${API_BASE_URL}
+    user: node
+    entrypoint: sh -c
+    working_dir: /home/node/client/admin
+    command: '"npm install && npm run dev"'
+    volumes:
+      - ./client/admin:/home/node/client/admin
+
   server:
     image: node:20.0.0-alpine
     restart: always
@@ -51,7 +74,7 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - MONGO_URL=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/app?authSource=admin
     ports:
-      - 8000:8000
+      - "8000:8000"
     user: node
     tty: true
     stdin_open: true

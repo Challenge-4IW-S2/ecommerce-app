@@ -7,7 +7,7 @@
     "dev": "node --watch --trace-warnings index.js",
     "dev:nodemon": "nodemon -L --verbose index.js",
     "start": "node index.js",
-    "migrate": "npx sequelize-cli db:migrate:all",
+    "migrate": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all"
   },
   "dependencies": {
