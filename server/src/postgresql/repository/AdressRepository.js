@@ -15,7 +15,7 @@ export default class AdressRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.Adress.findOne({
+        return await this.Adress.findAll({
             where: {
                 [field]: value
             }
@@ -45,6 +45,13 @@ export default class AdressRepository {
         return await this.Adress.destroy({
             where: {
                 id: id
+            }
+        });
+    }
+    async deleteAdressFromUser(id) {
+        return await this.Adress.destroy({
+            where: {
+                user_id: id
             }
         });
     }

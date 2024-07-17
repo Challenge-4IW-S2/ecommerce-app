@@ -1,4 +1,4 @@
-import db from "../db";
+import db from "../db.js";
 import ProductPictureModel from "../models/ProductPicture.js";
 
 export default class ProductPictureRepository {
@@ -15,7 +15,7 @@ export default class ProductPictureRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.ProductPicture.findOne({
+        return await this.ProductPicture.findAll({
             where: {
                 [field]: value,
             },
@@ -34,6 +34,7 @@ export default class ProductPictureRepository {
             where: {
                 id: id,
             },
+            returning: true,
             individualHooks: true,
         });
     }

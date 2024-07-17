@@ -3,10 +3,24 @@ import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 import HomeView from './pages/Homepage.vue'
 import LoginView from './pages/Login.vue'
 import RegisterView from './pages/Register.vue'
-//import DashboardUsersView from './pages/Dashboard/users/Users.vue'
-//import DashboardUserEdit from './pages/Dashboard/users/EditUser.vue'
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
+import DashboardUsersView from './pages/Dashboard/Tables/Users.vue'
+import DashboardProductsView from './pages/Dashboard/Tables/Products.vue'
+import DashboardCategoriesView from './pages/Dashboard/Tables/Categories.vue'
+import DashboardOrdersView from './pages/Dashboard/Tables/Orders.vue'
+import DashboardCommentsView from './pages/Dashboard/Tables/Comments.vue'
+import DashboardAddressesView from './pages/Dashboard/Tables/Addresses.vue'
+import DashboardUserRolesView from './pages/Dashboard/Tables/UserRoles.vue'
+import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
+import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
+import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
+
+
+
+
+
+
 import PageNotFound from './pages/PageNotFound.vue'
 
 
@@ -14,14 +28,29 @@ const routes = [
     { path: '/', component: HomeView },
     { path: '/login', component: LoginView },
     { path: '/register', component: RegisterView },
-    //{ path: '/admin', component: DashboardView },
-    //{ path: '/admin/users', component: DashboardUsersView },
-    //{ path: '/admin/:entityType/:id', component: DashboardUserEdit },
-    //{ path: '/admin/add-:entityType', component: DashboardUserEdit},
+
+    { path: '/admin/categories', component: DashboardCategoriesView},
+    { path: '/admin/users', component: DashboardUsersView },
+    { path: '/admin/products', component: DashboardProductsView },
+    { path: '/admin/orders', component: DashboardOrdersView},
+    { path: '/admin/comments', component: DashboardCommentsView},
+    { path: '/admin/addresses', component: DashboardAddressesView},
+    { path: '/admin/userroles', component: DashboardUserRolesView},
+
+
+    { path: '/admin/:entityType/:id', component: DashboardEdit },
+    { path: '/admin/add-:entityType', component: DashboardEdit},
+    { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
+    { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
+    { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
     { path: '/products', component: ProductsView},
+    { path: '/products/:slug', component: ProductView},
+
+
     { path: '/change-password', component: ProductView},
     { path: '/change-password/:slug', component: ProductView},
-    // { path: '/:slug', component: ProductView},
+
+
     // route pour les 404
     { path: '/:catchAll(.*)*', component: PageNotFound }
 ]
