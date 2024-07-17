@@ -5,22 +5,12 @@ export default class CategoryRepository {
         this.Category = CategoryModel;
     }
 
-    createOrUpdateCategory(category) {
-        return this.Category.findOne
-        ({
-            where: {
-                id: category.id
-            }
-        })
-        .then((foundCategory) => {
-            if (foundCategory) {
-                return foundCategory.update(category);
-            } else {
-                return this.createCategory(category);
-            }
+    async createOrUpdateCategory(category) {
+        return this.Category.findByIdAndUpdate(category.id, {
+            name: category.name,
+        }, {
+            upsert: true,
+            new: true,
         });
-    }
-    createCategory(category) {
-        return this.Category.create(category);
     }
 }

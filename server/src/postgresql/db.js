@@ -46,10 +46,3 @@ const loadModels = async () => {
 // Charger les modèles au démarrage
 export const models = await loadModels();
 export default { connection , models };
-
-const categoryRepository = new CategoryRepository();
-categoryRepository.createCategory(
-    {
-        name: 'test 1'
-    }
-)
