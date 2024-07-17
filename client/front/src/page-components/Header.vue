@@ -28,12 +28,18 @@ const logout = async () => {
       <div class="flex justify-between gap-12 items-center">
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
 
-        <ButtonLink class-name="bg-black text-white p-4" to="register" text="CRÉER UN COMPTE" />
-        <RouterLink to="login" class="cursor-pointer text-sm">SE CONNECTER</RouterLink>
+        <ButtonLink class-name="bg-black text-white p-4 uppercase" to="register" text="Créer un compte" />
+        <RouterLink to="login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
+<<<<<<< HEAD
         <Button class="cursor-pointer text-sm" @click="logout">DÉCONNEXION</Button>
         <span class="cursor-pointer text-sm">PANIER (0)</span>
         <Cart />
+=======
+        <RouterLink to="account" class="cursor-pointer text-sm uppercase">Mon compte</RouterLink>
+        <Button class="cursor-pointer text-sm uppercase" @click="logout">Déconnexion</Button>
+        <span class="cursor-pointer text-sm uppercase">Panier (0)</span>
+>>>>>>> c20717b (commit test)
       </div>
     </div>
     <div class="flex items-center gap-12">

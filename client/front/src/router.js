@@ -3,8 +3,8 @@ import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 import HomeView from './pages/Homepage.vue'
 import LoginView from './pages/Login.vue'
 import RegisterView from './pages/Register.vue'
-//import DashboardUsersView from './pages/Dashboard/users/Users.vue'
-//import DashboardUserEdit from './pages/Dashboard/users/EditUser.vue'
+import UserView from './pages/Account/User.vue'
+
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
 import PageNotFound from './pages/PageNotFound.vue'
@@ -13,7 +13,8 @@ import {isUserAuthenticated} from "./api/auth.js";
 
 const routes = [
     {
-        path: '/', component: HomeView
+        path: '/',
+        component: HomeView,
     },
     {
         path: '/login',
@@ -24,11 +25,21 @@ const routes = [
         component: RegisterView,
     },
     {
-        path: '/profile',
-        component: ProductView,
-        meta: {
-            requiresAuth: true
-        }
+        path: '/account',
+        component: UserView,
+        // meta: {
+        //     requiresAuth: true
+        // },
+        children: [
+            {
+                path: '',
+                component: UserView
+            },
+            {
+                path: 'test',
+                component: UserView
+            }
+        ]
     },
     {
         path: '/products',
@@ -59,10 +70,8 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-    const isAuthenticated = await isUserAuthenticated();
-
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    if (requiresAuth && !isAuthenticated) {
+    if (requiresAuth && !await isUserAuthenticated()) {
         next('/login');
     } else {
         next();

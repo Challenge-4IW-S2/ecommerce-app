@@ -6,4 +6,3 @@ export default function (router) {
     router.get("/searchProduct", ProductController.search);
     return router;
 }
-
