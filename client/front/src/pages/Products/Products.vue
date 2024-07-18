@@ -40,9 +40,8 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax, names)
         await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProducts`, {
             searchParams: searchParams,
         }).json().then((response) => {
-            const { products: productsResults, totalPages: totalPagesResults } = response;
-            products.value = productsResults;
-            totalPages.value = totalPagesResults;
+            products.value = response.productsResults;
+            totalPages.value = response.totalPagesResults;
         });
     } catch (error) {
         console.error(error);

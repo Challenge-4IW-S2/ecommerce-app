@@ -72,6 +72,6 @@ export class CategoryController {
     static async getAllCategoriesMongo(request, response) {
         const categoryRepository = new CategoryRepositoryMongo();
         const categories = await categoryRepository.getAllCategories();
-        response.status(201).json(categories);
+        response.json(categories);
     }
 }
