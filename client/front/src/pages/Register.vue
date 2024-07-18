@@ -84,7 +84,7 @@ const register = async () => {
 <template>
   <div>
     <div class="m-auto max-w-125">
-      <h1>
+      <h1 class="mb-4">
         Créer votre compte Luzaya
       </h1>
       <div v-if="!isSubmitted">

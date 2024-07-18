@@ -77,6 +77,7 @@ export class AuthController {
             email: request.body.email,
             password:  request.body.password,
         }
+
         const now = Date.now()
         try{
             if (!loginAttempts[parameters.email]) {
@@ -93,6 +94,11 @@ export class AuthController {
             }
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
+            if (!user) return response.status(401).send("Email or password incorrect");
+            if (!user.is_verified) return response.status(401).send();
+            if (user.deleted) return response.status(401).send();
+
+          
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
                 loginAttempts[parameters.email].attempts += 1;
                 if (loginAttempts[parameters.email].attempts >= 3) {
@@ -112,6 +118,8 @@ export class AuthController {
                 // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
 
+
+
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
                 algorithm: "HS256"
@@ -123,7 +131,7 @@ export class AuthController {
                 secure: true,
                 sameSite: 'none'
             });
-            response.status(200).send(user);
+            response.status(200).send();
 
         } catch (error) {
             response.status(500).send(error.toString());
@@ -140,6 +148,79 @@ export class AuthController {
         });
     }
 
+    static changePassword(request, response) {
+        const parametersSchema = z.object({
+            oldPassword: z.string(),
+            newPassword: z.string(),
+            confirmNewPassword: z.string(),
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            return response.status(400).send();
+        }
+
+        if (parsedParameters.data.newPassword !== parsedParameters.data.confirmNewPassword) {
+            return response.status(400).send();
+        }
+
+        const userRepository = new UserRepository();
+        userRepository.findOne('id', request.user.id)
+            .then(user => {
+
+                if (!bcrypt.compareSync(parsedParameters.data.oldPassword, user.password)) {
+                    return response.status(403).send();
+                }
+
+                const newPassword = bcrypt.hashSync(parsedParameters.data.newPassword, 10);
+                userRepository.updateUser(user.id, {
+                    password: newPassword,
+                    passwordLastChanged: new Date()
+                })
+                    .then(() => {
+                        response.status(200).send();
+                    })
+                    .catch(err => {
+                        response.status(500).send();
+                    });
+            })
+            .catch(err => {
+                response.status(500).send();
+            });
+    }
+
+    static updateProfile(request, response) {
+        const parametersSchema = z.object({
+            firstname: z.string(),
+            lastname: z.string(),
+            phone: z.string().nullable()
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            return response.status(400).send();
+        }
+
+        const userRepository = new UserRepository();
+        userRepository.findOne('id', request.user.id)
+            .then(user => {
+                userRepository.updateUser(user.id, {
+                    firstname: parsedParameters.data.firstname,
+                    lastname: parsedParameters.data.lastname,
+                    email: parsedParameters.data.email,
+                    phone: parsedParameters.data.phone
+                })
+                    .then(() => {
+                        response.status(200).send();
+                    })
+                    .catch(err => {
+                        response.status(500).send();
+                    });
+            })
+            .catch(err => {
+                response.status(500).send();
+            });
+    }
 
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({
@@ -202,6 +283,10 @@ export class AuthController {
         return response.json({
             message: 'Logged'
         }).send()
+    }
+
+    static authCheck(request, response) {
+        return response.sendStatus(200);
     }
 
 
