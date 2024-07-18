@@ -31,7 +31,7 @@ export default class UserRepository {
             firstname: user.firstname,
             lastname: user.lastname,
             phone: user.phone,
-            role: await this.userRoleRepository.getRoleId(user.role)
+            role: await this.userRoleRepository.getRoleId(user.role),
         });
     }
 

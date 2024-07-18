@@ -55,6 +55,10 @@ export default function (connection) {
             deleted: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
+            },
+            password_updated_at: {
+                type: DataTypes.DATE,
+                allowNull: true
             }
         },
         {

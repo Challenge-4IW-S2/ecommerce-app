@@ -37,7 +37,7 @@ Content-Type: application/json
 
 {
   "email": "test@example.cor",
-  "password": "Testpassword1"
+  "password": "Testpassword"
 }
 
 ### Any request to the user routes
