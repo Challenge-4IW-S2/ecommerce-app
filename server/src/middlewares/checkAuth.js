@@ -21,5 +21,4 @@ export default () => async (request, response, next) => {
     } catch (e) {
         return response.sendStatus(401);
     }
-    next();
 }
