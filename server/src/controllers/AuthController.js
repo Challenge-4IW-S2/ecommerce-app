@@ -88,6 +88,9 @@ export class AuthController {
             const user = await userRepository.findOne('email', parameters.email);
             if (!user) return response.status(401).send("Email or password incorrect");
 
+            if (!user.is_verified) return response.status(401).send();
+            if (user.deleted) return response.status(401).send();
+
             if (!(await bcrypt.compare(parameters.password, user.password))) {
                 return response.status(401).send( "Email or password incorrect");
             }
@@ -116,8 +119,6 @@ export class AuthController {
                 return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
             }
 
-           // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
-
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
                 algorithm: "HS256"
@@ -129,7 +130,7 @@ export class AuthController {
                 secure: true,
                 sameSite: 'none'
             });
-            response.status(200).send(user);
+            response.status(200).send();
 
         } catch (error) {
             response.status(500).send(error.toString());

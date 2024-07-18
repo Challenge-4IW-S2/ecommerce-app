@@ -3,66 +3,18 @@ import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
-import {computed, ref} from "vue";
-import Swal from "sweetalert2";
+import {ref} from "vue";
 import {  useRouter } from "vue-router";
-// import jwt_decode from "jwt-decode";
 
 // For connect user bag
 import { useUserStore } from "../store/userStore";
 const userStore = useUserStore();
 
 const router = useRouter()
+
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
-// let row = jwt_decode(document.cookie) // decode the cookie
-let loginAttempts = {};
-const MAX_ATTEMPTS = 3;
-const LOCK_TIME = 15 * 60 * 1000;
-
-const attempts = async (request, response) => {
-  const { email, password } = request.body;
-  const now = Date.now();
-  if (loginAttempts[email] && loginAttempts[email].lockUntil > now) {
-    return response.status(403).send('Votre compte a été temporairement verrouillé en raison de trop nombreuses tentatives de connexion infructueuses. Veuillez réessayer plus tard.');
-  }
-
-  try {
-    const user = await userRepository.findOne('email', email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      // Si la connexion échoue, augmentez le nombre de tentatives de connexion
-      if (!loginAttempts[email]) {
-        loginAttempts[email] = { count: 1, lockUntil: 0 };
-      } else {
-        loginAttempts[email].count++;
-      }
-
-      // Si l'utilisateur a dépassé le nombre maximum de tentatives, verrouillez le compte
-      if (loginAttempts[email].count >= MAX_ATTEMPTS) {
-        loginAttempts[email].lockUntil = Date.now() + LOCK_TIME;
-
-        // Envoyez un e-mail à l'utilisateur pour l'informer que son compte est verrouillé
-        sendLockNotification(email);
-      }
-
-      return response.status(401).send('Email ou mot de passe incorrect');
-    }
-
-    // Si la connexion réussit, réinitialisez le nombre de tentatives de connexion
-    loginAttempts[email] = { count: 0, lockUntil: 0 };
-
-    // Continuez avec votre logique de connexion normale...
-  } catch (error) {
-    // Gérez les erreurs
-  }
-};
-
-// Fonction pour envoyer une notification par e-mail à l'utilisateur
-const sendLockNotification = (email) => {
-  // Utilisez votre service d'e-mail pour envoyer un e-mail à l'utilisateur
-  // Vous devrez remplacer cette fonction par votre propre logique d'envoi d'e-mails
-};
 
 
 const connect = async () => {
@@ -71,38 +23,17 @@ const connect = async () => {
       json: {
         email: email.value,
         password: password.value,
-      }, credentials: 'include'
-    } ).json();
-    if (response) {
-      if (response.status === 401) {
-        return msgError.value = 'Votre email ou votre mot de passe sont incorrects.';
-      }
-      if (response.is_verified === false){
-        Swal.fire({
-          title: 'Votre compte n\'est pas vérifié',
-          text: 'Un email de vérification vous a été envoyé',
-          icon: 'warning',
-          confirmButtonText: 'OK'
-        })
-      }
-      console.log(response.status)
-      if (response.status === 200) {
-       let cookie = response.cookie
-        console.log(cookie)
-        console.log(document.cookie)
-        userStore.updateSessionId(userStore.user, response.user.id)
-          if (response.user.role === 'admin') {
-            await router.push('/admin/dashboard')
-          } else {
-            await router.push(`/admin/user/${row.id}`)
-        }
-      }
-
+      },
+      credentials: 'include'
+    });
+    if (response.ok) {
+      // userStore.updateSessionId(userStore.user, response.user.id)
+      await router.replace('/');
     } else {
-      const data = await response.json();
+      new Error('Votre email ou votre mot de passe sont incorrects.');
     }
   } catch (error) {
-    msgError.value = 'Votre email ou votre mot de passe sont incorrects.';
+    msgError.value = error.message;
   }
 };
 

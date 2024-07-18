@@ -2,8 +2,11 @@ import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from './pages/Homepage.vue'
 import LoginView from './pages/Login.vue'
+import LogoutView from './pages/Logout.vue'
 import RegisterView from './pages/Register.vue'
 import UserView from './pages/Account/User.vue'
+import UserHomeView from './pages/Account/UserHomeView.vue'
+import UserOrdersView from './pages/Account/Orders.vue'
 
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
@@ -18,25 +21,42 @@ const routes = [
     },
     {
         path: '/login',
-        component: LoginView
+        component: LoginView,
+        meta: {
+            requiresNoAuth: true
+        }
+    },
+    {
+        path: '/logout',
+        component: LogoutView,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/register',
         component: RegisterView,
+        meta: {
+            requiresNoAuth: true
+        }
     },
     {
         path: '/account',
         component: UserView,
-        // meta: {
-        //     requiresAuth: true
-        // },
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: '',
-                component: UserView
+                component: UserHomeView
             },
             {
-                path: 'test',
+                path: 'orders',
+                component: UserOrdersView
+            },
+            {
+                path: 'settings',
                 component: UserView
             }
         ]
@@ -70,12 +90,21 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+    const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth);
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    if (requiresAuth && !await isUserAuthenticated()) {
-        next('/login');
-    } else {
-        next();
+    const isAuthenticated = await isUserAuthenticated();
+
+    if (requiresNoAuth && isAuthenticated) {
+        next('/');
+        return;
     }
+
+    if (requiresAuth && !isAuthenticated) {
+        next('/login');
+        return;
+    }
+
+    next();
 });
 
 

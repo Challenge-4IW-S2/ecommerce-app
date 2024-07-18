@@ -7,7 +7,7 @@ export default class UserRoleRepository {
 
     async createOrUpdateUserRole(userRole) {
         return this.UserRole.findByIdAndUpdate(userRole.id, {
-            role: userRole.role,
+            name: userRole.name
         }, {
             upsert: true,
             new: true,

@@ -4,18 +4,6 @@ import Logo from "../components/Logo.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import Cart from "../components/Cart/Cart.vue";
 import Search from "../components/Search/Search.vue";
-import ky from "ky";
-
-
-const logout = async () => {
-  try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/logout`, {
-      credentials: 'include',
-    });
-  } catch (e) {
-    console.log(e);
-  }
-}
 
 </script>
 
@@ -31,15 +19,9 @@ const logout = async () => {
         <ButtonLink class-name="bg-black text-white p-4 uppercase" to="register" text="Créer un compte" />
         <RouterLink to="login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
-<<<<<<< HEAD
-        <Button class="cursor-pointer text-sm" @click="logout">DÉCONNEXION</Button>
-        <span class="cursor-pointer text-sm">PANIER (0)</span>
-        <Cart />
-=======
         <RouterLink to="account" class="cursor-pointer text-sm uppercase">Mon compte</RouterLink>
-        <Button class="cursor-pointer text-sm uppercase" @click="logout">Déconnexion</Button>
-        <span class="cursor-pointer text-sm uppercase">Panier (0)</span>
->>>>>>> c20717b (commit test)
+        <RouterLink to="logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
+        <Cart />
       </div>
     </div>
     <div class="flex items-center gap-12">

@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath,pathToFileURL } from 'url';
+import UserRepository from "./repository/UserRepository.js";
 
 const connection = new Sequelize(process.env.DATABASE_URL);
 
