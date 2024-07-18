@@ -7,13 +7,18 @@ export default function (router) {
     router.get('/auth-check', checkAuth(), AuthController.authCheck);
 
     router.post("/signup", checkNotAuth(),AuthController.signup);
+
     router.post("/login", checkNotAuth(), AuthController.login);
     router.get('/logout', AuthController.logout);
+
+    router.put('/update-profile', checkAuth(), AuthController.updateProfile);
+    router.put('/change-password', checkAuth(), AuthController.changePassword);
 
     router.get('/logout', checkAuth(), AuthController.logout);
 
     router.post('/forgot-password', checkNotAuth(), AuthController.forgotPassword);
     router.get('/check-reset-password-token', checkNotAuth(), AuthController.checkResetPasswordToken);
+    // router.post('/reset-password', checkNotAuth(), AuthController.resetPassword);
 
     router.post('/delete-account', checkAuth(), AuthController.deleteAccount);
     return router;

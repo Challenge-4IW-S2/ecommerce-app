@@ -17,10 +17,10 @@ import Search from "../components/Search/Search.vue";
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
 
         <ButtonLink class-name="bg-black text-white p-4 uppercase" to="register" text="Créer un compte" />
-        <RouterLink to="login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
+        <RouterLink to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
-        <RouterLink to="account" class="cursor-pointer text-sm uppercase">Mon compte</RouterLink>
-        <RouterLink to="logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
+        <RouterLink to="/account" class="cursor-pointer text-sm uppercase">Mon compte</RouterLink>
+        <RouterLink to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
         <Cart />
       </div>
     </div>

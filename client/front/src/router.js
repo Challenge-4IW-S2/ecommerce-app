@@ -56,6 +56,10 @@ const routes = [
                 component: UserOrdersView
             },
             {
+                path: 'adresses',
+                component: UserView
+            },
+            {
                 path: 'settings',
                 component: UserView
             }

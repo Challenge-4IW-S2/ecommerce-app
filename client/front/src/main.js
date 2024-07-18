@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import './style.css'
 import App from './App.vue'
 import router from './router.js'
+import 'flowbite';
 
 const pinia = createPinia()
 const app = createApp(App)

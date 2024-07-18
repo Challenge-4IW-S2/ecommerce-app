@@ -15,7 +15,11 @@ const props = defineProps({
   },
   error: String,
   option: String,
-  modelValue: String
+  modelValue: String,
+  autocomplete: {
+    type: String,
+    default: 'on'
+  }
 })
 
 let dynamicType = ref(props.type);
@@ -47,6 +51,7 @@ const internalModelValue = computed({
           :type="dynamicType"
           :placeholder="placeholder"
           :option="option"
+          :autocomplete="autocomplete"
           v-model="internalModelValue"
           class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
       </input>
