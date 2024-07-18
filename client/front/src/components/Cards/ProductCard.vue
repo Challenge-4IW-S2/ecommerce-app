@@ -15,7 +15,7 @@ const openModal = () => {
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
 
     <div class="flex flex-col relative">
-        <RouterLink :to="`/${product.slug}/`" class="flex flex-col">
+        <RouterLink :to="`/product/${product.slug}/`" class="flex flex-col">
             <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`">
         </RouterLink>
         <button @click.stop="openModal"
