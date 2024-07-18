@@ -67,6 +67,11 @@ export class ProductController {
             const slugAlreadyExists = await productRepository.findByOtherField("slug",parameters.slug);
             if (slugAlreadyExists) return response.sendStatus(400);
             const product = await productRepository.createProduct(parameters)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const newProductsToday = await productRepository.findAndCountAll();
+            console.log(newProductsToday)
             response.status(201).json(product);
         } catch (error) {
             next(error)

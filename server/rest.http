@@ -36,8 +36,8 @@ POST http://localhost:8000/login
 Content-Type: application/json
 
 {
-  "email": "test@example.cor",
-  "password": "Testpassword"
+  "email": "tesddo@ex.cop",
+  "password": "Testpassword&1"
 }
 
 ### Any request to the user routes
@@ -157,8 +157,21 @@ Content-Type: application/json
   "price_ttc": "10",
   "price_ht": "8",
   "slug": "clips-ins",
-  "category_id": "22912a9c-6bde-429e-bdbc-741beb3ac9a8"
+  "category_id": "Tapes-in"
 }
 
 ### Get Product Picture by id
 GET localhost:8000/productPicture/aafb5b65-e13b-44a8-a143-c54e9a020ed9
+
+### Create Preferences
+POST localhost:8000/preferences
+Content-Type: application/json
+
+{
+  "name": "NEW",
+  "activated": true,
+  "user_id": "c73e74f4-8a30-4107-a771-762bb6e72a30"
+}
+
+### Get Preferences
+GET localhost:8000/preferences

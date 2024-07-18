@@ -49,7 +49,8 @@ export class AuthController {
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
             .then(() => {
-                response.status(201).json(sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte,<br> <button> BACK </button>'),{
+
+                response.status(201).json(sendEmail(userData.email,'Verification code Luzaya ', sendCode()),{
                     message: 'Compte créé'
                 })
 
@@ -92,7 +93,7 @@ export class AuthController {
             const userAttempts = loginAttempts[parameters.email];
             if (userAttempts.attempts >= 3) {
                 const timeSinceLastAttempt = Date.now() - userAttempts.lastAttempt;
-                if (timeSinceLastAttempt < 300000) {
+                if (timeSinceLastAttempt < 3000) {
                     return response.status(429).send('Trop de tentatives, veuillez réessayer plus tard.');
                 } else {
                     userAttempts.attempts = 0;
@@ -117,12 +118,11 @@ export class AuthController {
             loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
-            const passwordChangeDate = new Date(user.password_updated_at);
+            /*const passwordChangeDate = new Date(user.password_updated_at);
             const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
             if (now > passwordExpiryDate) {
-                return response.status(403);
-            }
-            response.json(user);
+                console.log(passwordExpiryDate)
+            }*/
 
            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
@@ -135,7 +135,7 @@ export class AuthController {
                 secure: true,
                 sameSite: 'none'
             });
-            response.status(200).send();
+            response.sendStatus(200);
 
         } catch (error) {
             response.status(500).send(error.toString());
