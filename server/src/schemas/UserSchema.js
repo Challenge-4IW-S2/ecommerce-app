@@ -39,7 +39,7 @@ export const GetUsersSchema = z.object({
     createdAt: z.date(),
     updatedAt: z.date(),
 })
-export const UserDeleteSchema = z.object({
+export const checkUserId = z.object({
     id: z.string().uuid(),
 })
 

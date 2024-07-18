@@ -3,7 +3,6 @@ import { z } from "zod";
 export const validateBody = (schema) => {
     return (req, res, next) => {
         try {
-            console.log(req.body)
             req.body = schema.parse(req.body);
             next();
         } catch (err) {

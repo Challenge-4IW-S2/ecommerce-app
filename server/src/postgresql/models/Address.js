@@ -38,7 +38,7 @@ export default function (connection) {
         },
         {
             sequelize: connection,
-            tableName: "adresses",
+            tableName: "addresses",
             underscored: true,
             timestamps: true
         }

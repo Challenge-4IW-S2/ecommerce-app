@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch --trace-warnings index.js",
-    "dev:nodemon": "nodemon -L index.js",
+    "dev:nodemon": "nodemon -L --verbose index.js",
     "start": "node index.js",
     "migrate": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all"
@@ -19,8 +19,11 @@
     "dotenv": "^16.4.5",
     "express": "4.19.2",
     "fast-glob": "^3.3.2",
+    "flowbite": "^2.4.1",
+    "googleapis": "^140.0.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.1",
+    "nodemailer": "^6.9.14",
     "pg": "^8.11.5",
     "pg-hstore": "^2.3.4",
     "process": "^0.11.10",
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.2",
+    "resend": "^3.4.0",
     "sequelize-cli": "^6.6.2",
     "uuid": "^10.0.0"
   }
