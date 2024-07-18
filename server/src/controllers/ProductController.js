@@ -8,7 +8,12 @@ export class ProductController {
             const productRepositoryMongo = new ProductRepositoryMongo();
             const page = request.query.page;
             const order = request.query.order;
-            await productRepositoryMongo.getAllProducts(page, order).then((data) => {
+            const categories = request.query.categories;
+            const valueMin = request.query.valueMin;
+            const valueMax = request.query.valueMax;
+            const names = request.query.names;
+
+            await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax, names).then((data) => {
                 response.json({
                     products: data.productsResults,
                     totalPages: data.totalPagesResults,
@@ -19,6 +24,28 @@ export class ProductController {
                 message: error.message,
             });
         }
+    }
+
+    static async getMinAndMaxPrice(request, response) {
+        try {
+            const productRepositoryMongo = new ProductRepositoryMongo();
+            await productRepositoryMongo.getMinAndMaxPrice().then((data) => {
+                response.json({
+                    min: data[0].min,
+                    max: data[0].max,
+                });
+            });
+        } catch (error) {
+            response.json({
+                message: error.message,
+            });
+        }
+    }
+
+    static async getProductsName(request, response) {
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const names = await productRepositoryMongo.getProductsName();
+        response.status(201).json(names);
     }
 
     static async getProductBySlug(request, response) {

@@ -9,5 +9,6 @@ export default function (router) {
     router.put('/category/:id',validateBody(CategorySchema), CategoryController.updatePutCategory);
     router.patch('/category/:id',validateBody(CategorySchema), CategoryController.updatePatchCategory);
     router.delete('/category/:id', CategoryController.deleteCategory);
+    router.get('/getCategories', CategoryController.getAllCategoriesMongo);
     return router;
 }

@@ -44,7 +44,7 @@ const routes = [
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
     { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
     { path: '/products', component: ProductsView},
-    { path: '/products/:slug', component: ProductView},
+    { path: '/product/:slug', component: ProductView},
 
 
     { path: '/change-password', component: ProductView},
