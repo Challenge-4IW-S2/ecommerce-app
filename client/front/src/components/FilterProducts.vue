@@ -27,8 +27,8 @@ let priceMax = ref(0);
 const getPrices = async () => {
     try {
         await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getMinMaxPrice`).json().then((response) => {
-            priceMin.value = response.min;
-            priceMax.value = response.max;
+            priceMin.value = response[0].min;
+            priceMax.value = response[0].max;
         });
 
     } catch (error) {
@@ -85,7 +85,6 @@ watch(productsNamesSelected, () => {
 </script>
 
 <template>
-    {{ productsNamesSelected }}
     <div class="py-4 px-5 flex justify-between">
         <button @click="openFilters" class="">Filtrer les résultats</button>
         <div class="flex gap-1">
