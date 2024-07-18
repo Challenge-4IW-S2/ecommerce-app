@@ -40,11 +40,5 @@ export default class OrderRepository {
         });
     }
 
-    async deleteOrder(id) {
-        return await this.Order.destroy({
-            where: {
-                id: id
-            }
-        });
-    }
+
 }

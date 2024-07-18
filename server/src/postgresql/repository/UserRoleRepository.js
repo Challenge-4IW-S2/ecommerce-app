@@ -44,7 +44,8 @@ export default class UserRoleRepository {
             where: {
                 id: id
             },
-            individualHooks: true
+            individualHooks: true,
+            returning: true
         });
     }
 

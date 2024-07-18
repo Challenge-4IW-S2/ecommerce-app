@@ -65,7 +65,9 @@ services:
 
   server:
     image: node:20.0.0-alpine
+    restart: always
     environment:
+      - MAIL_KEY=${MAIL_KEY}
       - APP_BASE_URL=${APP_BASE_URL}
       - PORT=8000
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}

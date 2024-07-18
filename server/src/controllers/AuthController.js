@@ -1,13 +1,10 @@
 import UserRepository from "../postgresql/repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-let loginAttempts = {};
-const MAX_ATTEMPTS = 3;
-const LOCK_TIME = 15 * 60 * 1000;
-
+import {sendEmail} from "../middlewares/sendEmail.js";
 import {z} from 'zod';
-import e from "express";
+import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
+const loginAttempts = {}
 import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
 
 export class AuthController {
@@ -46,13 +43,15 @@ export class AuthController {
             role: 'ROLE_USER',
             phone: null
         };
+       // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
             .then(() => {
-                response.status(201).json({
+                response.status(201).json(sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte,<br> <button> BACK </button>'),{
                     message: 'Compte créé'
                 })
+
             })
             .catch(err => {
                 // TODO: Erreur isNotUnique ?
@@ -78,46 +77,48 @@ export class AuthController {
             email: request.body.email,
             password:  request.body.password,
         }
-        const now = Date.now();
 
-        if (loginAttempts[parameters.email] && loginAttempts[parameters.email].lockUntil > now) {
-            return response.status(403).send('Votre compte a été temporairement verrouillé en raison de trop nombreuses tentatives de connexion infructueuses. Veuillez réessayer plus tard.');
-        }
-        try {
+        const now = Date.now()
+        try{
+            if (!loginAttempts[parameters.email]) {
+                loginAttempts[parameters.email] = { attempts: 0, lastAttempt: Date.now() };
+            }
+            const userAttempts = loginAttempts[parameters.email];
+            if (userAttempts.attempts >= 3) {
+                const timeSinceLastAttempt = Date.now() - userAttempts.lastAttempt;
+                if (timeSinceLastAttempt < 300000) { // Temporisation de 5 minutes
+                    return response.status(429).send('Trop de tentatives, veuillez réessayer plus tard.');
+                } else {
+                    userAttempts.attempts = 0;
+                }
+            }
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
             if (!user) return response.status(401).send("Email or password incorrect");
-
             if (!user.is_verified) return response.status(401).send();
             if (user.deleted) return response.status(401).send();
 
-            if (!(await bcrypt.compare(parameters.password, user.password))) {
-                return response.status(401).send( "Email or password incorrect");
-            }
-
-            if (!user || !(await bcrypt.compare(parameters.password, user.password))) {
-                if (!loginAttempts[parameters.email]) {
-                    loginAttempts[parameters.email] = { count: 1, lockUntil: 0 };
-                } else {
-                    loginAttempts[parameters.email].count++;
+          
+            if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
+                loginAttempts[parameters.email].attempts += 1;
+                if (loginAttempts[parameters.email].attempts >= 3) {
+                    await sendEmail('progrdnvictor@gmail.com', 'Luzaya.fr; Action requise : Tentative de connexion\n', attackAttemptTemplate('Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte.') )
                 }
-
-                if (loginAttempts[parameters.email].count >= MAX_ATTEMPTS) {
-                    loginAttempts[parameters.email].lockUntil = now + LOCK_TIME;
-                    sendLockNotification(parameters.email); // Implémentez cette fonction pour envoyer un email de notification
-                }
-
-                return response.status(401).send('Email ou mot de passe incorrect');
+                return response.status(401).send("Email or password incorrect");
             }
-
-            loginAttempts[parameters.email] = { count: 0, lockUntil: 0 };
+            loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
-            const passwordChangeDate = new Date(user.passwordLastChanged);
-            const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
-            if (now > passwordExpiryDate) {
-                return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
-            }
+                // const passwordChangeDate = new Date(user.passwordLastChanged);
+                // const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
+                /* if (now > passwordExpiryDate) {
+                     return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
+                 }*/
+
+                // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
+
+
+
 
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
@@ -146,6 +147,7 @@ export class AuthController {
             message: "Logged out successfully"
         });
     }
+
 
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({

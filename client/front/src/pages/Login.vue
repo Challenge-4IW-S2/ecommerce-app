@@ -4,6 +4,7 @@ import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
 import {ref} from "vue";
+import Swal from "sweetalert2";
 import {  useRouter } from "vue-router";
 
 // For connect user bag
@@ -19,6 +20,7 @@ const msgError = ref('')
 
 const connect = async () => {
   try {
+    console.log(`${import.meta.env.VITE_API_BASE_URL}login`)
     const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
       json: {
         email: email.value,
