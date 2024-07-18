@@ -2,38 +2,27 @@ import { ref, reactive, onMounted, watch } from 'vue';
 import ky from 'ky';
 import { z } from 'zod';
 import sweetalert from 'sweetalert2';
-import { filterUnwantedFields } from '../functions/model.js';
-const getEntitySchema = (entityType) => {
-    switch (entityType) {
-        case 'user':
-            return z.object({
-                email: z.string().email("Invalid email format"),
-                password: z.string().min(6, "Password must be at least 6 characters long"),
-                firstname: z.string(),
-                lastname: z.string(),
-                phone: z.string().optional(),
-                role: z.string(),
-            });
-        case 'product':
-            return z.object({
-                name: z.string().nonempty("Product name is required"),
-                price: z.number().positive("Price must be positive"),
-                description: z.string().optional(),
-            });
-        default:
-                return z.object({});
-    }
-};
-const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted'];
-export function useEntityForm(entityType, entityId = null) {
+import {
+    fetchModelStructure,
+    filterUnwantedFields,
+    getEntitySchema,
+    handleHttpResponse
+} from '../functions/model.js';
+
+const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active', 'user_id', "product_id"];
+export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const formData = reactive({});
     const entitySchema = ref(getEntitySchema(entityType));
     const entityStructure = ref([]);
     const errors = ref({});
     const isEditing = ref(Boolean(entityId));
+    let addressOptions = ref([]);
+    let categorieOption = ref([]);
+    let images = ref([]);
+
     const getRoleOptions = async () => {
         try {
-            const response = await ky.get("http://localhost:8000/role").json();
+            const response = await ky.get(`${BASE_URL}/userRoles`).json();
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -43,34 +32,100 @@ export function useEntityForm(entityType, entityId = null) {
             return [];
         }
     };
+    const getAdressOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}/address/${entityId}/addresses`).json();
+            return response.map(address => ({
+                id: address.id,
+               street: address.street,
+               city: address.city,
+                postal_code: address.postal_code,
+                country: address.country,
+            }));
+        } catch (error) {
+            console.error('Failed to fetch addresses:', error);
+            return [];
+        }
+    };
+
+    const getCategorieOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}/categories`).json();
+            return response.map(categorie => ({
+                value: categorie.id,
+                label: categorie.name
+            }));
+        } catch (error) {
+            console.error('Failed to fetch categories:', error);
+            return [];
+        }
+    };
+
+    const getProductPictureOptions = async () => {
+        try {
+            const response = await ky.get(`${BASE_URL}/productPicture/${entityId}/productPictures`).json();
+            return response.map(picture => ({
+                id: picture.id,
+                url: picture.url.replace(/^.*[\\\/]/, '')
+            }));
+        } catch (error) {
+            console.error('Failed to fetch pictures:', error);
+            return [];
+        }
+    }
 
 
     const fetchEntityStructure = async () => {
-        try {
-            const response = await ky.get(`http://localhost:8000/${entityType}/${entityId || ''}`).json();
-            const cleanedResponse = filterUnwantedFields(response, unwantedFields);
-            let roleOptions = [];
-            if (entityType === 'user') {
-                roleOptions = await getRoleOptions();
-            }
-            entityStructure.value = Object.keys(cleanedResponse).map(key => {
-            const field = {
-                name: key,
-                value: cleanedResponse[key],
-                type: getTypeForKey(key, cleanedResponse[key])
-            };
-            // Ajouter les options pour les champs de type select
-            if (key === 'role') {
-                field.is = 'select';
-                field.options = roleOptions;
-            }
-            return field;
-        });
+            try {
+                unwantedFields.push('id');
+                let response = {};
+                if (entityId) {
+                    response = await ky.get(`${BASE_URL}/${entityType}/${entityId || ''}`).json();
+                } else {
+                    const [structure] = await Promise.all([fetchModelStructure(entityType.charAt(0).toUpperCase() + entityType.slice(1))]);
+                    response = structure;
+                    response = structure.reduce((acc, field) => {
+                        acc[field.name] = field.defaultValue || '';
+                        return acc;
+                    }, {});
+                }
 
-            initializeFormData();
-        } catch (error) {
-            console.error('Failed to fetch entity structure:', error);
-        }
+                const cleanedResponse = filterUnwantedFields(response, unwantedFields);
+                let roleOptions = [];
+                if (entityType === 'user') {
+                    roleOptions = await getRoleOptions();
+                    if (entityId) {
+                        addressOptions.value = await getAdressOptions();
+                    }
+                }
+                if (entityType === 'product') {
+                    categorieOption = await getCategorieOptions();
+                    if (entityId) {
+                        images.value = await getProductPictureOptions();
+                    }
+                }
+                entityStructure.value = Object.keys(cleanedResponse).map(key => {
+                    const field = {
+                        name: key,
+                        value: cleanedResponse[key],
+                        type: getTypeForKey(key, cleanedResponse[key])
+                    };
+                    if (key === 'role') {
+                        field.is = 'select';
+                        field.options = roleOptions;
+                        field.value = roleOptions.find(role => role.value === field.value)?.label;
+                    }
+                    if (key === 'category_id') {
+                        field.is = 'select';
+                        field.options = categorieOption;
+                    }
+                    return field;
+                });
+                initializeFormData();
+            } catch (error) {
+                console.error('Failed to fetch entity structure:', error);
+            }
+
     };
 
     const initializeFormData = () => {
@@ -92,24 +147,27 @@ export function useEntityForm(entityType, entityId = null) {
                     return acc;
                 }, {});
                 errors.value = errorMessages;
+                console.log(errors.value)
             }
             return false;
         }
     };
 
     const handleSubmit = async () => {
-        if (validateForm()) {
-            try {
+            if (!validateForm()) return;
+        try {
                 const method = isEditing.value ? 'patch' : 'post';
+
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
-                const response = await ky[method](`http://localhost:8000/${entityType}/${entityId || ''}`, {
+                const response = await ky[method](`${BASE_URL}/${entityType}/${entityId || ''}`, {
                     json: cleanedData
                 }).json();
                 await sweetalert.fire({
-                   icon: "success",
-                   title: "Success",
-                   text: `${entityType} ${isEditing.value ? 'updated' : 'created'} successfully`,
+                    icon: "success",
+                    title: "Success",
+                    text: `${entityType} ${isEditing.value ? 'updated' : 'created'} successfully`,
                 });
+
             } catch (error) {
                 await sweetalert.fire({
                     icon: "error",
@@ -118,15 +176,12 @@ export function useEntityForm(entityType, entityId = null) {
                 });
                 console.error('Failed to submit form:', error);
             }
-        } else {
-            console.log('Validation errors:', errors.value);
-        }
     };
 
     const handleDelete = async () => {
         if (entityId) {
             try {
-                await ky.delete(`http://localhost:8000/${entityType}/${entityId}`).json();
+                await ky.delete(`${BASE_URL}/${entityType}/${entityId}`).json();
                 console.log(`${entityType} deleted successfully`);
             } catch (error) {
                 console.error(`Failed to delete ${entityType}:`, error);
@@ -135,7 +190,7 @@ export function useEntityForm(entityType, entityId = null) {
     };
 
     const getTypeForKey = (key, value) => {
-        if (typeof value === 'number') return 'number';
+        if (typeof value === 'number' )  return 'number';
         if (typeof value === 'boolean') return 'checkbox';
         if (typeof value === 'string' && (key.includes('email') || key.includes('Email'))) return 'email';
         if (typeof value === 'string' && (key.includes('password') || key.includes('Password'))) return 'password';
@@ -145,7 +200,7 @@ export function useEntityForm(entityType, entityId = null) {
     };
 
     onMounted(() => {
-        if (entityId) {
+        if (entityType) {
             fetchEntityStructure();
         } else {
             initializeFormData();
@@ -158,11 +213,12 @@ export function useEntityForm(entityType, entityId = null) {
             if (entityId) fetchEntityStructure();
         }
     );
-
     return {
         formData,
         errors,
         entityStructure,
+        images,
+        addressOptions,
         handleSubmit,
         handleDelete,
     };

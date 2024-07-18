@@ -24,6 +24,10 @@ export const GetUsersSchema = z.object({
     updatedAt: z.date(),
 })
 
+export const checkUserId = z.object({
+    id: z.string().uuid(),
+})
+
 export const ClientUpdatePasswordSchema = z.object({
     oldPassword: z.string().min(1, 'Votre mot de passe actuel est requis'),
     newPassword: z.string().min(1, 'Votre nouveau mot de passe ne peut pas être vide'),

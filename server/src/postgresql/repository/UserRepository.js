@@ -40,7 +40,8 @@ export default class UserRepository {
             where: {
                 id: id
             },
-            individualHooks: true
+            individualHooks: true,
+            returning: true
         });
     }
 

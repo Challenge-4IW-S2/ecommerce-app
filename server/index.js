@@ -9,9 +9,8 @@ const port = 8000;
 
 app.use(cookieParser(process.env.JWT_SECRET));
 
-
 const corsOptions = {
-  origin: process.env.APP_BASE_URL,
+  origin: true,
   credentials: true
 };
 app.use(cors(corsOptions));
