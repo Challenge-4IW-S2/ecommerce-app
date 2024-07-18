@@ -77,6 +77,7 @@ export class AuthController {
             email: request.body.email,
             password:  request.body.password,
         }
+
         const now = Date.now()
         try{
             if (!loginAttempts[parameters.email]) {
@@ -93,6 +94,11 @@ export class AuthController {
             }
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('email', parameters.email);
+            if (!user) return response.status(401).send("Email or password incorrect");
+            if (!user.is_verified) return response.status(401).send();
+            if (user.deleted) return response.status(401).send();
+
+          
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
                 loginAttempts[parameters.email].attempts += 1;
                 if (loginAttempts[parameters.email].attempts >= 3) {
@@ -112,6 +118,8 @@ export class AuthController {
                 // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
 
+
+
             const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
                 algorithm: "HS256"
@@ -123,7 +131,7 @@ export class AuthController {
                 secure: true,
                 sameSite: 'none'
             });
-            response.status(200).send(user);
+            response.status(200).send();
 
         } catch (error) {
             response.status(500).send(error.toString());
@@ -202,6 +210,10 @@ export class AuthController {
         return response.json({
             message: 'Logged'
         }).send()
+    }
+
+    static authCheck(request, response) {
+        return response.sendStatus(200);
     }
 
 

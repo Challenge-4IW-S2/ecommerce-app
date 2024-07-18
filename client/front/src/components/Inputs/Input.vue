@@ -63,6 +63,7 @@ function handleFileChange(event) {
           class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           >
       </input>
+
       <input v-else
           :id="id"
           :type="dynamicType"
@@ -77,11 +78,11 @@ function handleFileChange(event) {
            file:border-0
            file:text-sm file:font-semibold
            file:bg-black file:text-white
-           hover:file:bg-black hover:file:text-white"
+           hover:file:bg-black hover:file:text-white">
 
-          >
+      <span v-if="type === 'password'" class="bg-transparent absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer z-0"
 
-      <span v-if="type === 'password'" class="z-20 absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer bg-white"
+
             @click="changeVisibility">
         {{
           dynamicType === 'password' ? 'AFFICHER' : 'MASQUER'
