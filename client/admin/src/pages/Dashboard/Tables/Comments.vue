@@ -1,6 +1,6 @@
 <script setup>
-import Table from "../../components/Tables/Table.vue";
-import { useEntityTable } from '../../composables/useEntityTable.ts';
+import Table from "../../../components/Tables/Table.vue";
+import { useEntityTable } from '../../../composables/useEntityTable.ts';
 
 const entityPath = 'comment';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;

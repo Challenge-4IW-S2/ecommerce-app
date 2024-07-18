@@ -1,5 +1,5 @@
 <script setup>
-import Table from "../../components/Tables/Table.vue";
+import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
 import ky from "ky";
 import {  useRouter } from "vue-router";
@@ -11,7 +11,7 @@ const actions = ref([
   {
     label: 'Modifier',
     method: (row) => {
-      router.push(`/admin/user/${row.id}`)
+      router.push(`/user/${row.id}`)
     },
     color: 'blue',
   },
@@ -91,11 +91,8 @@ fetchData();
 </script>
 
 <template>
-  <div>
-    <h1>User Dashboard</h1>
-  </div>
-  <Table :params="data" :actions="actions"  />
-
+          <h1>User Dashboard</h1>
+        <Table :params="data" :actions="actions"  />
 </template>
 
 <style scoped>

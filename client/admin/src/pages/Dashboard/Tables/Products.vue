@@ -1,6 +1,6 @@
 <script setup>
-import Table from "../../components/Tables/Table.vue";
-import { useEntityTable } from '../../composables/useEntityTable.ts';
+import Table from "../../../components/Tables/Table.vue";
+import { useEntityTable } from '../../../composables/useEntityTable.ts';
 
 const product = 'product';
 const entityPath = 'product';

@@ -2,10 +2,10 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import ky from 'ky';
-import Input from "../components/Inputs/Input.vue";
-import {fetchModelStructure, filterUnwantedFields} from "../functions/model.js";
-import {useFormHandler} from '../composables/useFormHandler';
-import Button from "../components/Buttons/Button.vue";
+import Input from "../../components/Inputs/Input.vue";
+import {fetchModelStructure, filterUnwantedFields} from "../../functions/model.js";
+import {useFormHandler} from '../../composables/useFormHandler';
+import Button from "../../components/Buttons/Button.vue";
 const props = defineProps({
   productId: {
     type: String,

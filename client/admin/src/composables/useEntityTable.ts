@@ -26,7 +26,7 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
             label: 'Modifier',
             method: ({ row }) => {
                 console.log(row)
-                router.push(`/admin/${entityPath}/${row.id}`);
+                router.push(`/${entityPath}/${row.id}`);
             },
             color: 'blue',
         },

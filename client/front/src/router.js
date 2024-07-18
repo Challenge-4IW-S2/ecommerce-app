@@ -29,7 +29,7 @@ const routes = [
     { path: '/login', component: LoginView },
     { path: '/register', component: RegisterView },
 
-    { path: '/admin/categories', component: DashboardCategoriesView},
+    /**{ path: '/admin/categories', component: DashboardCategoriesView},
     { path: '/admin/users', component: DashboardUsersView },
     { path: '/admin/products', component: DashboardProductsView },
     { path: '/admin/orders', component: DashboardOrdersView},
@@ -43,6 +43,7 @@ const routes = [
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
     { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
+    **/
     { path: '/products', component: ProductsView},
     { path: '/products/:slug', component: ProductView},
 
