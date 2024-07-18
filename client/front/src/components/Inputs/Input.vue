@@ -18,7 +18,7 @@ const props = defineProps({
   autocomplete: {
     type: String,
     default: 'on'
-  }
+  },
   disabled: Boolean
 })
 

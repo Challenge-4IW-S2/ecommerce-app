@@ -1,10 +1,11 @@
+'use strict';
 import { Model, DataTypes } from "sequelize";
-import {denormalizeUser} from "../../denormalizations/user.js";
 
 export default function (connection) {
   class Preference extends Model {
     static associate(models) {
       Preference.belongsTo(models.User);
+      Preference.belongsTo(models.PreferencesList);
     }
     //ADD DENORMALIZATION
     }
@@ -16,6 +17,14 @@ export default function (connection) {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
+    user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: 'users',
+            key: 'id'
+        }
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -26,7 +35,7 @@ export default function (connection) {
     },
   }, {
     sequelize:connection,
-    modelName: 'preferences',
+    tableName: 'preferences',
     underscored: true,
     timestamps: true
   });

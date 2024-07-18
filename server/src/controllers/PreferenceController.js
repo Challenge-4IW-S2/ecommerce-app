@@ -1,13 +1,30 @@
 import PreferenceRepository from '../postgresql/repository/PreferenceRepository.js';
+import PreferencesList from "../postgresql/models/PreferencesList.js";
+import PreferenceListRepository from "../postgresql/repository/PreferenceListRepository.js";
 export default class PreferenceController {
 
     static async getAllPreferences(req,res,next) {
         try {
+
+            const preferenceListRepository = new PreferenceListRepository();
+            const preferences = await preferenceListRepository.findAll();
             const preferenceRepository = new PreferenceRepository();
-            const preferences = await preferenceRepository.findAll();
-            res.json(preferences);
+            const userPreferences = await preferenceRepository.findByOtherField("user_id", req.user.id);
+            const userPreferencesMap = userPreferences.reduce((acc, pref) => {
+                acc[pref.name] = pref.activated;
+                return acc;
+            }, {});
+
+            const combinedPreferences = preferences.map(pref => ({
+                id: pref.dataValues.id,
+                name: pref.dataValues.name,
+                description: pref.dataValues.description,
+                activated: userPreferencesMap[pref.dataValues.name] || false
+            }));
+
+            res.json(combinedPreferences);
+
         }catch (e) {
-            console.log(e)
             next(e)
         }
     }
@@ -16,7 +33,6 @@ export default class PreferenceController {
         const preferenceRepository = new PreferenceRepository();
         try {
             const preference = await preferenceRepository.findByOtherField("user_id", req.params.id);
-            console.log(preference)
             if (preference) {
                 res.json(preference);
             } else {
@@ -26,26 +42,22 @@ export default class PreferenceController {
             next(error);
         }
     }
-    static async createOrUpdatePreference(req, res, next) {
+    static async createOrUpdatePreference(req, response, next) {
         const preferenceRepository = new PreferenceRepository();
         const params = {
-            id: req.params.id,
             name: req.body.name,
             activated: req.body.activated,
+            user_id: req.user.id
         };
-        try {
-            const nbDeleted = await preferenceRepository.destroy(params.id);
-            const preference = await preferenceRepository.create({ UserId: req.user.id, ...params });
-            res.status(nbDeleted === 1 ? 200 : 201).json(preference);
+        try{
+           const nbDeleted = await preferenceRepository.destroy(params.name,  req.user.id)
+           if (params.activated) {
+               const preference = await preferenceRepository.create(params);
+              response.status(201).json(preference);
+           }
+
         } catch (e) {
             next(e);
         }
-
-            try {
-                const preference = await preferenceRepository.createOrUpdatePreference();
-                res.status(201).json(preference);
-            } catch (error) {
-                next(error);
-            }
     }
 }
