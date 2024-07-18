@@ -1,18 +1,80 @@
 <script setup>
+import { ref, computed } from 'vue';
+import ky from "ky";
+import router from "../../router.js";
+
+// Définir les props reçues par le composant
 const props = defineProps({
   params: {
     type: Array,
     default: () => []
   },
-  actions:{
+  actions: {
     type: Array,
     default: () => [],
   },
   title: {
     type: String,
     default: 'User'
+  },
+  to: {
+    type: String,
+    default: ''
   }
-})
+});
+
+const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+
+const selectedRows = ref([]);
+
+// Calcul des données filtrées en fonction de la recherche
+const filteredData = computed(() => {
+  if (!searchQuery.value) return props.params;
+  return props.params.filter(row =>
+      Object.values(row).some(
+          value => String(value).toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+  );
+});
+
+// Gestion de la pagination
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredData.value.slice(start, end);
+});
+
+const totalPages = computed(() => Math.ceil(filteredData.value.length / itemsPerPage.value));
+
+// Gestion de la sélection de toutes les lignes
+const isAllSelected = computed({
+  get: () => selectedRows.value.length === props.params.length,
+  set: (value) => {
+    if (value) {
+      selectedRows.value = props.params.map(row => row.id);
+    } else {
+      selectedRows.value = [];
+    }
+  }
+});
+
+// Méthode pour basculer la sélection de toutes les lignes
+const toggleSelectAll = () => {
+  isAllSelected.value = !isAllSelected.value;
+};
+
+
+const toggleRowSelection = (rowId) => {
+  if (selectedRows.value.includes(rowId)) {
+    selectedRows.value = selectedRows.value.filter(id => id !== rowId);
+  } else {
+    selectedRows.value.push(rowId);
+  }
+};
+
+// Utiliser une fonction pour déterminer la classe des boutons
 function getButtonClass(color) {
   switch (color) {
     case 'red':
@@ -22,263 +84,189 @@ function getButtonClass(color) {
     case 'green':
       return 'bg-green-500 hover:bg-green-700';
     default:
-      return 'bg-gray-500 hover:bg-gray-700';
+      return 'bg-black hover:bg-black';
   }
 }
 
+// Pagination
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+const flattenObject = (obj, prefix = '') => {
+  let result = {};
+
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const pre = prefix.length ? prefix + '.' : '';
+      if (Array.isArray(obj[key])) {
+        obj[key].forEach((item, index) => {
+          Object.assign(result, flattenObject(item, `${pre}${key}[${index}]`));
+        });
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        Object.assign(result, flattenObject(obj[key], pre + key));
+      } else {
+        result[pre + key] = obj[key];
+      }
+    }
+  }
+
+  return result;
+};
+
+const exportSelectedRows = async () => {
+  try {
+    const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
+    const flattenedData = selectedData.map(row => flattenObject(row));
+
+    const headers = Object.keys(flattenedData[0]).join(',');
+    const csvContent = [
+      headers,
+      ...flattenedData.map(row => Object.values(row).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${props.title}-export.csv`;
+    a.click();
+    URL.revokeObjectURL(url); // libérer le blob
+  } catch (error) {
+    console.error('Erreur lors de l\'exportation du CSV:', error);
+  }
+};
+const deleteSelected = async () => {
+  try {
+    if (!confirm('Voulez-vous vraiment supprimer les éléments sélectionnés?')) return;
+    const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
+    const selectedIds = selectedData.map(row => row.id);
+    for (let i = 0; i < selectedIds.length; i++) {
+      console.log(selectedIds[i])
+      const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/${props.title.toLowerCase()}/${selectedIds[i]}`).json();
+
+      router.go();
+    }
+  } catch (error) {
+    console.error('Erreur lors de la suppression des éléments sélectionnés:', error);
+  }
+};
+const canDeleteOrEdit = computed(() => {
+  return props.title !== 'orders' && props.title !== 'comments';
+});
 </script>
 
 <template>
-  <!-- Start block -->
   <div class="p-4 sm:ml-64">
     <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-  <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
-    <div class="">
-      <!-- Start coding here -->
+        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased">
+    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
       <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
         <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
           <div class="w-full md:w-1/2">
             <form class="flex items-center">
-              <label for="simple-search" class="sr-only">Search</label>
+              <label for="simple-search" class="sr-only">Rechercher</label>
               <div class="relative w-full">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                  <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
+                       viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clip-rule="evenodd"/>
                   </svg>
                 </div>
-                <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                <input type="text" id="simple-search" v-model="searchQuery"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                       placeholder="Search" required="">
               </div>
             </form>
           </div>
-          <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-            <RouterLink to="/add-user">  Add {{ title }} </RouterLink>
-            <div class="flex items-center space-x-3 w-full md:w-auto">
-              <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
-                Actions
+          <div
+              class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+            <router-link v-if="canDeleteOrEdit " :to="to" class="bg-black text-white py-2 px-4 font-bold rounded hover:bg-black"> Add {{ title }}
+            </router-link>
+            <div class="flex items-center space-x-3 w-full md:w-auto" >
+              <button v-if="canDeleteOrEdit " @click="deleteSelected"
+                      class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                Delete Selected
               </button>
-              <div id="actionsDropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actionsDropdownButton">
-                  <li>
-                    <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass Edit</a>
-                  </li>
-                </ul>
-                <div class="py-1">
-                  <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete all</a>
-                </div>
-              </div>
-              <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-4 w-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-                </svg>
-                Filter
-                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                </svg>
+              <button @click="exportSelectedRows"
+                      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Export Selected
               </button>
-              <div id="filterDropdown" class="z-10 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Category</h6>
-                <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
-                  <li class="flex items-center">
-                    <input id="apple" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="apple" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Apple (56)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="fitbit" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="fitbit" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Fitbit (56)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="dell" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="dell" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Dell (56)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="asus" type="checkbox" value="" checked="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="asus" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Asus (97)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="logitech" type="checkbox" value="" checked="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="logitech" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Logitech (97)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="msi" type="checkbox" value="" checked="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="msi" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">MSI (97)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="bosch" type="checkbox" value="" checked="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="bosch" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Bosch (176)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="sony" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="sony" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Sony (234)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="samsung" type="checkbox" value="" checked="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="samsung" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Samsung (76)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="canon" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="canon" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Canon (49)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="microsoft" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="microsoft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Microsoft (45)</label>
-                  </li>
-                  <li class="flex items-center">
-                    <input id="razor" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                    <label for="razor" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Razor (49)</label>
-                  </li>
-                </ul>
-              </div>
             </div>
           </div>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" >
+          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr v-if="params.length > 0 ">
+            <tr>
               <th scope="col" class="p-4">
-                <div class="flex items-center">
-                  <input id="checkbox-all-search" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="checkbox-all-search" class="sr-only">checkbox</label>
-                </div>
+                <input type="checkbox" v-model="isAllSelected" @click="toggleSelectAll">
               </th>
-              <th v-for="(value, property) in params[0]" :key="property" scope="col" class="px-6 py-3">
-            <span v-if="typeof value !== 'object' && property !== 'password' && property !== 'id'"  >
-              {{ property }}
-            </span>
+              <th scope="col" class="px-4 py-3">#</th>
+              <th scope="col" class="px-4 py-3" v-for="(param, index) in Object.keys(props.params[0] || {})"
+                  :key="index">{{ param }}
               </th>
-              <th scope="col" class="px-6 py-3">
-                Actions
-              </th>
+              <th scope="col" class="px-4 py-3">Actions</th>
             </tr>
             </thead>
             <tbody>
 
-            <tr v-if="params.length > 0"
-                v-for="param in params" :key="params.id"
-                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <td class="w-4 p-4">
-                <div class="flex items-center">
-                  <input id="checkbox-table-search-1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-                </div>
+            <tr v-for="(item, index) in paginatedData" :key="item.id"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="p-4">
+                <input type="checkbox" :value="item.id" v-model="selectedRows">
               </td>
-
-              <td v-for="(value, property) in param" :key="property"  >
-          <span v-if="typeof value !== 'object' && property !== 'password'  && property !== 'id'" >
-               {{ value }}
-            </span>
-                <span v-else-if="property === 'is_verified'">
-            <span class="status-dot h-2.5 w-2.5 rounded-full me-2" :class="{ 'bg-green-500': value === 'true', 'bg-red-500': value === 'false' }">ok</span>
-            {{ value }}
-          </span>
+              <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white truncate">
+                {{ index + 1 }}
+              </th>
+              <td class="px-4 py-3 truncate" v-for="param in Object.keys(item)" :key="param">
+                {{ item[param] }}
               </td>
-              <td v-if="actions.length > 0" class="px-4 py-2 border-b">
-                <div class="flex space-x-2">
-                  <button
-                      v-for="(action, actionIndex) in actions"
-                      :key="actionIndex"
-                      @click="action.method(param)"
-                      :class="[getButtonClass(action.color), 'text-white px-2 py-1 rounded']"
+              {{ item.delete }}
+              <td class="px-4 py-3 flex items-center space-x-3">
+                <template v-if="!item.deleted">
+                  <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
+                          :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white font-medium "
                   >
                     {{ action.label }}
                   </button>
-                </div>
+                </template>
+                <template v-else>
+                  <span class="text-gray-500">Actions not available</span>
+                </template>
               </td>
             </tr>
-            <tr v-else>
-              <td colspan="5" class="text-center py-4">
+            <tr v-if="paginatedData.length === 0">
+              <td class="px-4 py-3 text-center" >
                 No data found
               </td>
             </tr>
             </tbody>
           </table>
-
         </div>
-        <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
-                    of
-                    <span class="font-semibold text-gray-900 dark:text-white">1000</span>
-                </span>
-          <ul class="inline-flex items-stretch -space-x-px">
-            <li>
-              <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                <span class="sr-only">Previous</span>
-                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-            </li>
-            <li>
-              <a href="#" aria-current="page" class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-            </li>
-            <li>
-              <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                <span class="sr-only">Next</span>
-                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </li>
-          </ul>
-        </nav>
+        <!-- Pagination Controls -->
+        <div class="flex justify-between items-center py-3 px-4">
+          <button @click="previousPage" :disabled="currentPage === 1"
+                  class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:bg-gray-300">
+            Previous
+          </button>
+          <div class="text-sm text-gray-500">Page {{ currentPage }} of {{ totalPages }}</div>
+          <button @click="nextPage" :disabled="currentPage >= totalPages"
+                  class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 disabled:bg-gray-300">
+            Next
+          </button>
+        </div>
       </div>
     </div>
   </section>
-  </div>
-  </div>
-
-  <!-- End block -->
-  <!-- Delete modal
-  <div id="deleteModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-       Modal content
-      <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-        <button type="button" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="deleteModal">
-          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-        <svg class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-        </svg>
-        <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to delete this item?</p>
-        <div class="flex justify-center items-center space-x-4">
-          <button data-modal-toggle="deleteModal" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancel</button>
-          <button type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">Yes, I'm sure</button>
-        </div>
-      </div>
     </div>
   </div>
-  <li>
-    <button type="button" data-modal-target="deleteModal" data-modal-toggle="deleteModal" class="flex w-full items-center py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:hover:text-red-400">
-      <svg class="w-4 h-4 mr-2" viewbox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="M6.09922 0.300781C5.93212 0.30087 5.76835 0.347476 5.62625 0.435378C5.48414 0.523281 5.36931 0.649009 5.29462 0.798481L4.64302 2.10078H1.59922C1.36052 2.10078 1.13161 2.1956 0.962823 2.36439C0.79404 2.53317 0.699219 2.76209 0.699219 3.00078C0.699219 3.23948 0.79404 3.46839 0.962823 3.63718C1.13161 3.80596 1.36052 3.90078 1.59922 3.90078V12.9008C1.59922 13.3782 1.78886 13.836 2.12643 14.1736C2.46399 14.5111 2.92183 14.7008 3.39922 14.7008H10.5992C11.0766 14.7008 11.5344 14.5111 11.872 14.1736C12.2096 13.836 12.3992 13.3782 12.3992 12.9008V3.90078C12.6379 3.90078 12.8668 3.80596 13.0356 3.63718C13.2044 3.46839 13.2992 3.23948 13.2992 3.00078C13.2992 2.76209 13.2044 2.53317 13.0356 2.36439C12.8668 2.1956 12.6379 2.10078 12.3992 2.10078H9.35542L8.70382 0.798481C8.62913 0.649009 8.5143 0.523281 8.37219 0.435378C8.23009 0.347476 8.06631 0.30087 7.89922 0.300781H6.09922ZM4.29922 5.70078C4.29922 5.46209 4.39404 5.23317 4.56282 5.06439C4.73161 4.8956 4.96052 4.80078 5.19922 4.80078C5.43791 4.80078 5.66683 4.8956 5.83561 5.06439C6.0044 5.23317 6.09922 5.46209 6.09922 5.70078V11.1008C6.09922 11.3395 6.0044 11.5684 5.83561 11.7372C5.66683 11.906 5.43791 12.0008 5.19922 12.0008C4.96052 12.0008 4.73161 11.906 4.56282 11.7372C4.39404 11.5684 4.29922 11.3395 4.29922 11.1008V5.70078ZM8.79922 4.80078C8.56052 4.80078 8.33161 4.8956 8.16282 5.06439C7.99404 5.23317 7.89922 5.46209 7.89922 5.70078V11.1008C7.89922 11.3395 7.99404 11.5684 8.16282 11.7372C8.33161 11.906 8.56052 12.0008 8.79922 12.0008C9.03791 12.0008 9.26683 11.906 9.43561 11.7372C9.6044 11.5684 9.69922 11.3395 9.69922 11.1008V5.70078C9.69922 5.46209 9.6044 5.23317 9.43561 5.06439C9.26683 4.8956 9.03791 4.80078 8.79922 4.80078Z" />
-      </svg>
-      Delete
-    </button>
-  </li>
-  -->
 </template>
-
-<style scoped>
-
-</style>

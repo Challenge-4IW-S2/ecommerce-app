@@ -40,7 +40,7 @@ const routes = [
 
 
     // route pour les 404
-    { path: '/:catchAll(.*)*', component: PageNotFound }
+    // { path: '/:catchAll(.*)*', component: PageNotFound }
 
 ]
 
