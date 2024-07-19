@@ -13,7 +13,7 @@ onMounted(() => {
   <div>
     <h1>Mon compte</h1>
 
-    <div id="accordion-collapse" data-accordion="collapse" class="w-full mt-4">
+    <div id="accordion-collapse" data-accordion="collapse" class=" mt-4">
       <h2 id="accordion-collapse-heading-1">
         <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
           <span>Modifier mes informations</span>

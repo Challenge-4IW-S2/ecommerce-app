@@ -19,6 +19,9 @@ const submitDeleteAccount = () => {
 </script>
 
 <template>
+  <p>
+    TODO: À FAIRE
+  </p>
   <div v-if="!showDeleteSection">
     <p>Voulez-vous vraiment accéder à cette section ?</p>
     <Button @click="seeDeleteSection" class="mt-4" text="Je comprends les risques" />
