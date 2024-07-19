@@ -4,10 +4,12 @@ import z from 'zod';
 import { useRoute } from 'vue-router';
 import ky from 'ky';
 import CardDescription from '../../components/CardDescription.vue';
+import { useCartStore } from "../../store/cart.js";
 
 const route = useRoute();
 const slug = computed(() => route.params.slug);
 let product = ref([]);
+const cartStore = useCartStore();
 
 const getProduct = async () => {
     try {
@@ -21,6 +23,7 @@ const getProduct = async () => {
 
 const addProductToBag = () => {
     console.log('Product added to bag:', product.value._id);
+    cartStore.addToCart(product.value);
 };
 
 onMounted(getProduct);
