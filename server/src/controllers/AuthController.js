@@ -148,8 +148,6 @@ export class AuthController {
         });
     }
 
-
-
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({
             email: z.string().email(),

@@ -11,7 +11,6 @@ export default function (router) {
     router.post("/login", checkNotAuth(), AuthController.login);
     router.get('/logout', AuthController.logout);
 
-
     router.get('/logout', checkAuth(), AuthController.logout);
 
     router.post('/forgot-password', checkNotAuth(), AuthController.forgotPassword);
