@@ -8,14 +8,14 @@ defineProps({
 });
 
 const increaseQuantity = (productId) => {
-  const product = cartStore.items.find(item => item.id === productId);
+  const product = cartStore.items.find(item => item._id === productId);
   if (product) {
     cartStore.updateQuantity(productId, product.quantity + 1);
   }
 };
 
 const decreaseQuantity = (productId) => {
-  const product = cartStore.items.find(item => item.id === productId);
+  const product = cartStore.items.find(item => item._id === productId);
   if (product && product.quantity > 1) {
     cartStore.updateQuantity(productId, product.quantity - 1);
   }
@@ -30,17 +30,38 @@ const decreaseQuantity = (productId) => {
       <button @click="cartStore.clearCart">Vider le panier</button>
     </div>
     <ul class="w-full">
-      <li v-for="item in cartStore.items" :key="item.id" class="flex justify-between">
+      <li v-for="item in cartStore.items" :key="item._id" class="flex justify-between">
         <span>{{ item.name }}</span>
         <div>
-          <button @click="decreaseQuantity(item.id)">-</button>
+          <button @click="decreaseQuantity(item._id)">-</button>
           <span>{{ item.quantity }}</span>
-          <button @click="increaseQuantity(item.id)">+</button>
+          <button @click="increaseQuantity(item._id)">+</button>
         </div>
         <span>{{ item.price_ttc }} EUR</span>
-        <button @click="cartStore.removeFromCart(item.id)">Supprimer</button>
+        <button @click="cartStore.removeFromCart(item._id)">Supprimer</button>
       </li>
     </ul>
     <div>Total: {{ cartStore.total }} EUR</div>
   </div>
 </template>
+
+<style scoped>
+.cart-item {
+  @apply flex justify-between items-center;
+}
+
+@media (max-width: 768px) {
+  .cart {
+    @apply w-4/5;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart {
+    @apply w-full;
+  }
+  .cart-item {
+    @apply flex-col items-start;
+  }
+}
+</style>

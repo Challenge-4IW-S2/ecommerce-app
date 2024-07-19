@@ -13,25 +13,24 @@ export const useCartStore = defineStore('cart', {
     actions: {
         addToCart(product) {
             console.log("Adding product to cart:", product);
-            const existingProductIndex = this.items.findIndex(item => item.id === product.id);
+            const existingProductIndex = this.items.findIndex(item => item._id === product._id);
             if (existingProductIndex !== -1) {
                 this.items[existingProductIndex].quantity += 1;
-                console.log("Product quantity updated:", this.items[existingProductIndex]);
             } else {
                 this.items.push({ ...product, quantity: 1 });
             }
             this.saveCart();
         },
         removeFromCart(productId) {
-            const index = this.items.findIndex(item => item.id === productId);
+            const index = this.items.findIndex(item => item._id === productId);
             if (index !== -1) {
                 this.items.splice(index, 1);
                 this.saveCart();
             }
         },
         updateQuantity(productId, quantity) {
-            const index = this.items.findIndex(item => item.id === productId);
-            if (index !== -1) {
+            const index = this.items.findIndex(item => item._id === productId);
+            if (index !== -1 && quantity >= 0) {
                 this.items[index].quantity = quantity;
                 this.saveCart();
             }
