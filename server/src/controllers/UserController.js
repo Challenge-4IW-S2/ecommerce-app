@@ -117,15 +117,11 @@ export class UserController {
     }
 
     static updateClientProfile(request, response) {
+        const parameters = request.body;
         const userRepository = new UserRepository();
         userRepository.findOne('id', request.user.id)
             .then(user => {
-                userRepository.updateUser(user.id, {
-                    firstname: parsedParameters.data.firstname,
-                    lastname: parsedParameters.data.lastname,
-                    email: parsedParameters.data.email,
-                    phone: parsedParameters.data.phone
-                })
+                userRepository.updateUser(user.id, parameters)
                     .then(() => {
                         response.status(200).send();
                     })

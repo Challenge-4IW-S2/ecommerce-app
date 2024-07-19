@@ -58,6 +58,9 @@ const submitModifyPassword = async () => {
     if (res.ok) {
       modifyPasswordMessage.message = "Votre mot de passe a bien été modifié";
       modifyPasswordMessage.success = true;
+      modifyPassword.oldPassword = "";
+      modifyPassword.newPassword = "";
+      modifyPassword.confirmNewPassword = "";
     }
   }).catch(async (error) => {
     const httpCode = error.response.status;
@@ -86,7 +89,7 @@ const submitModifyPassword = async () => {
 </script>
 
 <template>
-  <p :class="!modifyPasswordMessage.success ? 'text-red-600' : 'text-green-500'" class="text-red-600 mt-4" v-if="modifyPasswordMessage.message.length > 0">
+  <p :class="!modifyPasswordMessage.success ? 'text-red-600' : 'text-green-500'" class="mt-4" v-if="modifyPasswordMessage.message.length > 0">
     {{ modifyPasswordMessage.message }}
   </p>
   <ul class="text-red-600 mt-4" v-if="Object.keys(modifyPasswordMessage.errors).length > 0">

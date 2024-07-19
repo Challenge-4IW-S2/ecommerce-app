@@ -35,9 +35,9 @@ export const ClientUpdatePasswordSchema = z.object({
 });
 
 export const ClientUpdateProfileSchema = z.object({
-    firstname: z.string().min(1),
-    lastname: z.string().min(1),
-    phone: z.string().nullable()
+    firstname: z.string().min(1, 'Votre prénom ne peut pas être vide'),
+    lastname: z.string().min(1, 'Votre nom ne peut pas être vide'),
+    phone: z.string().trim().regex(/^0[1-9](?:[\s.-]*\d{2}){4}$/, "Votre numéro n'est pas au bon format").nullable()
 });
 
 export const ClientDeleteAccountSchema = z.object({
