@@ -25,11 +25,11 @@ export default class ProductRepository {
         });
     }
 
-    async findAndCountAll() {
+    async findAndCountAll(today) {
         return await this.Product.findAndCountAll({
             where: {
                 createdAt: {
-                    [Op.gte]: 'today'
+                    [Op.gte]: today
                 }
             }
         });
@@ -53,7 +53,7 @@ export default class ProductRepository {
             where: {
                 id: id
             },
-            individualHooks: true
+            individualHooks: true,
         });
     }
 

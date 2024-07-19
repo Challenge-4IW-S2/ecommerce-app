@@ -67,7 +67,7 @@ POST localhost:8000/user
 Content-Type: application/json
 
 {
-  "email": "estelle272001@gmail.com",
+  "email": "estelle272001@gmai.com",
   "password": "Testpassword&1",
   "role": "ROLE_USER",
   "firstname":"Test",
@@ -112,11 +112,11 @@ POST localhost:8000/product
 Content-Type: application/json
 
 {
-  "name": "Clips-ins",
+  "name": "Clips-in",
   "description": "Description",
   "price_ttc": "10",
   "price_ht": "8",
-  "slug": "clips-ins",
+  "slug": "pmk-klm",
   "category_id": "test"
 }
 
@@ -156,7 +156,7 @@ Content-Type: application/json
   "description": "Description",
   "price_ttc": "10",
   "price_ht": "8",
-  "slug": "clips-ins",
+  "slug": "clips-ihhhhns",
   "category_id": "Tapes-in"
 }
 

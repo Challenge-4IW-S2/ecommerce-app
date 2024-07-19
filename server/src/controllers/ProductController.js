@@ -1,7 +1,12 @@
 import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
-
+import User from "../postgresql/models/user.js";
+import Preference from "../postgresql/models/Preference.js";
+import {sendEmail} from "./SendMailController.js";
+import {newProductsTemplate} from "../mailsTemplates/newProducts.js";
+import UserRepository from "../postgresql/repository/UserRepository.js";
+import {newPriceTemplate} from "../mailsTemplates/NewPrice.js";
 export class ProductController {
     static async index(request, response) {
         try {
@@ -69,11 +74,21 @@ export class ProductController {
             const product = await productRepository.createProduct(parameters)
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-
-            const newProductsToday = await productRepository.findAndCountAll();
-            console.log(newProductsToday)
+            const newProductsToday = await productRepository.findAndCountAll(today);
+            if (newProductsToday> 5) {
+                const userRepo = new UserRepository();
+                const users = await userRepo.findAllWithPreferences();
+                for (const user of users) {
+                    const {to, subject} = {
+                        to: user.email,
+                        subject: 'New Products Alert',
+                    };
+                    await sendEmail(to, subject, newProductsTemplate());
+                }
+            }
             response.status(201).json(product);
         } catch (error) {
+            console.log(error)
             next(error)
         }
     }
@@ -89,7 +104,21 @@ export class ProductController {
         }
         try {
             const productRepository = new ProductRepository();
-            const product = await productRepository.updateProduct(request.params.id,parameters)
+            const previousData = await productRepository.findById(request.params.id);
+            const oldPrice = previousData.price_ttc;
+            const newPrice = parameters.price_ttc;
+            const product = await productRepository.updateProduct(request.params.id, parameters)
+            if (oldPrice > newPrice) {
+                const userRepo = new UserRepository();
+                const users = await userRepo.findAllWithPreferences();
+                for (const user of users) {
+                    const {to, subject} = {
+                        to: user.email,
+                        subject: 'Price Drop Alert',
+                    };
+                    await sendEmail(to, subject, newPriceTemplate(parameters));
+                }
+            }
             response.status(200).json(product);
         } catch (error) {
             next(error)

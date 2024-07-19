@@ -34,9 +34,9 @@ const loadModels = async () => {
         Object.values(models).forEach(model => {
             if (model.associate) {
                 model.associate(models);
+                console.log(`Associations du modèle ${model.name} chargées`)
             }
         });
-        console.log('Modèles chargés avec succès:', Object.keys(models));
         return models;
     }catch (error) {
         console.error('Erreur lors du chargement des modèles:', error);

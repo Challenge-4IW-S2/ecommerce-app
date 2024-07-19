@@ -1,11 +1,13 @@
 'use strict';
 import { Model, DataTypes } from "sequelize";
+import User from "./User.js";
+import PreferencesList from "./PreferencesList.js";
 
 export default function (connection) {
   class Preference extends Model {
     static associate(models) {
-      Preference.belongsTo(models.User);
-      Preference.belongsTo(models.PreferencesList);
+      Preference.belongsTo(models.User,{foreignKey: 'user_id', as: 'user' });
+      //Preference.belongsTo(models.PreferencesList);
     }
     //ADD DENORMALIZATION
     }
@@ -39,5 +41,7 @@ export default function (connection) {
     underscored: true,
     timestamps: true
   });
+
+
   return Preference;
 };

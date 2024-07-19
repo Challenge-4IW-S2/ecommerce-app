@@ -4,7 +4,12 @@ import bcrypt from 'bcryptjs';
 
 export default function (connection) {
 
-    class User extends Model {}
+    class User extends Model {
+        static associate(models) {
+            User.hasMany(models.Preference,{ foreignKey: 'user_id', as: 'preferences' });
+            User.hasMany(models.Wishlist, { foreignKey: 'user_id' });
+        }
+    }
 
     User.init(
         {
@@ -88,6 +93,7 @@ export default function (connection) {
     User.afterUpdate(async (user) => {
         await denormalizeUser(user);
     });
+
 
     return User;
 }

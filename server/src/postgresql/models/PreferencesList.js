@@ -2,11 +2,7 @@
 import { Model, DataTypes } from "sequelize";
 
 export default function (connection) {
-  class PreferencesList extends Model {
-    static associate(models) {
-      PreferencesList.hasMany(models.Preference);
-  }
-  }
+  class PreferencesList extends Model { }
     PreferencesList.init({
     id: {
       type: DataTypes.UUID,
