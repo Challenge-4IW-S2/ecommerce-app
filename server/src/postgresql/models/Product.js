@@ -44,6 +44,14 @@ export default function (connection) {
                     model: 'categories',
                     key: 'id'
                 }
+            },
+            type_id: {
+                type: DataTypes.UUID,
+                allowNull: false,
+                references: {
+                    model: 'types',
+                    key: 'id'
+                }
             }
         },
         {

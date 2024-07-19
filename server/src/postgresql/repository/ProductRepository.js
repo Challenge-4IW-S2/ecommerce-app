@@ -1,11 +1,13 @@
 import db from '../db.js';
 import ProductModel from '../models/Product.js';
 import CategoryRepository from './CategoryRepository.js';
+import TypeRepository from './TypeRepository.js';
 
 export default class ProductRepository {
     constructor() {
         this.Product = ProductModel(db.connection);
         this.CategoryRepository = new CategoryRepository();
+        this.TypeRepository = new TypeRepository();
     }
 
     async findAll() {
@@ -33,7 +35,8 @@ export default class ProductRepository {
             is_active: product.is_active,
             token: product.token,
             slug: product.slug,
-            category_id: await this.CategoryRepository.getCategoryId(product.category)
+            category_id: await this.CategoryRepository.getCategoryId(product.category),
+            type_id: await this.TypeRepository.getTypeId(product.type),
         });
     }
 

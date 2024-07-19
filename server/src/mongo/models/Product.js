@@ -36,6 +36,10 @@ const productSchema = new Schema({
         type: 'UUID',
         required: true,
     },
+    type_id: {
+        type: 'UUID',
+        required: true,
+    },
     created_at: {
         type: Date,
         required: true,
