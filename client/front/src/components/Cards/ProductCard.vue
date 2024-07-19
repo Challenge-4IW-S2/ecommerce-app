@@ -14,19 +14,19 @@ const openModal = () => {
 <template>
     <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
 
-    <div class="flex flex-col relative">
+    <div class="flex flex-col xl:w-[530px] sm:relative">
         <RouterLink :to="`/product/${product.slug}/`" class="flex flex-col">
             <img :src="product.pictures[0]?.url" :alt="`image du produit ${product.name}`">
         </RouterLink>
         <button @click.stop="openModal"
-            class="bg-black h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-6">
+            class="bg-black h-8 w-8 rounded-full flex items-center justify-center absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-6 xl:hidden">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 14 14">
                 <path stroke="#fff" d="M.335 6.5h13.333M7.505.335v13.334" />
             </svg>
         </button>
     </div>
 
-    <div v-if="isModalOpen" class="fixed inset-0 z-20 flex flex-col justify-center">
+    <div v-if="isModalOpen" class="fixed inset-0 z-20 flex flex-col justify-center xl:hidden">
         <div class="bg-white pb-10 shadow-lg flex flex-col font-light mx-2">
             <button @click="openModal" class="self-end mt-5 mr-5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256">
