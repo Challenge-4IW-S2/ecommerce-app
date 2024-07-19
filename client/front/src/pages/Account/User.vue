@@ -58,7 +58,8 @@ const routes = [
           </RouterLink>
         </li>
       </ul>
-      <RouterView class="min-w-96 flex-grow"></RouterView>
+<!--      <RouterView class="min-w-96 flex-grow"></RouterView>-->
+      <RouterView class="flex-grow"></RouterView>
     </div>
   </div>
 

@@ -148,80 +148,6 @@ export class AuthController {
         });
     }
 
-    static changePassword(request, response) {
-        const parametersSchema = z.object({
-            oldPassword: z.string(),
-            newPassword: z.string(),
-            confirmNewPassword: z.string(),
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        if (parsedParameters.data.newPassword !== parsedParameters.data.confirmNewPassword) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-
-                if (!bcrypt.compareSync(parsedParameters.data.oldPassword, user.password)) {
-                    return response.status(403).send();
-                }
-
-                const newPassword = bcrypt.hashSync(parsedParameters.data.newPassword, 10);
-                userRepository.updateUser(user.id, {
-                    password: newPassword,
-                    passwordLastChanged: new Date()
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
-    }
-
-    static updateProfile(request, response) {
-        const parametersSchema = z.object({
-            firstname: z.string(),
-            lastname: z.string(),
-            phone: z.string().nullable()
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-                userRepository.updateUser(user.id, {
-                    firstname: parsedParameters.data.firstname,
-                    lastname: parsedParameters.data.lastname,
-                    email: parsedParameters.data.email,
-                    phone: parsedParameters.data.phone
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
-    }
-
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({
             email: z.string().email(),
@@ -277,12 +203,6 @@ export class AuthController {
         }
 
         response.status(200).send();
-    }
-
-    static deleteAccount(request, response) {
-        return response.json({
-            message: 'Logged'
-        }).send()
     }
 
     static authCheck(request, response) {

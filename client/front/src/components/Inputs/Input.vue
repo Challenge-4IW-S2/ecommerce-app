@@ -9,7 +9,7 @@ const props = defineProps({
   },
   placeholder: String,
   type: {
-    validator: (value) => ['text', 'email', 'password', 'number', 'date', 'datetime-local', 'month', 'search', 'tel', 'time', 'url','file', 'week', 'color'].includes(value),
+    validator: (value) => ['text', 'email', 'password', 'number', 'date', 'datetime-local', 'month', 'search', 'tel', 'time', 'url', 'file', 'week', 'color'].includes(value),
     default: 'text'
   },
   error: String,
@@ -18,20 +18,15 @@ const props = defineProps({
   autocomplete: {
     type: String,
     default: 'on'
-  }
+  },
   disabled: Boolean
 })
 
 let dynamicType = ref(props.type);
-
 let inputValue = ref(props.modelValue);
 
-function changeVisibility() {
-  dynamicType.value = dynamicType.value === 'password'
-      ? 'text'
-      : 'password';
-}
 const emit = defineEmits(['update:modelValue', 'update:file']);
+
 const internalModelValue = computed({
   get: () => inputValue.value,
   set: (value) => {
@@ -40,13 +35,23 @@ const internalModelValue = computed({
   }
 });
 
+function changeVisibility() {
+  dynamicType.value = dynamicType.value === 'password'
+      ? 'text'
+      : 'password';
+}
+
 function handleFileChange(event) {
   const files = event.target.files;
   if (files.length > 0) {
     emit('update:file', files[0]);
   }
-
 }
+
+// Watch for changes in props.modelValue and update inputValue accordingly
+watch(() => props.modelValue, (newValue) => {
+  inputValue.value = newValue;
+});
 
 </script>
 
@@ -57,27 +62,27 @@ function handleFileChange(event) {
     </label>
     <div class="w-full relative">
       <input v-if="dynamicType !== 'file'"
-          :id="id"
-          :type="dynamicType"
-          :placeholder="placeholder"
-          :option="option"
-          :autocomplete="autocomplete"
-          v-model="internalModelValue"
-          :disabled="disabled"
-          class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          >
+             :id="id"
+             :type="dynamicType"
+             :placeholder="placeholder"
+             :option="option"
+             :autocomplete="autocomplete"
+             v-model="internalModelValue"
+             :disabled="disabled"
+             class="border pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+      >
       </input>
 
       <input v-else
-          :id="id"
-          :type="dynamicType"
-          :placeholder="placeholder"
-          :option="option"
-          v-model="internalModelValue"
+             :id="id"
+             :type="dynamicType"
+             :placeholder="placeholder"
+             :option="option"
+             v-model="internalModelValue"
              :disabled="disabled"
-          accept=".jpg, .jpeg, .png, .svg"
+             accept=".jpg, .jpeg, .png, .svg"
 
-      class="border pr-1 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full
+             class="border pr-1 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full
            file:mr-4 file:py-2 file:px-4
            file:border-0
            file:text-sm file:font-semibold
@@ -85,8 +90,6 @@ function handleFileChange(event) {
            hover:file:bg-black hover:file:text-white">
 
       <span v-if="type === 'password'" class="bg-transparent absolute top-2/4 right-2 pl-4 pr-2 -translate-y-2/4 text-xs cursor-pointer z-0"
-
-
             @click="changeVisibility">
         {{
           dynamicType === 'password' ? 'AFFICHER' : 'MASQUER'
@@ -99,4 +102,3 @@ function handleFileChange(event) {
 <style scoped>
 
 </style>
-//v-model="value"

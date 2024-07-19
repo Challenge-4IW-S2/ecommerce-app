@@ -63,4 +63,3 @@ const internalModelValue = computed({
 <style scoped>
 
 </style>
-//v-model="value"

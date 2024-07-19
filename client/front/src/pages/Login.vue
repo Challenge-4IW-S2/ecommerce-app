@@ -20,7 +20,6 @@ const msgError = ref('')
 
 const connect = async () => {
   try {
-    console.log(`${import.meta.env.VITE_API_BASE_URL}login`)
     const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
       json: {
         email: email.value,
@@ -29,13 +28,18 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-      // userStore.updateSessionId(userStore.user, response.user.id)
       await router.replace('/');
-    } else {
-      new Error('Votre email ou votre mot de passe sont incorrects.');
     }
   } catch (error) {
-    msgError.value = error.message;
+    const httpCode = error.response.status;
+    switch (httpCode) {
+      case 401:
+        msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+      default:
+        msgError.value = 'Une erreur est survenue';
+        break;
+    }
   }
 };
 
