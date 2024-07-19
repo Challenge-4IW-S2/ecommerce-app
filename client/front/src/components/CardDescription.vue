@@ -46,37 +46,40 @@ defineProps({
                     </div>
                 </div>
 
-
-                <div class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+                <div v-if="product && product.pictures && product.pictures.length > 0"
+                    class="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
                     <div class="aspect-h-4 aspect-w-3  rounded-lg lg:block">
-                        <img src="../assets/deepW3.svg" alt="Two each of gray, white, and black shirts laying flat."
+                        <img :src="product.pictures[0].url" alt="Two each of gray, white, and black shirts laying flat."
                             class="h-full w-full object-cover object-center">
                     </div>
                     <div class=" lg:grid lg:grid-cols-1 lg:gap-y-8">
                         <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-                            <img src="../assets/deepW1.svg" alt="Model wearing plain black basic tee."
+                            <img :src="product.pictures[0].url" alt="Model wearing plain black basic tee."
                                 class="h-full w-full object-cover object-center">
                         </div>
                         <div class="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
-                            <img src="../assets/deepW2.svg" alt="Model wearing plain gray basic tee."
+                            <img :src="product.pictures[0].url" alt="Model wearing plain gray basic tee."
                                 class="h-full w-full object-cover object-center">
                         </div>
                     </div>
-
                 </div>
+
                 <div class="fixed md:relative bottom-0 w-full z-50 mt-6 sm:mt-8 lg:mt-0">
                     <div
                         class="p-6 bg-white text-left border border-[#E4E4E4] rounded dark:bg-gray-800 dark:border-gray-700">
                         <form @submit.prevent="handleSubmit">
                             <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
                                 <a href="#">
-                                    <p v-if="product && product.category && product.category.lenght > 0" class="mb-2 text-left tracking-tight text-black dark:text-white">{{ product.category[0].name }}</p>
+                                    <p v-if="product && product.category && product.category.lenght > 0"
+                                        class="mb-2 text-left tracking-tight text-black dark:text-white">{{
+                                            product.category[0].name }}</p>
                                 </a>
                             </div>
                             <h2 class=" mb-2 text-lg font-semibold text-black sm:text-2xl dark:text-white">
                                 {{ product.name }}
                             </h2>
-                            <p class="mb-2 text-left tracking-tight text-black dark:text-white">{{ product.price_ttc }} EUR</p>
+                            <p class="mb-2 text-left tracking-tight text-black dark:text-white">{{ product.price_ttc }}
+                                EUR</p>
                             <p class="my-4 font-normal text-black py-3  dark:text-gray-400 hidden md:block">
                                 {{ product.description }}
                             </p>

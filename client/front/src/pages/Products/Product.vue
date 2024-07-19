@@ -18,10 +18,6 @@ const getProduct = async () => {
     }
 };
 
-const addProductToBag = () => {
-    console.log('Product added to bag:', product.value._id);
-};
-
 onMounted(getProduct);
 </script>
 
