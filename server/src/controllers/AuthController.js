@@ -51,11 +51,9 @@ export class AuthController {
                 response.status(201).json(sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte,<br> <button> BACK </button>'),{
                     message: 'Compte créé'
                 })
-
             })
             .catch(err => {
-                // TODO: Erreur isNotUnique ?
-                const isNotUnique = err.errors[0].validatorKey === 'not_unique';
+                const isNotUnique = err.name === 'SequelizeUniqueConstraintError';
 
                 const message = isNotUnique
                     ? 'Un compte existe déjà avec cet email'
