@@ -64,7 +64,7 @@ export class ProductController {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             const newProductsToday = await productRepository.findAndCountAll(today);
-            if (newProductsToday> 5) {
+            if (newProductsToday.count > 5) {
                 const userRepo = new UserRepository();
                 const users = await userRepo.findAllWithPreferences();
                 for (const user of users) {

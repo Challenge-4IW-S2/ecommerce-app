@@ -48,8 +48,8 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax, names)
     }
 }
 
-onMounted(() => {
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+onMounted(async () => {
+    await getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
 });
 
 const goToNextPage = () => {

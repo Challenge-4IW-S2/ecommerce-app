@@ -24,7 +24,8 @@ const isLogged = computed(() => userAuthStore.getIsLoggedIn());
         <RouterLink v-if="!isLogged" to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
         <ButtonLink v-if="isLogged" class-name="bg-black text-white p-4 uppercase" to="/account" text="Mon compte" />
-        <RouterLink v-if="isLogged" to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
+        <RouterLink v-if="isLogged" to="/logout" class="cursor-pointer text-sm uppercase">
+          Déconnexion</RouterLink>
         <Cart />
       </div>
     </div>

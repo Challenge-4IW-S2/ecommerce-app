@@ -1,8 +1,17 @@
 <script setup>
 import { ref } from 'vue'
-defineProps({
-    product: Object,
-})
+
+import { defineProps, defineEmits } from 'vue';
+
+const props = defineProps({
+  product: Object
+});
+
+const emit = defineEmits(['addProductToBag']);
+
+function addProductToBag() {
+  emit('addProductToBag');
+}
 </script>
 
 <template>
@@ -67,34 +76,35 @@ defineProps({
                 <div class="fixed md:relative bottom-0 w-full z-50 mt-6 sm:mt-8 lg:mt-0">
                     <div
                         class="p-6 bg-white text-left border border-[#E4E4E4] rounded dark:bg-gray-800 dark:border-gray-700">
-                        <form @submit.prevent="handleSubmit">
-                            <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                                <a href="#">
-                                    <p v-if="product && product.category && product.category.lenght > 0"
-                                        class="mb-2 text-left tracking-tight text-black dark:text-white">{{
-                                            product.category[0].name }}</p>
-                                </a>
-                            </div>
-                            <h2 class=" mb-2 text-lg font-semibold text-black sm:text-2xl dark:text-white">
-                                {{ product.name }}
-                            </h2>
-                            <p class="mb-2 text-left tracking-tight text-black dark:text-white">{{ product.price_ttc }}
-                                EUR</p>
-                            <p class="my-4 font-normal text-black py-3  dark:text-gray-400 hidden md:block">
-                                {{ product.description }}
+                      <form @submit.prevent="addProductToBag">
+                        <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
+                          <a href="#">
+                            <p v-if="product && product.category && product.category.length > 0"
+                               class="mb-2 text-left tracking-tight text-black dark:text-white">
+                              {{ product.category[0].name }}
                             </p>
-                            <!-- Sizes -->
-                            <div class="hidden md:block mt-4">
-                                <SizeOptions />
-                            </div>
-                            <div v-if="showSizeOptions" class="">
-                                <SizeOptions />
-                            </div>
-                            <button type="button"
+                          </a>
+                        </div>
+                        <h2 class="mb-2 text-lg font-semibold text-black sm:text-2xl dark:text-white">
+                          {{ product.name }}
+                        </h2>
+                        <p class="mb-2 text-left tracking-tight text-black dark:text-white">{{ product.price_ttc }}
+                          EUR</p>
+                        <p class="my-4 font-normal text-black py-3 dark:text-gray-400 hidden md:block">
+                          {{ product.description }}
+                        </p>
+                        <!-- Sizes -->
+                        <div class="hidden md:block mt-4">
+                          <SizeOptions />
+                        </div>
+                        <div v-if="showSizeOptions" class="">
+                          <SizeOptions />
+                        </div>
+                        <button type="submit"
                                 class="mt-10 flex w-full bg-principal items-center justify-center text-white rounded-md border border-transparent px-8 py-3 text-base font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Ajouter
-                            </button>
-                        </form>
+                          Ajouter
+                        </button>
+                      </form>
 
                         <!--<a href="#" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
               Read more

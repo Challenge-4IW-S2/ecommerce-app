@@ -4,7 +4,6 @@ import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
 import {ref} from "vue";
-import Swal from "sweetalert2";
 import {  useRouter } from "vue-router";
 
 // For connect user bag
