@@ -89,8 +89,8 @@ const routes = [
         component: ProductsView
     },
     {
-        path: '/products:slug',
-        component: ProductsView
+        path: '/product/:slug',
+        component: ProductView
     },
     {
         path: '/change-password',

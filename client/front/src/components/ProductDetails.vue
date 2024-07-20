@@ -6,14 +6,11 @@ const openToggle = () => {
     isToggleOpen.value = !isToggleOpen.value;
 }
 
-defineProps({
-    buttonTitle: String,
-    descriptionToggle: String,
-})
 </script>
 
 <template>
-    <div class="flex flex-col border-black border-t-2 px-2 py-4">
+    <div></div>
+    <!-- <div class="flex flex-col border-black border-t-2 px-2 py-4">
         <div class="flex justify-between">
             <span class="font-semibold text-sm md:text-base"> {{ buttonTitle }}</span>
             <button @click="openToggle">
@@ -25,5 +22,5 @@ defineProps({
         <div v-if="isToggleOpen" class="mt-2 font-light text-sm md:text-base">
             <p v-html="descriptionToggle"></p>
         </div>
-    </div>
+    </div> -->
 </template>

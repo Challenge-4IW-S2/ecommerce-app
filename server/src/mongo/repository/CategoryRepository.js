@@ -17,4 +17,8 @@ export default class CategoryRepository {
     async deleteCategory(categoryId) {
         return this.Category.findByIdAndDelete(categoryId);
     }
+
+    async getAllCategories() {
+        return this.Category.find();
+    }
 }

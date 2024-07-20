@@ -4,53 +4,42 @@ import ProductPictureRepository from "../postgresql/repository/ProductPictureRep
 
 export class ProductController {
     static async index(request, response) {
-        try {
-            const productRepositoryMongo = new ProductRepositoryMongo();
-            const page = request.query.page;
-            const order = request.query.order;
-            await productRepositoryMongo.getAllProducts(page, order).then((data) => {
-                response.json({
-                    products: data.productsResults,
-                    totalPages: data.totalPagesResults,
-                });
-            });
-        } catch (error) {
-            response.json({
-                message: error.message,
-            });
-        }
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const page = request.query.page;
+        const order = request.query.order;
+        const categories = request.query.categories;
+        const valueMin = request.query.valueMin;
+        const valueMax = request.query.valueMax;
+        const names = request.query.names;
+
+        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax, names);
+        response.json(products);
+    }
+
+    static async getMinAndMaxPrice(request, response) {
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const minMax = await productRepositoryMongo.getMinAndMaxPrice();
+        response.json(minMax);
+    }
+
+    static async getProductsName(request, response) {
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const names = await productRepositoryMongo.getProductsName();
+        response.json(names);
     }
 
     static async getProductBySlug(request, response) {
-        try {
-            const productRepositoryMongo = new ProductRepositoryMongo();
-            const slug = request.params.slug;
-            await productRepositoryMongo.getProduct(slug).then((data) => {
-                response.json({
-                    data,
-                });
-            });
-        } catch (error) {
-            response.json({
-                message: error.message,
-            });
-        }
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const slug = request.params.slug;
+        const product = await productRepositoryMongo.getProduct(slug);
+        response.json(product);
     }
 
     static async search(request, response) {
-        try {
-            const productRepositoryMongo = new ProductRepositoryMongo();
-            const search = request.query.search;
-            await productRepositoryMongo.searchProduct(search).then((data) => {
-                response.json({
-                    data,
-                });
-            });
-        } catch (error) {
-            response.json({
-                message: error.message,
-            });
-        }
+        const productRepositoryMongo = new ProductRepositoryMongo();
+        const search = request.query.search;
+        const result = await productRepositoryMongo.searchProduct(search);
+        response.json(result);
     }
 
     static async createProduct(request, response,next) {

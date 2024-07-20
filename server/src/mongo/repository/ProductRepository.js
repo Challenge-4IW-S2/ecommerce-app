@@ -24,7 +24,7 @@ export default class ProductRepository {
         return this.Product.findByIdAndDelete(productId);
     }
 
-    async getAllProducts(page, order) {
+    async getAllProducts(page, order, categories, valueMin, valueMax, names) {
 
         // nombre total de pages ( ex : 100 / 10 = 10)
         const totalProducts = await this.Product.countDocuments({ is_active: true });
@@ -54,6 +54,12 @@ export default class ProductRepository {
                 break;
         }
 
+        // gestion de la catégorie
+        const categoryFilter = categories && categories.length ? { "category.name": { $in: categories } } : {};
+
+        // gestion des noms 
+        const nameFilter = names && names.length ? { name: { $in: names } } : {};
+
         // récupération des produits
         const productsResults = await this.Product.aggregate()
             .lookup({
@@ -80,11 +86,26 @@ export default class ProductRepository {
                 slug: 1,
             })
             .match({
-                is_active: true
+                is_active: true,
+                ...categoryFilter,
+                ...nameFilter,
+                price_ttc: { $gte: Number(valueMin), $lte: Number(valueMax) }
             })
             .limit(Number(page))
 
         return { productsResults, totalPagesResults };
+    }
+
+    async getMinAndMaxPrice() {
+        return this.Product.aggregate().group({
+            _id: null,
+            min: { $min: "$price_ttc" },
+            max: { $max: "$price_ttc" }
+        })
+    }
+
+    async getProductsName() {
+        return this.Product.find({}, 'name -_id');
     }
 
     getProduct(slug) {
