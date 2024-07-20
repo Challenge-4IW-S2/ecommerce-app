@@ -5,11 +5,15 @@ import { useRoute } from 'vue-router';
 import ky from 'ky';
 import CardDescription from '../../components/CardDescription.vue';
 import { useCartStore } from "../../store/cart.js";
+import Warning from '../../components/Alerts/Warning.vue';
 
 const route = useRoute();
 const slug = computed(() => route.params.slug);
 let product = ref([]);
 const cartStore = useCartStore();
+
+const showWarning = ref(false);
+const warningMessage = ref('');
 
 const getProduct = async () => {
     try {
@@ -22,14 +26,27 @@ const getProduct = async () => {
 };
 
 const addProductToBag = () => {
-    console.log('Product added to bag:', product.value._id);
+  const existingProduct = cartStore.items.find(item => item._id === product.value._id);
+  if (existingProduct) {
+    if (existingProduct.quantity >= 18) {
+      showWarning.value = true;
+      warningMessage.value = "La quantité maximale est de 18, si vous avez besoin de plus, veuillez contacter le support.";
+      return;
+    } else {
+      // Increase the quantity by 1 if it doesn't exceed the limit
+      cartStore.updateQuantity(existingProduct._id, existingProduct.quantity + 1);
+    }
+  } else {
+    // If the product doesn't exist in the cart, add it
     cartStore.addToCart(product.value);
+  }
 };
 
 onMounted(getProduct);
 </script>
 
 <template>
+  <Warning v-if="showWarning" :message="warningMessage" @close="showWarning = false" />
     <section class="p-4 flex gap-4">
         <CardDescription v-if="product && product.category && product.category.length > 0"
             :productCategory="product.category[0].name" />

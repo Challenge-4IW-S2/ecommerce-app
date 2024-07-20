@@ -20,7 +20,18 @@ defineProps({
 const increaseQuantity = (productId) => {
   const product = cartStore.items.find(item => item._id === productId);
   if (product) {
+    if (product.quantity >= 18) {
+      alert("La quantité maximale est de 18, si vous avez besoin de plus, veuillez contacter le support.")
+      return;
+    }
     cartStore.updateQuantity(productId, product.quantity + 1);
+  }
+};
+
+const updateQuantity = (productId, quantity) => {
+  const product = cartStore.items.find(item => item._id === productId);
+  if (product) {
+    cartStore.updateQuantity(productId, Number(quantity));
   }
 };
 
@@ -44,9 +55,9 @@ const decreaseQuantity = (productId) => {
       <li v-for="item in cartStore.items" :key="item._id" class="flex justify-between">
         <span>{{ item.name }}</span>
         <div>
-          <button @click="decreaseQuantity(item._id)">-</button>
-          <span>{{ item.quantity }}</span>
-          <button @click="increaseQuantity(item._id)">+</button>
+          <select v-model="item.quantity" @change="updateQuantity(item._id, $event.target.value)">
+            <option v-for="number in 18" :value="number">{{ number }}</option>
+          </select>
         </div>
         <span>{{ item.price_ttc }} EUR</span>
         <button @click="cartStore.removeFromCart(item._id)">Supprimer</button>
