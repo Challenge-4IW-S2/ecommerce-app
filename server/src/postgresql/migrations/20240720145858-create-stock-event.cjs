@@ -23,10 +23,6 @@ module.exports = {
         type: DataTypes.ENUM('low_stock', 'restock'),
         allowNull: false,
       },
-      sub_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       stock_level: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -45,5 +41,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('StockEvents');
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_StockEvents_event_type";');
   }
 };

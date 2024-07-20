@@ -55,6 +55,7 @@ export class ProductController {
             slug: request.body.slug,
             description: request.body.description,
             category: request.body.category_id,
+            quantity: request.body.quantity,
         }
         try {
             const productRepository = new ProductRepository();

@@ -6,7 +6,7 @@ export default function (connection) {
         static associate(models) {
             Product.belongsTo(models.Category, { foreignKey: 'category_id' });
             Product.hasMany(models.ProductPicture, { foreignKey: 'product_id' });
-            //Product.hasMany(models.StockEvent, { foreignKey: 'product_id' });
+            Product.hasMany(models.StockEvent, { foreignKey: 'product_id' });
         }
     }
 
