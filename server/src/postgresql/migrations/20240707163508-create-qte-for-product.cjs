@@ -11,10 +11,15 @@ module.exports = {
      */
     await queryInterface.addColumn('products', 'quantity', {
       type: Sequelize.INTEGER,
-      allowNull: true,
+      allowNull: false,
+      defaultValue: 0
     })
-  },
-
+    await queryInterface.addColumn('products', 'low_stock_threshold ', {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 10
+    })
+    } ,
   async down (queryInterface, Sequelize) {
     /**
      * Add reverting commands here.
