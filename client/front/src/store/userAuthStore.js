@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useUserStore } from "./userStore.js";
 
 export const useUserAuthStore = defineStore('auth', {
     state: () => ({
@@ -17,6 +18,14 @@ export const useUserAuthStore = defineStore('auth', {
         },
         getUserDetails() {
             return this.user;
+        },
+        async checkAuthStatus() {
+            const userStore = useUserStore();
+            if (userStore.user !== null) {
+                this.setLoginStatus(true);
+            } else {
+                this.setLoginStatus(false);
+            }
         }
     }
 });
