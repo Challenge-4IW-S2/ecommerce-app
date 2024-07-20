@@ -8,7 +8,7 @@ async up (queryInterface, Sequelize) {
         allowNull: false,
         defaultValue: 0
     });
-    await queryInterface.addColumn('products', 'low_stock_threshold', { // Removed the space after 'low_stock_threshold'
+    await queryInterface.addColumn('products', 'low_stock_threshold', {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 10
