@@ -45,6 +45,7 @@ const addProductToBag = () => {
 onMounted(getProduct);
 </script>
 
+
 <template>
   <Warning v-if="showWarning" :message="warningMessage" @close="showWarning = false" />
     <section class="p-4 flex gap-4">
@@ -70,4 +71,6 @@ onMounted(getProduct);
             </form>
         </div>
     </section>
+    <CardDescription :product="product" />
+
 </template>

@@ -1,6 +1,7 @@
 import db from '../db.js';
 import ProductModel from '../models/Product.js';
 import CategoryRepository from './CategoryRepository.js';
+import {Op} from "sequelize";
 
 export default class ProductRepository {
     constructor() {
@@ -24,6 +25,16 @@ export default class ProductRepository {
         });
     }
 
+    async findAndCountAll(today) {
+        return await this.Product.findAndCountAll({
+            where: {
+                createdAt: {
+                    [Op.gte]: today
+                }
+            }
+        });
+    }
+
     async createProduct(product) {
         return await this.Product.create({
             name: product.name,
@@ -42,7 +53,7 @@ export default class ProductRepository {
             where: {
                 id: id
             },
-            individualHooks: true
+            individualHooks: true,
         });
     }
 

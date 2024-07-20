@@ -95,7 +95,7 @@ const namesSelected = (name) => {
             <div class="grid grid-cols-2">
                 <ProductCard v-for="(product, index) in products" :key="index" :product="product" />
             </div>
-            <span class="italic">Page {{ currentPage }} sur {{ totalPages }}</span>
+            <span class="italic xl:text-xl">Page {{ currentPage }} sur {{ totalPages }}</span>
             <ProgressBar :percentage="currentPage" :max="totalPages" />
             <button v-if="currentPage !== totalPages" @click="goToNextPage"
                 class="bg-black text-white font-bold p-2 w-32 h-12 rounded">

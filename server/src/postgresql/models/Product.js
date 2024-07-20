@@ -58,6 +58,9 @@ export default function (connection) {
         await denormalizeProduct(product);
     });
 
+
+
+
     Product.afterUpdate(async (product) => {
         await denormalizeProduct(product);
     });
