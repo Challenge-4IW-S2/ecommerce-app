@@ -43,7 +43,7 @@ export class AuthController {
             role: 'ROLE_USER',
             phone: null
         };
-       // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
+        // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
@@ -98,7 +98,7 @@ export class AuthController {
             if (!user.is_verified) return response.status(401).send();
             if (user.deleted) return response.status(401).send();
 
-          
+
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
                 loginAttempts[parameters.email].attempts += 1;
                 if (loginAttempts[parameters.email].attempts >= 3) {
@@ -109,13 +109,13 @@ export class AuthController {
             loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
-                // const passwordChangeDate = new Date(user.passwordLastChanged);
-                // const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
-                /* if (now > passwordExpiryDate) {
-                     return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
-                 }*/
+            // const passwordChangeDate = new Date(user.passwordLastChanged);
+            // const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
+            /* if (now > passwordExpiryDate) {
+                 return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
+             }*/
 
-                // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
+            // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
 
 
 
@@ -146,80 +146,6 @@ export class AuthController {
         response.json({
             message: "Logged out successfully"
         });
-    }
-
-    static changePassword(request, response) {
-        const parametersSchema = z.object({
-            oldPassword: z.string(),
-            newPassword: z.string(),
-            confirmNewPassword: z.string(),
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        if (parsedParameters.data.newPassword !== parsedParameters.data.confirmNewPassword) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-
-                if (!bcrypt.compareSync(parsedParameters.data.oldPassword, user.password)) {
-                    return response.status(403).send();
-                }
-
-                const newPassword = bcrypt.hashSync(parsedParameters.data.newPassword, 10);
-                userRepository.updateUser(user.id, {
-                    password: newPassword,
-                    passwordLastChanged: new Date()
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
-    }
-
-    static updateProfile(request, response) {
-        const parametersSchema = z.object({
-            firstname: z.string(),
-            lastname: z.string(),
-            phone: z.string().nullable()
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-                userRepository.updateUser(user.id, {
-                    firstname: parsedParameters.data.firstname,
-                    lastname: parsedParameters.data.lastname,
-                    email: parsedParameters.data.email,
-                    phone: parsedParameters.data.phone
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
     }
 
     static async forgotPassword(request, response) {
@@ -277,12 +203,6 @@ export class AuthController {
         }
 
         response.status(200).send();
-    }
-
-    static deleteAccount(request, response) {
-        return response.json({
-            message: 'Logged'
-        }).send()
     }
 
     static authCheck(request, response) {

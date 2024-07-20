@@ -1,8 +1,18 @@
 <script setup>
 import { useCartStore } from "../../store/cart.js";
 import Button from '../Buttons/Button.vue';
+import { loadStripe} from "@stripe/stripe-js";
+import {ref} from "vue";
+import StripeCheckout from "./StripeCheckout.vue";
+
+
 
 const cartStore = useCartStore();
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const stripe = ref(null);
+const elements = ref(null);
+const cardElement = ref(null);
+
 defineProps({
   closeFunction: Function
 });
@@ -20,6 +30,7 @@ const decreaseQuantity = (productId) => {
     cartStore.updateQuantity(productId, product.quantity - 1);
   }
 };
+
 </script>
 
 <template>
@@ -42,6 +53,7 @@ const decreaseQuantity = (productId) => {
       </li>
     </ul>
     <div>Total: {{ cartStore.total }} EUR</div>
+    <StripeCheckout @close-cart="closeFunction"/>
   </div>
 </template>
 
