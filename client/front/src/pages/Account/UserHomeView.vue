@@ -1,12 +1,17 @@
 <script setup>
-import {onMounted} from "vue";
+import {computed, onMounted} from "vue";
 import ModifyInformationForm from "./forms/ModifyInformationForm.vue";
 import ModifyPasswordForm from "./forms/ModifyPasswordForm.vue";
 import DeleteAccountForm from "./forms/DeleteAccountForm.vue";
+import {useUserAuthStore} from "../../store/userAuthStore.js";
 
 onMounted(() => {
   initFlowbite();
 });
+
+const userAuthStore = useUserAuthStore();
+const userDetails = userAuthStore.getUserDetails();
+
 </script>
 
 <template>
