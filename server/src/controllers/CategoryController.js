@@ -1,5 +1,6 @@
 import Category from "../postgresql/models/Category.js";
 import CategoryRepository from "../postgresql/Repository/CategoryRepository.js";
+import CategoryRepositoryMongo from "../mongo/repository/CategoryRepository.js";
 
 export class CategoryController {
     static async createCategory(request, response,next) {
@@ -68,4 +69,9 @@ export class CategoryController {
         }
     }
 
+    static async getAllCategoriesMongo(request, response) {
+        const categoryRepository = new CategoryRepositoryMongo();
+        const categories = await categoryRepository.getAllCategories();
+        response.json(categories);
+    }
 }

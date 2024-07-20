@@ -29,6 +29,7 @@ import Subscriptions from './pages/user/Subscriptions.vue'
 
 import PageNotFound from './pages/PageNotFound.vue'
 import {isUserAuthenticated} from "./api/auth.js";
+import {useUserAuthStore} from "./store/userAuthStore.js";
 
 
 const routes = [
@@ -88,8 +89,8 @@ const routes = [
         component: ProductsView
     },
     {
-        path: '/products:slug',
-        component: ProductsView
+        path: '/product/:slug',
+        component: ProductView
     },
     {
         path: '/change-password',
@@ -140,21 +141,24 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const requiresNoAuth = to.matched.some(record => record.meta.requiresNoAuth);
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    const isAuthenticated = await isUserAuthenticated();
+    const user = await isUserAuthenticated();
+    const isLogged = user !== false;
 
-    if (requiresNoAuth && isAuthenticated) {
+    const userAuthStore = useUserAuthStore();
+    userAuthStore.setUserDetails(isLogged ? user : null);
+    userAuthStore.setLoginStatus(isLogged);
+    console.log(isLogged);
+    if (requiresNoAuth && isLogged) {
         next('/');
         return;
     }
-
-    if (requiresAuth && !isAuthenticated) {
+    if (requiresAuth && !isLogged) {
         next('/login');
+
         return;
     }
 
     next();
 });
-
-
 
 export default router

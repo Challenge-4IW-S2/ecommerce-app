@@ -60,7 +60,7 @@ watch(search, (newValue) => {
     </button>
 
     <div v-if="isSearchOpen"
-        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2 z-50 h-48">
+        class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2 z-50">
         <!-- close button -->
         <button @click="openSearch" class="self-end">
             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 256 256">
@@ -72,7 +72,7 @@ watch(search, (newValue) => {
         <SearchInput v-model="search" />
         <div v-if="search !== ''" class="flex flex-col">
             <!-- Affichage des résults -->
-            <SearchResult v-for="(product, index) in response.data" :key="index" :product="product"
+            <SearchResult v-for="(product, index) in response" :key="index" :product="product"
                 @click="addToSearchHistory" />
         </div>
         <!-- search History -->

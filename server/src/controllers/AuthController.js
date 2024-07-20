@@ -7,6 +7,7 @@ import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
 import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
 import {sendCode} from "../mailsTemplates/sendCode.js";
 const loginAttempts = {}
+import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 
 export class AuthController {
 
@@ -53,11 +54,9 @@ export class AuthController {
                 response.status(201).json(sendEmail(userData.email,'Verification code Luzaya ', sendCode()),{
                     message: 'Compte créé'
                 })
-
             })
             .catch(err => {
-                // TODO: Erreur isNotUnique ?
-                const isNotUnique = err.errors[0].validatorKey === 'not_unique';
+                const isNotUnique = err.name === 'SequelizeUniqueConstraintError';
 
                 const message = isNotUnique
                     ? 'Un compte existe déjà avec cet email'
@@ -152,80 +151,6 @@ export class AuthController {
         });
     }
 
-    static changePassword(request, response) {
-        const parametersSchema = z.object({
-            oldPassword: z.string(),
-            newPassword: z.string(),
-            confirmNewPassword: z.string(),
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        if (parsedParameters.data.newPassword !== parsedParameters.data.confirmNewPassword) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-
-                if (!bcrypt.compareSync(parsedParameters.data.oldPassword, user.password)) {
-                    return response.status(403).send();
-                }
-
-                const newPassword = bcrypt.hashSync(parsedParameters.data.newPassword, 10);
-                userRepository.updateUser(user.id, {
-                    password: newPassword,
-                    passwordLastChanged: new Date()
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
-    }
-
-    static updateProfile(request, response) {
-        const parametersSchema = z.object({
-            firstname: z.string(),
-            lastname: z.string(),
-            phone: z.string().nullable()
-        });
-
-        const parsedParameters = parametersSchema.safeParse(request.body);
-        if (!parsedParameters.success) {
-            return response.status(400).send();
-        }
-
-        const userRepository = new UserRepository();
-        userRepository.findOne('id', request.user.id)
-            .then(user => {
-                userRepository.updateUser(user.id, {
-                    firstname: parsedParameters.data.firstname,
-                    lastname: parsedParameters.data.lastname,
-                    email: parsedParameters.data.email,
-                    phone: parsedParameters.data.phone
-                })
-                    .then(() => {
-                        response.status(200).send();
-                    })
-                    .catch(err => {
-                        response.status(500).send();
-                    });
-            })
-            .catch(err => {
-                response.status(500).send();
-            });
-    }
-
     static async forgotPassword(request, response) {
         const parametersSchema = z.object({
             email: z.string().email(),
@@ -283,15 +208,18 @@ export class AuthController {
         response.status(200).send();
     }
 
-    static deleteAccount(request, response) {
-        return response.json({
-            message: 'Logged'
-        }).send()
+    static async authCheck(request, response) {
+        const userRoleRepository = new UserRoleRepository();
+        const role = (await userRoleRepository.findOne('id', request.user.role)).name;
+
+        const user = {
+            email: request.user.email,
+            role: role,
+            firstname: request.user.firstname,
+            lastname: request.user.lastname,
+            phone: request.user.phone
+        };
+
+        return response.status(200).json(user);
     }
-
-    static authCheck(request, response) {
-        return response.sendStatus(200);
-    }
-
-
 }

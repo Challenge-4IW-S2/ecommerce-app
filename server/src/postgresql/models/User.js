@@ -35,7 +35,7 @@ export default function (connection) {
             },
             firstname: {
                 type: DataTypes.STRING,
-                allowNull: true
+                allowNull: true,
             },
             lastname: {
                 type: DataTypes.STRING,
@@ -95,5 +95,17 @@ export default function (connection) {
     });
 
 
+    User.afterValidate(async (user) => {
+        if (user.changed("lastname")) {
+            user.lastname = user.lastname.toUpperCase();
+        }
+
+        if (user.changed("firstname")) {
+            // UCWORDS
+            user.firstname = user.firstname
+                .toLowerCase()
+                .replace(/(?<= )[^\s]|^./g, a=> a.toUpperCase())
+        }
+    });
     return User;
 }
