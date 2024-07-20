@@ -86,7 +86,6 @@ export class ProductController {
     static async updateProduct(request, response,next) {
         const parameters = {
             name: request.body.name,
-            price_ttc: request.body.price_ttc,
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
@@ -95,8 +94,8 @@ export class ProductController {
         try {
             const productRepository = new ProductRepository();
             const previousData = await productRepository.findById(request.params.id);
-            const oldPrice = previousData.price_ttc;
-            const newPrice = parameters.price_ttc;
+            const oldPrice = previousData.price_ht;
+            const newPrice = parameters.price_ht;
             const product = await productRepository.updateProduct(request.params.id, parameters)
             if (oldPrice > newPrice) {
                 const userRepo = new UserRepository();

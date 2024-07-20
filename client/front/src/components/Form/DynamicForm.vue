@@ -48,9 +48,9 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
                 :address="addressOptions"
                 :userId="entityId"
             />
-          </div>
-          <div v-else>
-            <p>No address found</p>
+            <div v-else>
+              <p>No address found</p>
+            </div>
           </div>
         <div v-if="entityType === 'product' && entityId">
           <div class="flex justify-between">

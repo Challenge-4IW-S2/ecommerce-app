@@ -29,10 +29,6 @@ export default function (connection) {
                 type: DataTypes.DECIMAL,
                 allowNull: false
             },
-            price_ttc: {
-                type: DataTypes.DECIMAL,
-                allowNull: false
-            },
             is_active: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true
