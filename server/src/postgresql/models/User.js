@@ -4,7 +4,12 @@ import bcrypt from 'bcryptjs';
 
 export default function (connection) {
 
-    class User extends Model {}
+    class User extends Model {
+        static associate(models) {
+            User.hasMany(models.Preference,{ foreignKey: 'user_id', as: 'preferences' });
+            User.hasMany(models.Wishlist, { foreignKey: 'user_id' });
+        }
+    }
 
     User.init(
         {
@@ -55,6 +60,10 @@ export default function (connection) {
             deleted: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
+            },
+            password_updated_at: {
+                type: DataTypes.DATE,
+                allowNull: true
             }
         },
         {
@@ -85,6 +94,7 @@ export default function (connection) {
         await denormalizeUser(user);
     });
 
+
     User.afterValidate(async (user) => {
         if (user.changed("lastname")) {
             user.lastname = user.lastname.toUpperCase();
@@ -97,6 +107,5 @@ export default function (connection) {
                 .replace(/(?<= )[^\s]|^./g, a=> a.toUpperCase())
         }
     });
-
     return User;
 }

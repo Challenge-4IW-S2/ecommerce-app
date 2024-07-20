@@ -1,11 +1,16 @@
 import db from '../db.js';
 import UserModel from '../models/User.js';
 import UserRoleRepository from './UserRoleRepository.js';
+import PreferenceModel from '../models/Preference.js';
 
 export default class UserRepository {
     constructor() {
-        this.User = new UserModel(db.connection);
+        this.User = db.models.User;
+        this.Preference = db.models.Preference;
+      //  this.User = new UserModel(db.connection);
         this.userRoleRepository = new UserRoleRepository();
+       // this.Preference = new PreferenceModel(db.connection);
+
     }
 
     async findAll() {
@@ -31,7 +36,7 @@ export default class UserRepository {
             firstname: user.firstname,
             lastname: user.lastname,
             phone: user.phone,
-            role: await this.userRoleRepository.getRoleId(user.role)
+            role: await this.userRoleRepository.getRoleId(user.role),
         });
     }
 
@@ -62,6 +67,30 @@ export default class UserRepository {
             phone: null,
             role: null,
             deleted: true,
+        });
+    }
+
+    async findAllWithPreferences() {
+        return await this.User.findAll({
+            include: [{
+                model: this.Preference,
+                as: 'preferences',
+                where: { name: 'NEW', activated: true }
+            }]
+        });
+    }
+
+    async findAllWithPreferencesAndWhishlist() {
+        return await this.User.findAll({
+            include: [{
+                model: this.Preference,
+                as: 'preferences',
+                where: { name: 'NEW', activated: true }
+            }, {
+                model: this.Preference,
+                as: 'whishlist',
+                where: { name: 'NEW', activated: true }
+            }]
         });
     }
 }

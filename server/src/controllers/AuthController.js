@@ -1,11 +1,12 @@
 import UserRepository from "../postgresql/repository/UserRepository.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import {sendEmail} from "../middlewares/sendEmail.js";
+import {sendEmail} from "./SendMailController.js";
 import {z} from 'zod';
 import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
-const loginAttempts = {}
 import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
+import {sendCode} from "../mailsTemplates/sendCode.js";
+const loginAttempts = {}
 import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 
 export class AuthController {
@@ -49,7 +50,8 @@ export class AuthController {
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
             .then(() => {
-                response.status(201).json(sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte,<br> <button> BACK </button>'),{
+
+                response.status(201).json(sendEmail(userData.email,'Verification code Luzaya ', sendCode()),{
                     message: 'Compte créé'
                 })
             })
@@ -77,15 +79,20 @@ export class AuthController {
             password:  request.body.password,
         }
 
+        const info = {
+            time: new Date().toLocaleString(),
+            url: 'https://luzaya.fr',
+        };
+
         const now = Date.now()
         try{
-            if (!loginAttempts[parameters.email]) {
+             if (!loginAttempts[parameters.email]) {
                 loginAttempts[parameters.email] = { attempts: 0, lastAttempt: Date.now() };
             }
             const userAttempts = loginAttempts[parameters.email];
             if (userAttempts.attempts >= 3) {
                 const timeSinceLastAttempt = Date.now() - userAttempts.lastAttempt;
-                if (timeSinceLastAttempt < 300000) { // Temporisation de 5 minutes
+                if (timeSinceLastAttempt < 3000) {
                     return response.status(429).send('Trop de tentatives, veuillez réessayer plus tard.');
                 } else {
                     userAttempts.attempts = 0;
@@ -97,29 +104,26 @@ export class AuthController {
             if (!user.is_verified) return response.status(401).send();
             if (user.deleted) return response.status(401).send();
 
-          
+
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
                 loginAttempts[parameters.email].attempts += 1;
                 if (loginAttempts[parameters.email].attempts >= 3) {
-                    await sendEmail('progrdnvictor@gmail.com', 'Luzaya.fr; Action requise : Tentative de connexion\n', attackAttemptTemplate('Quelqu’un qui connaît votre mot de passe est en train d’essayer de se connecter à votre compte.') )
+                    await sendEmail(parameters.email,
+                        'Luzaya.fr; Action requise : Tentative de connexion',
+                        attackAttemptTemplate(info))
                 }
-                return response.status(401).send("Email or password incorrect");
+                return response.sendStatus(401);
             }
             loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
-                // const passwordChangeDate = new Date(user.passwordLastChanged);
-                // const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
-                /* if (now > passwordExpiryDate) {
-                     return response.status(403).send('Votre mot de passe a expiré. Veuillez le réinitialiser.');
-                 }*/
+            /*const passwordChangeDate = new Date(user.password_updated_at);
+            const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
+            if (now > passwordExpiryDate) {
+                console.log(passwordExpiryDate)
+            }*/
 
-                // response.json({ status: 200, user: { id: user.id, name: user.name, email: user.email }, message: "Login successful" });
-
-
-
-
-            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+           const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",
                 algorithm: "HS256"
             });
@@ -130,7 +134,7 @@ export class AuthController {
                 secure: true,
                 sameSite: 'none'
             });
-            response.status(200).send();
+            response.sendStatus(200);
 
         } catch (error) {
             response.status(500).send(error.toString());

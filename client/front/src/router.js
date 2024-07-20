@@ -22,7 +22,7 @@ import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
 import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
 
-
+import Subscriptions from './pages/user/Subscriptions.vue'
 
 
 
@@ -120,6 +120,7 @@ const routes = [
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
     { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
 
+    {path: '/account/settings/preferences', component: Subscriptions},
 
 
 

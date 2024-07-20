@@ -3,6 +3,7 @@ import UserRepository from "../postgresql/repository/UserRepository.js";
 
 
 export default () => async (request, response, next) => {
+
     const token = request.signedCookies?.JWT ?? null;
     if (!token) return response.sendStatus(401);
 
@@ -21,7 +22,6 @@ export default () => async (request, response, next) => {
         }
 
         request.user = user;
-
         next();
     } catch (e) {
         return response.sendStatus(401);
