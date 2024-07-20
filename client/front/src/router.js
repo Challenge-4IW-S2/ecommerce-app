@@ -118,7 +118,8 @@ const routes = [
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
-    { path: '/admin/add-productPicture/:productId', component: DashboardEditProductPicture , props: true},//add photo produit
+    { path: '/products', component: ProductsView},
+    { path: '/product/:slug', component: ProductView},
 
     {path: '/account/settings/preferences', component: Subscriptions},
 

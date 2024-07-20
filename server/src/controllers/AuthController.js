@@ -45,7 +45,7 @@ export class AuthController {
             role: 'ROLE_USER',
             phone: null
         };
-       // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
+        // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
@@ -117,6 +117,7 @@ export class AuthController {
             loginAttempts[parameters.email].attempts = 0;
 
             // Vérification de la date de dernier changement de mot de passe
+
             /*const passwordChangeDate = new Date(user.password_updated_at);
             const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
             if (now > passwordExpiryDate) {
@@ -208,6 +209,7 @@ export class AuthController {
         response.status(200).send();
     }
 
+
     static async authCheck(request, response) {
         const userRoleRepository = new UserRoleRepository();
         const role = (await userRoleRepository.findOne('id', request.user.role)).name;
@@ -219,6 +221,7 @@ export class AuthController {
             lastname: request.user.lastname,
             phone: request.user.phone
         };
+
 
         return response.status(200).json(user);
     }

@@ -27,3 +27,4 @@ export default () => async (request, response, next) => {
         return response.sendStatus(401);
     }
 }
+

@@ -26,6 +26,7 @@ const getCategories = async () => {
     }
 }
 
+
 // --> function for prices
 let priceMin = ref(0);
 let priceMax = ref(0);
@@ -63,6 +64,19 @@ const getProductsNames = async () => {
 // function for colors
 
 
+// -> products name
+let productsNames = ref([]);
+let productsNamesSelected = ref([]);
+const getProductsNames = async () => {
+    try {
+        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProductsNames`).json().then((response) => {
+            productsNames.value = response;
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+getProductsNames();
 // order by
 const OrdersValue = [
     { id: 0, name: 'Pertinence', value: 'relevance' },
