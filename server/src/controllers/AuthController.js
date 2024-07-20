@@ -51,21 +51,14 @@ export class AuthController {
         userRepository.createUser(userData)
             .then(() => {
 
-                response.status(201).json(sendEmail(userData.email,'Verification code Luzaya ', sendCode()),{
+                response.status(201).json({
                     message: 'Compte créé'
                 })
             })
             .catch(err => {
                 const isNotUnique = err.name === 'SequelizeUniqueConstraintError';
-
-                const message = isNotUnique
-                    ? 'Un compte existe déjà avec cet email'
-                    : 'Une erreur est survenue';
-
-                const code = isNotUnique
-                    ? 409
-                    : 500;
-
+                const message = isNotUnique ? 'Un compte existe déjà avec cet email' : 'Une erreur est survenue';
+                const code = isNotUnique ? 409 : 500;
                 response.status(code).json({
                     message: message
                 });

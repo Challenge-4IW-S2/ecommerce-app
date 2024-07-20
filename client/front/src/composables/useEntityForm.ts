@@ -9,7 +9,7 @@ import {
     handleHttpResponse
 } from '../functions/model.js';
 
-const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active', 'user_id', "product_id"];
+const unwantedFields = ['createdAt', 'updatedAt', 'is_verified','deleted','is_active', 'user_id', "product_id", "password_updated_at"];
 export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const formData = reactive({});
     const entitySchema = ref(getEntitySchema(entityType));

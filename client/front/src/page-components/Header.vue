@@ -1,5 +1,5 @@
 <script setup>
-
+import { ref, onMounted } from "vue";
 import Logo from "../components/Logo.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import Cart from "../components/Cart/Cart.vue";
@@ -9,6 +9,12 @@ import {computed} from "vue";
 
 const userAuthStore = useUserAuthStore();
 const isLogged = computed(() => userAuthStore.getIsLoggedIn());
+const isAuthChecked = ref(false);
+
+onMounted(async () => {
+  await userAuthStore.checkAuthStatus();
+  isAuthChecked.value = true;
+});
 </script>
 
 <template>
@@ -17,14 +23,15 @@ const isLogged = computed(() => userAuthStore.getIsLoggedIn());
       <RouterLink to="/" class="h-fit">
         <Logo color="primary"></Logo>
       </RouterLink>
-      <div class="flex justify-between gap-12 items-center">
+      <div class="flex justify-between gap-12 items-center" v-if="isAuthChecked">
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
+          <ButtonLink v-if="isLogged" class-name="bg-black text-white p-4 uppercase" to="/account" text="Mon compte" />
+          <RouterLink v-if="isLogged" to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
 
-        <ButtonLink v-if="!isLogged" class-name="bg-black text-white p-4 uppercase" to="/register" text="Créer un compte" />
-        <RouterLink v-if="!isLogged" to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
+          <ButtonLink v-if="!isLogged" class-name="bg-black text-white p-4 uppercase" to="/register" text="Créer un compte" />
+          <RouterLink v-if="!isLogged" to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
-        <ButtonLink v-if="isLogged" class-name="bg-black text-white p-4 uppercase" to="/account" text="Mon compte" />
-        <RouterLink v-if="isLogged" to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
+
         <Cart />
       </div>
     </div>
