@@ -40,6 +40,8 @@ export function getEntitySchema (entityType){
                 price_ttc: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
                 price_ht: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
                 is_active: z.boolean().optional(),
+                quantity: z.string().regex(/^\d+$/, { message: "Quantity must be a positive integer" }),
+
             });
         case 'address':
             return z.object({

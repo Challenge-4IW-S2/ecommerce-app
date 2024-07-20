@@ -1,11 +1,9 @@
 'use strict';
 import { Model, DataTypes } from "sequelize";
-
-const Product = require("./Product.js");
 export default function (connection) {
   class StockEvent extends Model {
     static associate(models) {
-      StockEvent.belongsTo(Product, { foreignKey: 'product_id' });
+      StockEvent.belongsTo(models.Product, { foreignKey: 'product_id' });
     }
   }
   StockEvent.init({
@@ -24,10 +22,6 @@ export default function (connection) {
     },
     event_type: {
       type: DataTypes.ENUM('low_stock', 'restock'),
-      allowNull: false,
-    },
-    sub_type: {
-      type: DataTypes.STRING,
       allowNull: false,
     },
     stock_level: {

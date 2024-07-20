@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import cronTasks from "./src/cron/checkStock.js";
+
 import "./src/mongo/mongodb.js";
 import cookieParser from "cookie-parser";
 import RouteLoader from "./RouteLoader.js";
