@@ -4,7 +4,11 @@ import Logo from "../components/Logo.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import Cart from "../components/Cart/Cart.vue";
 import Search from "../components/Search/Search.vue";
+import {useUserAuthStore} from "../store/userAuthStore.js";
+import {computed} from "vue";
 
+const userAuthStore = useUserAuthStore();
+const isLogged = computed(() => userAuthStore.getIsLoggedIn());
 </script>
 
 <template>
@@ -16,11 +20,11 @@ import Search from "../components/Search/Search.vue";
       <div class="flex justify-between gap-12 items-center">
         <!--   class cursor pointer pour simuler le lien, à voir comportement avec router   -->
 
-        <ButtonLink class-name="bg-black text-white p-4 uppercase" to="register" text="Créer un compte" />
-        <RouterLink to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
+        <ButtonLink v-if="!isLogged" class-name="bg-black text-white p-4 uppercase" to="/register" text="Créer un compte" />
+        <RouterLink v-if="!isLogged" to="/login" class="cursor-pointer text-sm uppercase">Se connecter</RouterLink>
 
-        <RouterLink to="/account" class="cursor-pointer text-sm uppercase">Mon compte</RouterLink>
-        <RouterLink to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
+        <ButtonLink v-if="isLogged" class-name="bg-black text-white p-4 uppercase" to="/account" text="Mon compte" />
+        <RouterLink v-if="isLogged" to="/logout" class="cursor-pointer text-sm uppercase">Déconnexion</RouterLink>
         <Cart />
       </div>
     </div>

@@ -6,7 +6,7 @@ export async function isUserAuthenticated() {
             credentials: 'include',
         });
 
-        return response.ok;
+        return response.json();
     } catch (e) {
         return false;
     }

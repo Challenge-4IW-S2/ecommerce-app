@@ -12,7 +12,7 @@ export default () => async (request, response, next) => {
             const userRepository = new UserRepository();
 
             const user = await userRepository.findByPk(decoded.userId);
-            if (!user || user.deleted) {
+            if (!user || user.deleted || !user.is_verified) {
                 next();
             } else {
                 // User is authenticated, send a response or redirect

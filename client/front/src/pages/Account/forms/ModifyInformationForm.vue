@@ -1,13 +1,18 @@
 <script setup>
 import Button from "../../../components/Buttons/Button.vue";
 import Input from "../../../components/Inputs/Input.vue";
-import {reactive} from "vue";
+import {computed, reactive} from "vue";
 import ky from "ky";
+import {useUserAuthStore} from "../../../store/userAuthStore.js";
+
+
+const userAuthStore = useUserAuthStore();
+const userDetails = userAuthStore.getUserDetails()
 
 const modifyInformation = reactive({
-  firstname: "",
-  lastname: "",
-  phone: "",
+  firstname: userDetails.firstname,
+  lastname: userDetails.lastname,
+  phone: userDetails.phone,
 });
 
 
@@ -28,11 +33,6 @@ const submitModifyInformation = async () => {
     if (res.ok) {
       modifyInformationMessage.message = "Vos informations ont bien été modifiées";
       modifyInformationMessage.success = true;
-      Object.assign(modifyInformation, {
-        firstname: "",
-        lastname: "",
-        phone: "",
-      });
     }
   }).catch(async (error) => {
     const httpCode = error.response.status;

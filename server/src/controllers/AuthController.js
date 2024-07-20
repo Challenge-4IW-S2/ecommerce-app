@@ -6,6 +6,7 @@ import {z} from 'zod';
 import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
 const loginAttempts = {}
 import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
+import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 
 export class AuthController {
 
@@ -203,9 +204,18 @@ export class AuthController {
         response.status(200).send();
     }
 
-    static authCheck(request, response) {
-        return response.sendStatus(200);
+    static async authCheck(request, response) {
+        const userRoleRepository = new UserRoleRepository();
+        const role = (await userRoleRepository.findOne('id', request.user.role)).name;
+
+        const user = {
+            email: request.user.email,
+            role: role,
+            firstname: request.user.firstname,
+            lastname: request.user.lastname,
+            phone: request.user.phone
+        };
+
+        return response.status(200).json(user);
     }
-
-
 }

@@ -12,6 +12,11 @@ export default () => async (request, response, next) => {
 
         const user = await userRepository.findByPk(decoded.userId);
         if (!user || !user.is_verified || user.deleted) {
+            // destroy the cookie
+            response.clearCookie('JWT', {
+                httpOnly: true,
+                signed: true
+            });
             return response.sendStatus(401);
         }
 
