@@ -119,10 +119,12 @@ watch(priceMax, () => {
             <span class="mb-2">Gamme de prix</span>
             <div class=" w-full flex justify-between">
                 <span class="flex justify-center items-center gap-1">
-                    De <input type="number" v-model="priceMin" class="w-10 p-0 border-none" /> EUR
+                    De <input type="number" v-model="priceMin" class="w-10 p-0 border-none" style="font-size: unset;" />
+                    EUR
                 </span>
                 <span class="flex items-center gap-1">
-                    À <input type="number" v-model="priceMax" class="w-10 p-0 border-none" /> EUR
+                    À <input type="number" v-model="priceMax" class="w-10 p-0 border-none" style="font-size: unset;" />
+                    EUR
                 </span>
             </div>
         </section>
