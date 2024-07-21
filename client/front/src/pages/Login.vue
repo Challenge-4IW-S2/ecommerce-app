@@ -17,7 +17,6 @@ console.log(token)
 
 const verifyToken = async (token) => {
   try {
-    console.log(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`)
     const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
     if (response.ok) {
       const data = await response.json();
@@ -60,13 +59,16 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-      await router.replace('/');
+     await router.replace('/');
     }
   } catch (error) {
     const httpCode = error.response.status;
     switch (httpCode) {
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+      case 403:
+          await router.replace(`/edit-password?email=${email.value}`);
         break;
       default:
         msgError.value = 'Une erreur est survenue';

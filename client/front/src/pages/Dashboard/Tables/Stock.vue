@@ -6,6 +6,7 @@ import 'chartjs-adapter-date-fns';
 import fr from 'date-fns/locale/fr';
 
 import ky from "ky";
+import DynamicForm from "../../../components/Form/DynamicForm.vue";
 const chartRef = ref(null);
 const stockHistory = ref([]);
 
@@ -80,11 +81,15 @@ onMounted(async () => {
 
 </script>
 <template>
-  <h1>Stock</h1>
-
-  <div>
-    <canvas id="stockChart"></canvas>
+  <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+    <h1 class="text-center text-3xl ">Stock</h1>
+    <p class="text-center">Retrouvez lʼévolution des stocks au cours des derniers mois</p>
+    <div>
+      <canvas class="my-4 py-5" id="stockChart"></canvas>
+    </div>
   </div>
+
+
 </template>
 
 <style scoped>

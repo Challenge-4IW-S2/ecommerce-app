@@ -39,7 +39,6 @@ export class UserController {
     static async updateUser(request, response,next) {
         const parameters = {
             email: request.body.email,
-            password: request.body.password,
             firstname: request.body.firstname,
             lastname: request.body.lastname,
             phone: request.body.phone,

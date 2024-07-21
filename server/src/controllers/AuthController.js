@@ -16,12 +16,10 @@ export class AuthController {
             const token = request.params.token
             const userRepository = new UserRepository();
             const user = await userRepository.findOne('token', token);
-            console.log(user)
-            console.log(!user)
+
             if (!user) {
                 return response.status(404).send();
             }
-            console.log(user.id)
             const [nbUpdated,verifiedUser] = await userRepository.updateUser(user.id, {
                 is_verified: true,
                 token: null
@@ -110,9 +108,14 @@ export class AuthController {
                 }
             }
             const userRepository = new UserRepository();
+            const today = new Date();
+
             const user = await userRepository.findOne('email', parameters.email);
+            const lastPasswordChange = new Date(user.password_updated_at);
+            const differenceInDays = Math.floor((today - lastPasswordChange) / (1000 * 60 * 60 * 24));
             if (!user) return response.status(401).send("Email or password incorrect");
             if (!user.is_verified) return response.status(401).send();
+            if (differenceInDays >= 60) return response.status(403).send();
             if (user.deleted) return response.status(401).send();
 
 

@@ -51,7 +51,6 @@ export class ProductController {
     static async createProduct(request, response,next) {
         const parameters = {
             name: request.body.name,
-            price_ttc: request.body.price_ttc,
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
