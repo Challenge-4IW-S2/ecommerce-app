@@ -1,18 +1,5 @@
-import mongoose from "mongoose";
-import {userSchema} from "./User.js";
-const { Schema, model } = mongoose;
-
-const userRoleSchema = new Schema({
-    _id: {
-        type: 'UUID',
-        required: true,
-    },
-    name: {
-        type: String,
-        required: true,
-    },
-    users: userSchema
-});
+import {model} from "mongoose";
+import userRoleSchema from "../models_schema/userRoleSchema.js";
 
 const UserRole = model("UserRole", userRoleSchema);
 export default UserRole;

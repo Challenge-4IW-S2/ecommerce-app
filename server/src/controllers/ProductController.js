@@ -92,7 +92,6 @@ export class ProductController {
             description: request.body.description,
             category_id: request.body.category_id,
         }
-        console.log(parameters);
         try {
             const productRepository = new ProductRepository();
             const previousData = await productRepository.findById(request.params.id);

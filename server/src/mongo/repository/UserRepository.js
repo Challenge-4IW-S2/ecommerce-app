@@ -5,6 +5,10 @@ export default class UserRepository {
         this.User = UserModel;
     }
 
+    async findOneById(userId) {
+        return this.User.findById(userId);
+    }
+
     async createOrUpdateUser(user) {
         return this.User.findByIdAndUpdate(user.id, {
             email: user.email,

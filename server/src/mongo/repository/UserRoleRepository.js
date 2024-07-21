@@ -5,6 +5,11 @@ export default class UserRoleRepository {
         this.UserRole = UserRoleModel;
     }
 
+
+    async findOneById(id) {
+        return this.UserRole.findById(id);
+    }
+
     async createOrUpdateUserRole(userRole) {
         return this.UserRole.findByIdAndUpdate(userRole.id, {
             name: userRole.name
@@ -12,6 +17,10 @@ export default class UserRoleRepository {
             upsert: true,
             new: true,
         });
+    }
+
+    async getUsersByRole(userRoleId) {
+        return this.UserRole.findById(userRoleId, 'users', { lean: true });
     }
 
     async deleteUserRole(userRoleId) {

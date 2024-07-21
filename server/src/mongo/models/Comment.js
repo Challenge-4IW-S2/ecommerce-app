@@ -1,33 +1,5 @@
-import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
-
-const commentSchema = new Schema({
-    _id: {
-        type: 'UUID',
-        required: true,
-    },
-    comment: {
-        type: String,
-        required: true,
-    },
-    rating: {
-        type: Number,
-        required: true,
-    },
-    is_active: {
-        type: Boolean,
-        required: true,
-    },
-    user_id: {
-        type: 'UUID',
-        required: true,
-    },
-    product_id: {
-        type: 'UUID',
-        required: true,
-    },
-});
+import {model} from 'mongoose';
+import commentSchema from '../models_schema/commentSchema.js';
 
 const Comment = model('Comment', commentSchema);
-export { commentSchema };
 export default Comment;
