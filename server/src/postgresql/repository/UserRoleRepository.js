@@ -28,7 +28,7 @@ export default class UserRoleRepository {
                 name: role
             }
         });
-        return roleId.id;
+       return roleId.id;
     }
 
     async createUserRole(name) {

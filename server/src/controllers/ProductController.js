@@ -56,6 +56,7 @@ export class ProductController {
             description: request.body.description,
             category: request.body.category_id,
             quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
         try {
             const productRepository = new ProductRepository();
@@ -90,6 +91,7 @@ export class ProductController {
             slug: request.body.slug,
             description: request.body.description,
             category: request.body.category_id,
+            quantity: request.body.quantity
         }
         try {
             const productRepository = new ProductRepository();

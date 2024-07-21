@@ -6,6 +6,9 @@ export default class StockEventRepository {
         this.StockEvent = StockEventModel(db.connection);
     }
 
+    async findAll() {
+        return await this.StockEvent.findAll();
+    }
     async createStockEvent(stockEvent) {
         return await this.StockEvent.create(stockEvent);
     }
