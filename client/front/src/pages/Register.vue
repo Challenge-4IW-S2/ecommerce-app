@@ -3,8 +3,8 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
-import ky from "ky";
 import {computed, reactive, ref} from "vue";
+import { useAPI } from "../composables/useAPI";
 
 const parameters = reactive({
   firstname: '',

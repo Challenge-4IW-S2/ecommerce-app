@@ -4,16 +4,16 @@ import { useEntityTable } from '../../../composables/useEntityTable.ts';
 
 const product = 'product';
 const entityPath = 'product';
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const route = `${import.meta.env.VITE_API_BASE_URL}/products`;
 
-const { data, actions } = useEntityTable(baseUrl,route, entityPath, []);
+const route = 'products';
+
+const { data, actions } = useEntityTable(route, entityPath, []);
 </script>
 
 <template>
   <div>
     <h1>Product Dashboard</h1>
-    <Table :params="data" :actions="actions" :title="product" :to="`/admin/add-${product}`"/>
+    <Table :params="data" :actions="actions" :title="product" :to="`/admin/add-${product}`" />
   </div>
 </template>
 

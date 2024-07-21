@@ -4,11 +4,7 @@ import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
 import {ref} from "vue";
-import {  useRouter } from "vue-router";
-
-// For connect user bag
-import { useUserStore } from "../store/userStore";
-const userStore = useUserStore();
+import { useRouter } from "vue-router";
 
 const router = useRouter()
 

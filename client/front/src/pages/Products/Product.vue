@@ -1,8 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import z from 'zod';
 import { useRoute } from 'vue-router';
-import ky from 'ky';
+import { useAPI } from '../../composables/useAPI.js';
 import CardDescription from '../../components/CardDescription.vue';
 import { useCartStore } from "../../store/cart.js";
 import Warning from '../../components/Alerts/Warning.vue';
@@ -16,13 +15,12 @@ const showWarning = ref(false);
 const warningMessage = ref('');
 
 const getProduct = async () => {
-    try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProduct/${slug.value}`).json().then((response) => {
-            product.value = response[0];
-        });
-    } catch (error) {
-        console.error('Failed to fetch product:', error);
-    }
+  try {
+    const { results } = await useAPI('get',`getProduct/${slug.value}`, {}, {}, '');
+    product.value = results.value[0];
+  } catch (error) {
+    console.error('Failed to fetch product:', error);
+  }
 };
 
 const addProductToBag = () => {

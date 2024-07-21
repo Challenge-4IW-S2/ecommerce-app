@@ -1,17 +1,14 @@
 <script setup>
 import RadioInput from "../../components/Inputs/RadioInput.vue";
 import {onMounted, ref} from "vue";
-import ky from "ky";
-const url = import.meta.env.VITE_API_BASE_URL;
+import { useAPI } from "../../composables/useAPI";
 const formData = ref({});
 const errors = ref({});
 const entityStructure = ref([]);
 const fetchPreferences = async () => {
   try {
-    const response = await ky.get(`${url}/preferences`, {
-      credentials: 'include'
-    }).json();
-    console.log(response)
+    const { results } = await useAPI('get', 'preferences', {}, {}, 'include');
+    const response = results.value;
     entityStructure.value = response.map(pref => ({
       id: pref.id,
       name: pref.name,
