@@ -2,6 +2,7 @@ import UserRoleMongo from "../mongo/repository/UserRoleRepository.js";
 
 export const denormalizeUserRoleCreate = async (userRole) => {
     const userRoleRepository = new UserRoleMongo();
+    console.log("userRole", userRole);
     return await userRoleRepository.createOrUpdateUserRole(userRole);
 }
 

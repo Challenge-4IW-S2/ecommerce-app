@@ -37,7 +37,7 @@ export default function (connection) {
       await denormalizeUserRoleUpdate(userRole);
   });
 
-  UserRole.beforeDestroy(async (userRole) => {
+  UserRole.afterDestroy(async (userRole) => {
         await denormalizeUserRoleDelete(userRole.id);
     });
 

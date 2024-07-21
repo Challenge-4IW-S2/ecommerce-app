@@ -50,7 +50,7 @@ export default function (connection) {
         await denormalizeResetPasswordTokenUpdate(resetPasswordToken);
     });
 
-    ResetPasswordToken.beforeDestroy(async (resetPasswordToken) => {
+    ResetPasswordToken.afterDestroy(async (resetPasswordToken) => {
         await denormalizeResetPasswordTokenDelete(resetPasswordToken);
     });
 

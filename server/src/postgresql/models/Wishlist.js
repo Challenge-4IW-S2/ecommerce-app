@@ -45,7 +45,7 @@ export default function (connection) {
         await denormalizeWishlistUpdate(wishlist);
     });
 
-    Wishlist.beforeDestroy(async (wishlist) => {
+    Wishlist.afterDestroy(async (wishlist) => {
         await denormalizeWishlistDelete(wishlist);
     });
 

@@ -67,7 +67,7 @@ export default function (connection) {
         await denormalizeProductUpdate(product);
     });
 
-    Product.beforeDestroy(async (product) => {
+    Product.afterDestroy(async (product) => {
         await denormalizeProductDelete(product);
     });
 

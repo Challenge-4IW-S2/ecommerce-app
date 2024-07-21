@@ -56,7 +56,7 @@ export default function (connection) {
         await denormalizeAddressUpdate(address);
     });
 
-    Address.beforeDestroy(async (address) => {
+    Address.afterDestroy(async (address) => {
         await denormalizeAddressDelete(address);
     });
 

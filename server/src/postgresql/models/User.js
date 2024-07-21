@@ -91,7 +91,7 @@ export default function (connection) {
         await denormalizeUserUpdate(user);
     })
 
-    User.beforeDestroy(async (user) => {
+    User.afterDestroy(async (user) => {
         await denormalizeUserDelete(user);
     });
 

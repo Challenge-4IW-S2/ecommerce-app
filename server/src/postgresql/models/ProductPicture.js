@@ -46,7 +46,7 @@ export default function (connection) {
         await denormalizeProductPictureUpdate(productPicture);
     });
 
-    ProductPicture.beforeDestroy(async (productPicture) => {
+    ProductPicture.afterDestroy(async (productPicture) => {
         await denormalizeProductPictureDelete(productPicture);
     });
 

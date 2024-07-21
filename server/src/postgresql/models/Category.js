@@ -35,7 +35,7 @@ export default function (connection) {
       await denormalizeCategoryUpdate(category);
   });
 
-  Category.beforeDestroy(async (category) => {
+  Category.afterDestroy(async (category) => {
       await denormalizeCategoryDelete(category);
   });
 

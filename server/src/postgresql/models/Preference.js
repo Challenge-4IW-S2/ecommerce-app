@@ -52,7 +52,7 @@ export default function (connection) {
     await denormalizePreferenceUpdate(order);
   });
 
-  Preference.beforeDestroy(async (order) => {
+  Preference.afterDestroy(async (order) => {
     await denormalizePreferenceDelete(order);
   });
 

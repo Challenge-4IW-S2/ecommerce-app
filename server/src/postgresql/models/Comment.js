@@ -61,7 +61,7 @@ export default function (connection) {
         await denormalizeCommentUpdate(comment);
     });
 
-    Comment.beforeDestroy(async (comment) => {
+    Comment.afterDestroy(async (comment) => {
         await denormalizeCommentDelete(comment);
     });
 
