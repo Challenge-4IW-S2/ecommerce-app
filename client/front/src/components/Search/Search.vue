@@ -1,55 +1,45 @@
 <script setup>
 import { ref, watch } from 'vue';
-import ky from 'ky';
 import { useSearchHistoryStore } from '../../store/searchHistoryStore';
+import { useAPI } from '../../composables/useAPI';
 
-import SearchInput from './SearchInput.vue';
 import SearchResult from './SearchResult.vue';
 import ButtonDelete from '../Buttons/ButtonDelete.vue';
 
-const searchHistoryStore = useSearchHistoryStore();
-const searchHistory = searchHistoryStore.searchHistory;
-let response = ref([]);
-const isSearchOpen = ref(false);
 const search = ref('');
+const isSearchOpen = ref(false);
 const openSearch = () => {
     isSearchOpen.value = !isSearchOpen.value;
     search.value = '';
 }
 
-// search product API
-const searchProducts = async (newValue) => {
-    try {
-        response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/searchProduct`, {
-            searchParams: {
-                search: newValue,
-            },
-        }).json();
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-const addToSearchHistory = () => {
-    searchHistoryStore.addSearchHistory(search.value);
-}
-const deleteSearchHistory = () => {
-    searchHistoryStore.deleteSearchHistory();
-}
-
-const setSearchValue = (value) => {
-    search.value = value;
-}
+const results = ref([]);
 watch(search, (newValue) => {
-    searchProducts(newValue);
+    let searchParams = {
+        search: newValue
+    };
+    results.value = useAPI(searchParams, 'searchProduct')
 });
+//const { results } = useSearch(search.value);
+// const searchHistoryStore = useSearchHistoryStore();
+// const searchHistory = searchHistoryStore.searchHistory;
+// const addToSearchHistory = () => {
+//     searchHistoryStore.addSearchHistory(search.value);
+// }
+// const deleteSearchHistory = () => {
+//     searchHistoryStore.deleteSearchHistory();
+// }
+
+// const setSearchValue = (value) => {
+//     search.value = value;
+// }
+
 
 </script>
 
 <template>
     <div v-if="isSearchOpen" class="fixed inset-0 bg-black bg-opacity-50 z-10"></div>
 
-    <!-- search button -->
     <button @click="openSearch">
         <svg class="cursor-pointer" width="16" height="13" viewBox="0 0 15 12" fill="none"
             xmlns="http://www.w3.org/2000/svg">
@@ -61,22 +51,21 @@ watch(search, (newValue) => {
 
     <div v-if="isSearchOpen"
         class="absolute flex flex-col bg-white w-full top-0 left-0 p-4 border-b-2 border-principal gap-2 z-50">
-        <!-- close button -->
         <button @click="openSearch" class="self-end">
             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="22" viewBox="0 0 256 256">
                 <path fill="black"
                     d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128L50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
             </svg>
         </button>
-        <!-- input search -->
-        <SearchInput v-model="search" />
+        <input type="text" placeholder="Rechercher un produit"
+            class="py-3 pl-3 border border-custom-black text-principal" v-model="search">
         <div v-if="search !== ''" class="flex flex-col">
-            <!-- Affichage des résults -->
-            <SearchResult v-for="(product, index) in response" :key="index" :product="product"
-                @click="addToSearchHistory" />
+            {{ search }}
+            <!-- <SearchResult v-for="(product, index) in response" :key="index" :product="product"
+                @click="addToSearchHistory" />  -->
         </div>
-        <!-- search History -->
-        <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
+
+        <!-- <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
             <div class="flex justify-between">
                 <h2 class="text-xl font-bold">Historique de recherche</h2>
                 <ButtonDelete @click="deleteSearchHistory" />
@@ -86,6 +75,6 @@ watch(search, (newValue) => {
                     {{ search }}
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
 </template>

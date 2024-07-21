@@ -1,6 +1,6 @@
 <script setup>
 import ky from 'ky';
-import { ref, watch, defineEmits, onBeforeMount } from 'vue';
+import { ref, watch, onBeforeMount } from 'vue';
 import Button from './Buttons/Button.vue';
 
 const isFiltersOpen = ref(false);

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "chart.js": "^4.4.3",
     "chartjs-adapter-date-fns": "^3.0.0",
