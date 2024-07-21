@@ -114,6 +114,9 @@ export default class ProductRepository {
 
     getProduct(slug) {
         return this.Product.aggregate()
+        .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+        })
         .lookup({
             from: 'categories',
             localField: 'category_id',
