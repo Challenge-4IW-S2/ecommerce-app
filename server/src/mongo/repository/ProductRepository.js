@@ -64,6 +64,9 @@ export default class ProductRepository {
         const priceFilter = Number(valueMax) === 0 ? { $gte: Number(valueMin) } : { $gte: Number(valueMin), $lte: Number(valueMax) }
         // récupération des produits
         const productsResults = await this.Product.aggregate()
+            .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+            })
             .lookup({
                 from: 'categories',
                 localField: 'category_id',
@@ -99,9 +102,9 @@ export default class ProductRepository {
 
     async getMinAndMaxPrice() {
         return this.Product.aggregate().group({
-            _id: null,
-            min: { $min: "$price_ttc" },
-            max: { $max: "$price_ttc" }
+        _id: null,
+        min: { $min: { $multiply: ["$price_ht", 1.2] } },
+        max: { $max: { $multiply: ["$price_ht", 1.2] } }
         })
     }
 
