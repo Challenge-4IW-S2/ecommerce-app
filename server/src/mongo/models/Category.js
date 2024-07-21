@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import {productSchema} from "./Product.js";
 const { Schema, model } = mongoose;
 
 const categorySchema = new Schema({
@@ -9,7 +10,8 @@ const categorySchema = new Schema({
     name: {
         type: String,
         required: true,
-    }
+    },
+    products: productSchema
 });
 
 const Category = model('Category', categorySchema);

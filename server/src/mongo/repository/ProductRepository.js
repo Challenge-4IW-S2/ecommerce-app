@@ -172,4 +172,30 @@ export default class ProductRepository {
                 ]
         })
     }
+
+    async updateSubdocument(productId, subdocument, data) {
+        const exists = await this.Product.findOne({ _id: userId, [`${subdocument}._id`]: data._id });
+
+        if (exists) {
+            return this.Product.findOneAndUpdate(
+                { _id: productId, [`${subdocument}._id`]: data._id },
+                { $set: { [`${subdocument}.$`]: data } },
+                { new: true }
+            );
+        } else {
+            return this.Product.findByIdAndUpdate(
+                productId,
+                { $push: { [subdocument]: data } },
+                { new: true }
+            );
+        }
+    }
+
+    async deleteSubdocument(productId, subdocument, subdocumentId) {
+        return this.Product.findByIdAndUpdate(
+            productId,
+            { $pull: { [subdocument]: { _id: subdocumentId } } },
+            { new: true }
+        );
+    }
 }

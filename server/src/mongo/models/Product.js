@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 const { Schema, model } = mongoose;
+import {commentSchema} from "./Comment.js";
+import {productPictureSchema} from "./ProductPicture.js";
+
 
 const productSchema = new Schema({
     _id: {
@@ -46,7 +49,10 @@ const productSchema = new Schema({
         required: true,
         default: Date.now,
     },
+    comments: commentSchema,
+    productPictures: productPictureSchema
 });
 
 const Product = model('Product', productSchema);
+export { productSchema };
 export default Product;

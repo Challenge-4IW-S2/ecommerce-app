@@ -1,7 +1,10 @@
 'use strict';
 import { Model, DataTypes } from "sequelize";
-import User from "./User.js";
-import PreferencesList from "./PreferencesList.js";
+import {
+  denormalizePreferenceCreate,
+  denormalizePreferenceDelete,
+  denormalizePreferenceUpdate
+} from "../../denormalizations/preference.js";
 
 export default function (connection) {
   class Preference extends Model {
@@ -9,8 +12,7 @@ export default function (connection) {
       Preference.belongsTo(models.User,{foreignKey: 'user_id', as: 'user' });
       //Preference.belongsTo(models.PreferencesList);
     }
-    //ADD DENORMALIZATION
-    }
+  }
 
   Preference.init({
 
@@ -42,6 +44,17 @@ export default function (connection) {
     timestamps: true
   });
 
+  Preference.afterCreate(async (order) => {
+    await denormalizePreferenceCreate(order);
+  });
+
+  Preference.afterUpdate(async (order) => {
+    await denormalizePreferenceUpdate(order);
+  });
+
+  Preference.beforeDestroy(async (order) => {
+    await denormalizePreferenceDelete(order);
+  });
 
   return Preference;
 };

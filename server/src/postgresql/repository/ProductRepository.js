@@ -49,7 +49,7 @@ export default class ProductRepository {
     }
 
     async updateProduct(id, product) {
-        return await this.Product.update(product, {
+        return this.Product.update(product, {
             where: {
                 id: id
             },
@@ -61,7 +61,8 @@ export default class ProductRepository {
         return await this.Product.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }

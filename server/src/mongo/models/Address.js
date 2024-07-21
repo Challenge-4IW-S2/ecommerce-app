@@ -29,4 +29,5 @@ const addressSchema = new Schema({
 });
 
 const Address = model("Address", addressSchema);
+export { addressSchema };
 export default Address;

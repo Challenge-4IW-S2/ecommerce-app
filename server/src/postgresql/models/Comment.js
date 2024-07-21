@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeComment, denormalizeCommentDelete } from "../../denormalizations/comment.js";
+import {
+    denormalizeCommentCreate,
+    denormalizeCommentDelete,
+    denormalizeCommentUpdate
+} from "../../denormalizations/comment.js";
 
 export default function (connection) {
 
@@ -50,11 +54,11 @@ export default function (connection) {
     );
 
     Comment.afterCreate(async (comment) => {
-        await denormalizeComment(comment);
+        await denormalizeCommentCreate(comment);
     });
 
     Comment.afterUpdate(async (comment) => {
-        await denormalizeComment(comment);
+        await denormalizeCommentUpdate(comment);
     });
 
     Comment.beforeDestroy(async (comment) => {

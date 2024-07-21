@@ -5,17 +5,6 @@ export default class PreferenceRepository {
         this.Preference = Preference(db.connection);
     }
 
-    async createOrUpdatePreference(preference) {
-        return await this.Preference.findByIdAndUpdate(preference.id, {
-            name: preference.name,
-            activated: preference.activated,
-        }, {
-            upsert: true,
-            new: true
-
-        });
-    }
-
     async
 
     async getPreferenceById(id) {
@@ -50,6 +39,16 @@ export default class PreferenceRepository {
             name: params.name,
             activated: params.activated,
             user_id: params.user_id
+        });
+    }
+
+    async update(id, params) {
+        return this.Preference.update(params, {
+            where: {
+                id: id
+            },
+            returning: true,
+            individualHooks: true
         });
     }
 

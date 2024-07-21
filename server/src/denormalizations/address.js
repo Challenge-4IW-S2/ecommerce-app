@@ -1,11 +1,26 @@
 import AddressMongo from "../mongo/repository/AddressRepository.js";
+import UserMongo from "../mongo/repository/UserRepository.js";
 
-export const denormalizeAddress = async (addressId) => {
+export const denormalizeAddressCreate = async (address) => {
     const addressRepository = new AddressMongo();
-    return await addressRepository.createOrUpdateAddress(addressId);
+    const addedAddress = await addressRepository.createOrUpdateAddress(address);
+
+    const userRepository = new UserMongo();
+    return await userRepository.updateSubdocument(address.dataValues.user_id, 'addresses', addedAddress);
 }
 
-export const denormalizeAddressesDelete = async (addressId) => {
+export const denormalizeAddressUpdate = async (address) => {
     const addressRepository = new AddressMongo();
-    return await addressRepository.deleteAddress(addressId);
+    const addedAddress = await addressRepository.createOrUpdateAddress(address);
+
+    const userRepository = new UserMongo();
+    return await userRepository.updateSubdocument(address.dataValues.user_id, 'addresses', addedAddress);
+}
+
+export const denormalizeAddressDelete = async (address) => {
+    const addressRepository = new AddressMongo();
+    await addressRepository.deleteAddress(address.dataValues.id);
+
+    const userRepository = new UserMongo();
+    return await userRepository.deleteSubdocument(address.dataValues.user_id, 'addresses', address.dataValues.id);
 }

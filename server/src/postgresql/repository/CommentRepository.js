@@ -15,7 +15,7 @@ export default class CommentRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.Comment.findOne({
+        return this.Comment.findOne({
             where: {
                 [field]: value
             }
@@ -33,7 +33,7 @@ export default class CommentRepository {
     }
 
     async updateComment(id, comment) {
-        return await this.Comment.update(comment, {
+        return this.Comment.update(comment, {
             where: {
                 id: id
             },
@@ -45,7 +45,8 @@ export default class CommentRepository {
         return await this.Comment.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }

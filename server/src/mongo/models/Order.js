@@ -25,4 +25,5 @@ const orderSchema = new Schema({
 });
 
 const Order = model('Order', orderSchema);
+export { orderSchema };
 export default Order;

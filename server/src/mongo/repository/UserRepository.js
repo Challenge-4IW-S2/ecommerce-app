@@ -20,4 +20,34 @@ export default class UserRepository {
             new: true,
         });
     }
+
+    async deleteUser(userId) {
+        return this.User.findByIdAndDelete(userId);
+    }
+
+    async updateSubdocument(userId, subdocument, data) {
+        const exists = await this.User.findOne({ _id: userId, [`${subdocument}._id`]: data._id });
+
+        if (exists) {
+            return this.User.findOneAndUpdate(
+                { _id: userId, [`${subdocument}._id`]: data._id },
+                { $set: { [`${subdocument}.$`]: data } },
+                { new: true }
+            );
+        } else {
+            return this.User.findByIdAndUpdate(
+                userId,
+                { $push: { [subdocument]: data } },
+                { new: true }
+            );
+        }
+    }
+
+    async deleteSubdocument(userId, subdocument, subdocumentId) {
+        return this.User.findByIdAndUpdate(
+            userId,
+            { $pull: { [subdocument]: { _id: subdocumentId } } },
+            { new: true }
+        );
+    }
 }

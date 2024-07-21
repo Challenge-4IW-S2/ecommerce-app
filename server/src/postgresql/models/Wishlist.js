@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeWishlist, denormalizeWishlistDelete } from "../../denormalizations/wishlist.js";
+import {
+    denormalizeWishlistCreate,
+    denormalizeWishlistDelete,
+    denormalizeWishlistUpdate
+} from "../../denormalizations/wishlist.js";
 
 export default function (connection) {
     class Wishlist extends Model {}
@@ -34,11 +38,11 @@ export default function (connection) {
     );
 
     Wishlist.afterCreate(async (wishlist) => {
-        await denormalizeWishlist(wishlist);
+        await denormalizeWishlistCreate(wishlist);
     });
 
     Wishlist.afterUpdate(async (wishlist) => {
-        await denormalizeWishlist(wishlist);
+        await denormalizeWishlistUpdate(wishlist);
     });
 
     Wishlist.beforeDestroy(async (wishlist) => {

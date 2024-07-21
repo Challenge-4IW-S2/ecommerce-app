@@ -1,4 +1,9 @@
 import Sequelize, { Model, DataTypes } from "sequelize";
+import {
+    denormalizeResetPasswordTokenCreate,
+    denormalizeResetPasswordTokenUpdate,
+    denormalizeResetPasswordTokenDelete
+} from "../../denormalizations/resetPasswordToken.js";
 
 export default function (connection) {
     class ResetPasswordToken extends Model {}
@@ -36,6 +41,18 @@ export default function (connection) {
             timestamps: true
         }
     );
+
+    ResetPasswordToken.afterCreate(async (resetPasswordToken) => {
+        await denormalizeResetPasswordTokenCreate(resetPasswordToken);
+    });
+
+    ResetPasswordToken.afterUpdate(async (resetPasswordToken) => {
+        await denormalizeResetPasswordTokenUpdate(resetPasswordToken);
+    });
+
+    ResetPasswordToken.beforeDestroy(async (resetPasswordToken) => {
+        await denormalizeResetPasswordTokenDelete(resetPasswordToken);
+    });
 
     return ResetPasswordToken;
 }
