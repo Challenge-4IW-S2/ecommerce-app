@@ -16,6 +16,9 @@ const checkStock = new CronJob('0 * * * *', async () => {
                 console.log('Checking stock levels...')
                 for (const product of products) {
                     if (product.quantity <= product.low_stock_threshold) {
+                        console.log(`Low stock alert for product ${product.id}`)
+                        console.log(`Low stock alert for product ${product.quantity}`)
+                        console.log(`Low stock alert for product ${product.low_stock_threshold}`)
                         const stockEventRepository = new StockEventRepository();
                         await stockEventRepository.createStockEvent({
                             product_id: product.id,

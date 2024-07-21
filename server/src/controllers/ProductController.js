@@ -7,6 +7,7 @@ import {sendEmail} from "./SendMailController.js";
 import {newProductsTemplate} from "../mailsTemplates/newProducts.js";
 import UserRepository from "../postgresql/repository/UserRepository.js";
 import {newPriceTemplate} from "../mailsTemplates/NewPrice.js";
+import StockEventRepository from "../postgresql/repository/StockEventRepository.js";
 export class ProductController {
     static async index(request, response) {
         const productRepositoryMongo = new ProductRepositoryMongo();
@@ -95,14 +96,38 @@ export class ProductController {
         }
         try {
             const productRepository = new ProductRepository();
-            const previousData = await productRepository.findById(request.params.id);
+            const userRepo = new UserRepository();
+            const usersPrefNew = await userRepo.findAllWithPreferences('NEW');
+            const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
+            const id =request.params.id;
+            const previousData = await productRepository.findById(id);
+            console.log(previousData)
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
-            const product = await productRepository.updateProduct(request.params.id, parameters)
+            const oldQuantity = previousData.quantity;
+            const newQuantity = parameters.quantity;
+            if (oldQuantity < newQuantity) {
+                parameters.quantity += oldQuantity;
+
+                const stockMovement = new StockEventRepository()
+                await stockMovement.createStockEvent({
+                    product_id: id,
+                    event_type: 'restock',
+                    stock_level: parameters.quantity,
+                })
+                for (const user of usersPrefRestock) {
+                    const {to, subject} = {
+                        to: user.email,
+                        subject: 'New Stock Alert',
+                    };
+                    await sendEmail(to, subject, newPriceTemplate(parameters));
+                }
+            }
+
+            const product = await productRepository.updateProduct(id, parameters)
+
             if (oldPrice > newPrice) {
-                const userRepo = new UserRepository();
-                const users = await userRepo.findAllWithPreferences();
-                for (const user of users) {
+                for (const user of usersPrefNew) {
                     const {to, subject} = {
                         to: user.email,
                         subject: 'Price Drop Alert',
