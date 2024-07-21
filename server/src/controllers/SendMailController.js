@@ -1,9 +1,6 @@
 import {Resend} from "resend";
-console.log(process.env.MAIL_KEY)
 
 const resend = new Resend(process.env.MAIL_KEY);
-
-console.log(resend)
 
 export const sendEmail = async (to, subject,template) => {
     try {

@@ -7,9 +7,9 @@ export default class UserRepository {
     constructor() {
         this.User = db.models.User;
         this.Preference = db.models.Preference;
-      //  this.User = new UserModel(db.connection);
+        //  this.User = new UserModel(db.connection);
         this.userRoleRepository = new UserRoleRepository();
-       // this.Preference = new PreferenceModel(db.connection);
+        // this.Preference = new PreferenceModel(db.connection);
 
     }
 
@@ -52,12 +52,13 @@ export default class UserRepository {
 
 
     async destroy(id) {
-            return await this.User.destroy({
-                where: {
-                    id: id
-                }
-            });
-        }
+        return await this.User.destroy({
+            where: {
+                id: id
+            }
+        });
+    }
+
     async deleteUser(id) {
         return await this.updateUser(id, {
             email: null,
@@ -75,7 +76,7 @@ export default class UserRepository {
             include: [{
                 model: this.Preference,
                 as: 'preferences',
-                where: { name: 'NEW', activated: true }
+                where: {name: 'NEW', activated: true}
             }]
         });
     }
@@ -85,12 +86,20 @@ export default class UserRepository {
             include: [{
                 model: this.Preference,
                 as: 'preferences',
-                where: { name: 'NEW', activated: true }
+                where: {name: 'NEW', activated: true}
             }, {
                 model: this.Preference,
                 as: 'whishlist',
-                where: { name: 'NEW', activated: true }
+                where: {name: 'NEW', activated: true}
             }]
+        });
+    }
+
+    async findAllByRole(role) {
+        return await this.User.findAll({
+            where: {
+                role: await this.userRoleRepository.getRoleId(role)
+            }
         });
     }
 }
