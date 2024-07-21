@@ -196,6 +196,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
         if (typeof value === 'string' && (key.includes('password') || key.includes('Password'))) return 'password';
         if (typeof value === 'string' && (key.includes('phone') || key.includes('Phone'))) return 'tel';
         if ((key.includes('role') || key.includes('Role')) ) return 'select';
+        if ((key.includes('quantity') || key.includes('Quantity')) ) return 'number';
         return 'text';
     };
 
