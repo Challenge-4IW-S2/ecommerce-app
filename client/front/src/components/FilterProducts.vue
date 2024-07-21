@@ -1,5 +1,6 @@
 <script setup>
 import ky from 'ky';
+import { useAPI } from '../composables/useAPI';
 import { ref, watch, onBeforeMount } from 'vue';
 import Button from './Buttons/Button.vue';
 
@@ -18,9 +19,8 @@ const openCategories = () => {
 }
 const getCategories = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getCategories`).json().then((response) => {
-            categories.value = response;
-        });
+        const { results } = await useAPI('get', 'getCategories', {}, {}, '');
+        categories.value = results;
     } catch (error) {
         console.error(error);
     }

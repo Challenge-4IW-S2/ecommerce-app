@@ -51,7 +51,17 @@ function closeModal() {
   document.body.removeChild(modal);
 }
 
-export const useAPI =  async (searchParams, URL) => {
+/**
+ * 
+ * @param {string} method ex: get, post, put etc 
+ * @param {string} URL ex: 'URLExemple'
+ * @param {object} searchParams ex: { key : value }
+ * @param {object} JSON ex: { key : value }
+ * @param {string} Credentials ex: 'include'
+ * @returns A array of the response
+ */
+
+export const useAPI =  async (method, URL, searchParams, JSON, Credentials) => {
   const results = ref([]);
   const isModalOpen = ref(false);
   const controller = new AbortController();
@@ -67,10 +77,26 @@ export const useAPI =  async (searchParams, URL) => {
     })
   }
 
+  const hasSearchParams = searchParams && Object.keys(searchParams).length > 0 ? searchParams : undefined;
+  const hasJson = JSON && Object.keys(JSON).length > 0 ? JSON : undefined;
+  const hasCredentials = Credentials && Credentials !== '' ? Credentials : undefined
+
   try {
-    await ky.get(`${import.meta.env.VITE_API_BASE_URL}/${URL}`, {
-      searchParams: searchParams,
-      signal: controller.signal, 
+    await ky[method](`${import.meta.env.VITE_API_BASE_URL}/${URL}`, {
+      searchParams: hasSearchParams,
+      json: hasJson,
+      credentials: hasCredentials,
+      signal: controller.signal,
+      hooks: {
+        afterResponse: [
+          async (request, options, response) => {
+            if (response.status === 401) {
+              closeModal();
+              isModalOpen.value = false;
+            }
+          }
+        ]
+      }
     }).json()
     .then((res) => {
       results.value = res;

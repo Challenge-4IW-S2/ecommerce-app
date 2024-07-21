@@ -1,7 +1,8 @@
 import {onMounted, ref} from 'vue';
 import ky from "ky";
-import {  useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useTable } from "./useTable";
+import { useAPI } from './useAPI';
 
 
 export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], roleApiUrl = null) => {

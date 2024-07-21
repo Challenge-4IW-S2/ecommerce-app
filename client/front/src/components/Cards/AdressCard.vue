@@ -1,5 +1,4 @@
 <script setup>
-
 import ky from "ky";
 import router from "../../router.js";
 

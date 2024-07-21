@@ -20,7 +20,7 @@ const debouncedSearch = debounce(async (newValue) => {
         let searchParams = {
             search: newValue
         };
-        const { results, isModalOpen } = await useAPI(searchParams, 'searchProduct');
+        const { results, isModalOpen } = await useAPI('get', 'searchProduct', searchParams, {}, '');
         searchResults.value = results;
         disabledInput.value = isModalOpen;
     } else {
@@ -29,7 +29,6 @@ const debouncedSearch = debounce(async (newValue) => {
 }, 1000);
 watch(search, (newValue) => {
     debouncedSearch(newValue);
-    console.log("test debug", disabledInput.value);
 });
 
 // Functions for search history

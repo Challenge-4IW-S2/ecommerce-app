@@ -2,7 +2,8 @@
 import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
 import ky from "ky";
-import {  useRouter } from "vue-router";
+import { useAPI } from "../../../composables/useAPI";
+import { useRouter } from "vue-router";
 const router = useRouter()
 // Définir les données dynamiques
 const data = ref( [] )
@@ -17,8 +18,8 @@ const actions = ref([
   },
   {
     label: 'Supprimer',
-    method: (row) => {
-      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`);
+    method: async (row) => {
+      const { results } = await useAPI('delete', `user/${row.id}`, {}, {}, '');
       location.reload();
     },
     color: 'red',
@@ -63,8 +64,9 @@ const actions = ref([
 
 const fetchData = async () => {
   try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users`).json();
-    console.log(response)
+    const { results } = await useAPI('get', 'users', {}, {}, '');
+    const response = results;
+    console.log(response.length)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)

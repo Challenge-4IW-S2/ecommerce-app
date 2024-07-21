@@ -3,8 +3,8 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
-import ky from "ky";
 import {computed, reactive, ref} from "vue";
+import { useAPI } from "../composables/useAPI";
 
 const parameters = reactive({
   firstname: '',
@@ -62,12 +62,10 @@ const canSubmit = computed(() => {
 
 const register = async () => {
   try {
-    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
-      json: {
-        ...parameters
-      },
-    }).json();
-    console.log(response.status)
+    const json = {
+      ...parameters
+    };
+    const { results } = await useAPI('post', 'signup', {}, json, '');
 
     isSubmitted.value = true;
     if (response.status === 201) {
