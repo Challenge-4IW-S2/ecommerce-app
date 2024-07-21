@@ -1,6 +1,7 @@
 import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
+import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
 import User from "../postgresql/models/user.js";
 import Preference from "../postgresql/models/Preference.js";
 import {sendEmail} from "./SendMailController.js";
@@ -89,13 +90,17 @@ export class ProductController {
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
-            category: request.body.category_id,
+            category_id: request.body.category_id,
         }
+        console.log(parameters);
         try {
             const productRepository = new ProductRepository();
             const previousData = await productRepository.findById(request.params.id);
             const oldPrice = previousData.price_ttc;
             const newPrice = parameters.price_ttc;
+
+            const categoryRepository = new CategoryRepository();
+            parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
             const product = await productRepository.updateProduct(request.params.id, parameters)
             if (oldPrice > newPrice) {
                 const userRepo = new UserRepository();
