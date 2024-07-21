@@ -22,7 +22,7 @@ import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
 import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
 import DashboardStock from './pages/Dashboard/Tables/Stock.vue'
-import Subscriptions from './pages/user/Subscriptions.vue'
+import Subscriptions from './pages/Account/Subscriptions.vue'
 
 
 

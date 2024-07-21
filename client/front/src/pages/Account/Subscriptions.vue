@@ -11,7 +11,9 @@ const fetchPreferences = async () => {
     const response = await ky.get(`${url}/preferences`, {
       credentials: 'include'
     }).json();
+    console.log(response)
     entityStructure.value = response.map(pref => ({
+      id: pref.id,
       name: pref.name,
       description: pref.description,
       activated: pref.activated
@@ -25,10 +27,11 @@ const fetchPreferences = async () => {
   }
 };
 const handleSubmit = async ({ name, activated }) => {
+  console.log(name, activated)
   try {
     await ky.put(`${url}/preferences`, {
       json: {
-        name: name,
+        preference_id: name,
         activated: activated
       },
       credentials: 'include'
@@ -56,7 +59,7 @@ onMounted(fetchPreferences);
               v-model="formData[input.name]"
               :id="input.name"
               :title="input.description"
-              :name="input.name"
+              :name="input.id"
               @change="handleSubmit"
           />
           <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
