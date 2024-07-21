@@ -67,10 +67,19 @@ const register = async () => {
         ...parameters
       },
     }).json();
+    console.log(response.status)
 
     isSubmitted.value = true;
+    if (response.status === 201) {
+      msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
+    }
 
   } catch (error) {
+    if (error.response.status === 409) {
+      msgError.value = 'Un compte existe déjà avec cette adresse e-mail';
+    }else  {
+      msgError.value = 'Une erreur est survenue pendant la création de votre compte. Veuillez réessayer plus tard.';
+    }
     if (error.response) {
       const serverResponse = await error.response.json();
       msgError.value = serverResponse.message;

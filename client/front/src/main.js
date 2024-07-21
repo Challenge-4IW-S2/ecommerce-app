@@ -18,11 +18,11 @@ app.use(router)
 app.mount('#app')
 const userStore = useUserStore();
 const userAuthStore = useUserAuthStore();
-const stockStore = useStockStore();
+//const stockStore = useStockStore();
 userAuthStore.checkAuthStatus();
 
 // create a sessionId and bag for the user when the app is loaded
 userStore.initSessionAndBag(uuidv4());
 
 
-stockStore.fetchProducts();
+//stockStore.fetchProducts();

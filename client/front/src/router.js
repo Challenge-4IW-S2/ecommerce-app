@@ -103,7 +103,11 @@ const routes = [
         path: '/change-password/:slug',
         component: ProductView
     },
-  
+
+    {
+        path: '/login?token=:token',
+        component: LoginView,
+    },
   
     { path: '/admin/categories', component: DashboardCategoriesView},
     { path: '/admin/users', component: DashboardUsersView },

@@ -15,6 +15,9 @@ export default function (router) {
 
     router.post('/forgot-password', checkNotAuth(), AuthController.forgotPassword);
     router.get('/check-reset-password-token', checkNotAuth(), AuthController.checkResetPasswordToken);
+
+    router.get('/verify-token/:token', AuthController.verifyToken);
+
     // router.post('/reset-password', checkNotAuth(), AuthController.resetPassword);
 
     return router;

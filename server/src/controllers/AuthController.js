@@ -5,11 +5,32 @@ import {sendEmail} from "./SendMailController.js";
 import {z} from 'zod';
 import {attackAttemptTemplate} from "../mailsTemplates/attackAttemptMail.js";
 import ResetPasswordTokenRepository from "../postgresql/repository/ResetPasswordTokenRepository.js";
-import {sendCode} from "../mailsTemplates/sendCode.js";
+import { v4 as uuidv4 } from 'uuid';
 const loginAttempts = {}
 import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
+import {confirmUser} from "../mailsTemplates/confirmUser.js";
 
 export class AuthController {
+    static async verifyToken(request, response, next) {
+        try {
+            const token = request.params.token
+            const userRepository = new UserRepository();
+            const user = await userRepository.findOne('token', token);
+            console.log(user)
+            console.log(!user)
+            if (!user) {
+                return response.status(404).send();
+            }
+            console.log(user.id)
+            const [nbUpdated,verifiedUser] = await userRepository.updateUser(user.id, {
+                is_verified: true,
+                token: null
+            });
+            if (nbUpdated === 1) return response.status(200).json(verifiedUser[0]);
+        } catch (e) {
+            return response.status(400).json(e);
+        }
+    };
 
     static signup(request, response) {
         const parametersSchema = z.object({
@@ -43,25 +64,22 @@ export class AuthController {
             email: request.body.email,
             password: request.body.password,
             role: 'ROLE_USER',
-            phone: null
+            phone: null,
+            token: uuidv4()
         };
-        // await sendEmail('progrdnvictor@gmail.com','attack detected','Plusieurs tentative de connexion ont été détectées sur votre compte' )
+
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
-            .then(() => {
-
-                response.status(201).json({
-                    message: 'Compte créé'
-                })
+            .then(async () => {
+                await sendEmail(userData.email, 'Luzaya.fr; Action requise : Vérification de votre adresse email', confirmUser(userData))
+                response.sendStatus(201)
             })
             .catch(err => {
-                const isNotUnique = err.name === 'SequelizeUniqueConstraintError';
-                const message = isNotUnique ? 'Un compte existe déjà avec cet email' : 'Une erreur est survenue';
+              const isNotUnique = err.name === 'SequelizeUniqueConstraintError';
+               // const message = isNotUnique ? 'Un compte existe déjà avec cet email' : 'Une erreur est survenue';
                 const code = isNotUnique ? 409 : 500;
-                response.status(code).json({
-                    message: message
-                });
+                response.sendStatus(code);
             });
     }
 
