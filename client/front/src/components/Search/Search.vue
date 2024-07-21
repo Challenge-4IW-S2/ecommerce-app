@@ -1,40 +1,49 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useSearchHistoryStore } from '../../store/searchHistoryStore';
-import { useAPI } from '../../composables/useAPI';
+import { useAPI } from '../../composables/useAPI.js';
+import { debounce } from '../../composables/useDebounce.js';
 
 import SearchResult from './SearchResult.vue';
 import ButtonDelete from '../Buttons/ButtonDelete.vue';
 
 const search = ref('');
+const searchResults = ref([]);
 const isSearchOpen = ref(false);
+const disabledInput = ref(false);
 const openSearch = () => {
     isSearchOpen.value = !isSearchOpen.value;
     search.value = '';
 }
-
-const results = ref([]);
+const debouncedSearch = debounce(async (newValue) => {
+    if (newValue.trim() !== '') {
+        let searchParams = {
+            search: newValue
+        };
+        const { results, isModalOpen } = await useAPI(searchParams, 'searchProduct');
+        searchResults.value = results;
+        disabledInput.value = isModalOpen;
+    } else {
+        searchResults.value = [];
+    }
+}, 1000);
 watch(search, (newValue) => {
-    let searchParams = {
-        search: newValue
-    };
-    results.value = useAPI(searchParams, 'searchProduct')
+    debouncedSearch(newValue);
+    console.log("test debug", disabledInput.value);
 });
-//const { results } = useSearch(search.value);
-// const searchHistoryStore = useSearchHistoryStore();
-// const searchHistory = searchHistoryStore.searchHistory;
-// const addToSearchHistory = () => {
-//     searchHistoryStore.addSearchHistory(search.value);
-// }
-// const deleteSearchHistory = () => {
-//     searchHistoryStore.deleteSearchHistory();
-// }
 
-// const setSearchValue = (value) => {
-//     search.value = value;
-// }
-
-
+// Functions for search history
+const searchHistoryStore = useSearchHistoryStore();
+const searchHistory = searchHistoryStore.searchHistory;
+const addToSearchHistory = () => {
+    searchHistoryStore.addSearchHistory(search.value);
+}
+const deleteSearchHistory = () => {
+    searchHistoryStore.deleteSearchHistory();
+}
+const setSearchValue = (value) => {
+    search.value = value;
+}
 </script>
 
 <template>
@@ -58,23 +67,23 @@ watch(search, (newValue) => {
             </svg>
         </button>
         <input type="text" placeholder="Rechercher un produit"
-            class="py-3 pl-3 border border-custom-black text-principal" v-model="search">
+            class="py-3 pl-3 border border-custom-black text-principal" v-model="search" :disabled="disabledInput.value">
         <div v-if="search !== ''" class="flex flex-col">
-            {{ search }}
-            <!-- <SearchResult v-for="(product, index) in response" :key="index" :product="product"
-                @click="addToSearchHistory" />  -->
+            <SearchResult v-for="(product, index) in searchResults.value" :key="index" :product="product"
+                @click="addToSearchHistory" />
         </div>
 
-        <!-- <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
+        <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
             <div class="flex justify-between">
                 <h2 class="text-xl font-bold">Historique de recherche</h2>
                 <ButtonDelete @click="deleteSearchHistory" />
             </div>
             <ul class="flex flex-col gap-2">
-                <li v-for="(search, index) in searchHistory" :key="index" class="" @click="setSearchValue(search)">
+                <li v-for="(search, index) in searchHistory" :key="index" class="cursor-pointer"
+                    @click="setSearchValue(search)">
                     {{ search }}
                 </li>
             </ul>
-        </div> -->
+        </div>
     </div>
 </template>
