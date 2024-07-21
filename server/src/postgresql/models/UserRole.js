@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeUserRole, denormalizeUserRoleDelete } from "../../denormalizations/userrole.js";
+import {
+    denormalizeUserRoleCreate,
+    denormalizeUserRoleDelete,
+    denormalizeUserRoleUpdate
+} from "../../denormalizations/userrole.js";
 
 export default function (connection) {
   class UserRole extends Model {}
@@ -26,15 +30,15 @@ export default function (connection) {
   );
 
   UserRole.afterCreate(async (userRole) => {
-      // await denormalizeUserRole(userRole);
+      await denormalizeUserRoleCreate(userRole);
   });
 
   UserRole.afterUpdate(async (userRole) => {
-      // await denormalizeUserRole(userRole);
+      await denormalizeUserRoleUpdate(userRole);
   });
 
   UserRole.beforeDestroy(async (userRole) => {
-        // await denormalizeUserRoleDelete(userRole.id);
+        await denormalizeUserRoleDelete(userRole.id);
     });
 
   return UserRole;

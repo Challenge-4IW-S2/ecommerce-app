@@ -1,11 +1,17 @@
 import UserRoleMongo from "../mongo/repository/UserRoleRepository.js";
 
-export const denormalizeUserRole = async (userRole) => {
+export const denormalizeUserRoleCreate = async (userRole) => {
     const userRoleRepository = new UserRoleMongo();
     return await userRoleRepository.createOrUpdateUserRole(userRole);
 }
 
-export const denormalizeUserRoleDelete = async (userRoleId) => {
+export const denormalizeUserRoleUpdate = async (userRole) => {
     const userRoleRepository = new UserRoleMongo();
-    return await userRoleRepository.deleteUserRole(userRoleId);
+    return await userRoleRepository.createOrUpdateUserRole(userRole);
+}
+
+
+export const denormalizeUserRoleDelete = async (userRole) => {
+    const userRoleRepository = new UserRoleMongo();
+    return await userRoleRepository.deleteUserRole(userRole.dataValues.id);
 }
