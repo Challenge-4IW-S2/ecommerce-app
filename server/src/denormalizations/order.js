@@ -14,5 +14,9 @@ export const denormalizeOrderUpdate = async (order) => {
     const addedOrder = await orderRepository.createOrUpdateOrder(order);
 
     const userRepository = new UserMongo();
+    if (order._previousDataValues.user_id === order.dataValues.user_id) {
+        return await userRepository.deleteSubdocument(order.dataValues.user_id, 'orders', addedOrder);
+    }
+
     return await userRepository.updateSubdocument(order.dataValues.user_id, 'orders', addedOrder);
 }

@@ -87,19 +87,17 @@ export default function (connection) {
         await denormalizeUserCreate(user);
     });
 
-    User.afterUpdate(async (user) => {
-        await denormalizeUserUpdate(user);
-    })
-
-    User.afterDestroy(async (user) => {
-        await denormalizeUserDelete(user);
-    });
-
     User.addHook("beforeUpdate", async function (user, { fields }) {
         if (fields.includes("password")) {
             const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
             user.password = hash;
         }
+
+        await denormalizeUserUpdate(user);
+    });
+    User.afterDestroy(async (user) => {
+        await denormalizeUserDelete(user);
+
     });
 
 

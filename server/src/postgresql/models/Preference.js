@@ -48,7 +48,7 @@ export default function (connection) {
     await denormalizePreferenceCreate(order);
   });
 
-  Preference.afterUpdate(async (order) => {
+  Preference.beforeUpdate(async (order) => {
     await denormalizePreferenceUpdate(order);
   });
 

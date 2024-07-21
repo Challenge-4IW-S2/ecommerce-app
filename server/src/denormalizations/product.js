@@ -6,7 +6,7 @@ export const denormalizeProductCreate = async (product) => {
     const addedProduct = await productRepository.createOrUpdateProduct(product);
 
     const categoryRepository = new CategoryMongo();
-    return await categoryRepository.updateSubdocument(product.category_id, 'products', addedProduct);
+    return await categoryRepository.updateSubdocument(product.dataValues.category_id, 'products', addedProduct);
 }
 
 export const denormalizeProductUpdate = async (product) => {
@@ -14,7 +14,11 @@ export const denormalizeProductUpdate = async (product) => {
     const addedProduct = await productRepository.createOrUpdateProduct(product);
 
     const categoryRepository = new CategoryMongo();
-    return await categoryRepository.updateSubdocument(product.category_id, 'products', addedProduct);
+    if (product._previousDataValues.category_id !== product.dataValues.category_id) {
+        await categoryRepository.deleteSubdocument(product._previousDataValues.category_id, 'products', product.dataValues.id);
+    }
+
+    return await categoryRepository.updateSubdocument(product.dataValues.category_id, 'products', addedProduct);
 }
 
 export const denormalizeProductDelete = async (product) => {

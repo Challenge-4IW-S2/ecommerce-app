@@ -47,7 +47,7 @@ export default function (connection) {
         await denormalizeOrderCreate(order);
     });
 
-    Order.afterUpdate(async (order) => {
+    Order.beforeUpdate(async (order) => {
         await denormalizeOrderUpdate(order);
     });
 

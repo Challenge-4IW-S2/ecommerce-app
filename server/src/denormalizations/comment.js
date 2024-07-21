@@ -18,9 +18,15 @@ export const denormalizeCommentUpdate = async (comment) => {
     const addedComment = await commentRepository.createOrUpdateComment(comment);
 
     const productRepository = new ProductMongo();
+    if (comment._previousDataValues.product_id !== comment.dataValues.product_id) {
+        await productRepository.deleteSubdocument(comment._previousDataValues.product_id, 'comments', comment.dataValues.id);
+    }
     await productRepository.updateSubdocument(comment.dataValues.product_id, 'comments', addedComment);
 
     const userRepository = new UserMongo();
+    if (comment._previousDataValues.user_id !== comment.dataValues.user_id) {
+        await userRepository.deleteSubdocument(comment._previousDataValues.user_id, 'comments', comment.dataValues.id);
+    }
     return await userRepository.updateSubdocument(comment.dataValues.user_id, 'comments', addedComment);
 }
 

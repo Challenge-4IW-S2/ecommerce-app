@@ -52,7 +52,7 @@ export default function (connection) {
         await denormalizeAddressCreate(address);
     });
 
-    Address.afterUpdate(async (address) => {
+    Address.beforeUpdate(async (address) => {
         await denormalizeAddressUpdate(address);
     });
 

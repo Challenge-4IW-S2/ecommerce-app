@@ -14,6 +14,10 @@ export const denormalizePreferenceUpdate = async (preference) => {
     const addedPreference = await preferenceRepository.createOrUpdatePreference(preference);
 
     const userRepository = new UserMongo();
+    if (preference._previousDataValues.user_id === preference.dataValues.user_id) {
+        return await userRepository.deleteSubdocument(preference.dataValues.user_id, 'preferences', addedPreference);
+    }
+
     return await userRepository.updateSubdocument(preference.dataValues.user_id, 'preferences', addedPreference);
 }
 

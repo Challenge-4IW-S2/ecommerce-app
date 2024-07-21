@@ -63,7 +63,7 @@ export default function (connection) {
     });
 
 
-    Product.afterUpdate(async (product) => {
+    Product.beforeUpdate(async (product) => {
         await denormalizeProductUpdate(product);
     });
 

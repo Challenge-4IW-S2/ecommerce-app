@@ -42,7 +42,7 @@ export default function (connection) {
         await denormalizeProductPictureCreate(productPicture);
     });
 
-    ProductPicture.afterUpdate(async (productPicture) => {
+    ProductPicture.beforeUpdate(async (productPicture) => {
         await denormalizeProductPictureUpdate(productPicture);
     });
 

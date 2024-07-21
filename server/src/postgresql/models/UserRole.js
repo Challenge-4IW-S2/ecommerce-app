@@ -33,7 +33,7 @@ export default function (connection) {
       await denormalizeUserRoleCreate(userRole);
   });
 
-  UserRole.afterUpdate(async (userRole) => {
+  UserRole.beforeUpdate(async (userRole) => {
       await denormalizeUserRoleUpdate(userRole);
   });
 

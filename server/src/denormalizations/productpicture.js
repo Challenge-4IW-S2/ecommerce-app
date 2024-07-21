@@ -15,6 +15,10 @@ export const denormalizeProductPictureUpdate = async (productPicture) => {
     const addedProductPicture = await productPictureRepository.createOrUpdateProductPicture(productPicture);
 
     const productRepository = new ProductMongo();
+    if (productPicture._previousDataValues.product_id !== productPicture.dataValues.product_id) {
+        await productRepository.deleteSubdocument(productPicture._previousDataValues.product_id, 'pictures', productPicture.dataValues.id);
+    }
+
     return await productRepository.updateSubdocument(productPicture.dataValues.product_id, 'pictures', addedProductPicture);
 }
 

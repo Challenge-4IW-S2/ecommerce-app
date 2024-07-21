@@ -57,7 +57,7 @@ export default function (connection) {
         await denormalizeCommentCreate(comment);
     });
 
-    Comment.afterUpdate(async (comment) => {
+    Comment.beforeUpdate(async (comment) => {
         await denormalizeCommentUpdate(comment);
     });
 

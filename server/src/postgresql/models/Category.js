@@ -31,7 +31,7 @@ export default function (connection) {
       await denormalizeCategoryCreate(category);
   });
 
-  Category.afterUpdate(async (category) => {
+  Category.beforeUpdate(async (category) => {
       await denormalizeCategoryUpdate(category);
   });
 

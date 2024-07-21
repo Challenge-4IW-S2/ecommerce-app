@@ -41,7 +41,7 @@ export default function (connection) {
         await denormalizeWishlistCreate(wishlist);
     });
 
-    Wishlist.afterUpdate(async (wishlist) => {
+    Wishlist.beforeUpdate(async (wishlist) => {
         await denormalizeWishlistUpdate(wishlist);
     });
 
