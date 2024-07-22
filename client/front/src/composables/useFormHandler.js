@@ -1,6 +1,6 @@
 import { ref, reactive } from 'vue';
 import { getEntitySchema, handleHttpResponse } from '../functions/model.js';
-import ky from 'ky';
+import { useAPI } from './useAPI.js';
 
 export function useFormHandler(entityType, initialData = {}) {
     const formData = ref({ ...initialData });
@@ -33,9 +33,11 @@ export function useFormHandler(entityType, initialData = {}) {
         serverError.value = null;
         try {
             if (method === 'POST') {
-                response = await ky.post(url, { json: formData.value });
+                const { results } = await useAPI('post', url, {}, formData.value, '');
+                response = results.value;
             } else {
-                response = await ky.patch(url, { json: formData.value });
+                const { results } = await useAPI('patch', url, {}, formData.value, '');
+                response = results.value;
             }
             await handleHttpResponse(response);
         } catch (error) {

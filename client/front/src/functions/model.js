@@ -1,11 +1,12 @@
-import ky from "ky";
 import {z} from "zod";
 import Swal from "sweetalert2";
+import { useAPI } from "../composables/useAPI";
 
-export function fetchModelStructure(modelName) {
+export async function fetchModelStructure(modelName) {
     try {
         console.log(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`)
-        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`).json();
+        const { results } = await useAPI('get', `model/${modelName}`, {}, {}, '');
+        return results.value;
     } catch (error) {
         console.error("Error fetching model structure:", error);
         throw error;

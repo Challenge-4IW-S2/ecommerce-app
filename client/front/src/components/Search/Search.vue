@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useSearchHistoryStore } from '../../store/searchHistoryStore';
 import { useAPI } from '../../composables/useAPI.js';
-import { debounce } from '../../composables/useDebounce.js';
+import { debounce } from '../../functions/debounce.js';
 
 import SearchResult from './SearchResult.vue';
 import ButtonDelete from '../Buttons/ButtonDelete.vue';
@@ -66,7 +66,8 @@ const setSearchValue = (value) => {
             </svg>
         </button>
         <input type="text" placeholder="Rechercher un produit"
-            class="py-3 pl-3 border border-custom-black text-principal" v-model="search" :disabled="disabledInput.value">
+            class="py-3 pl-3 border border-custom-black text-principal" v-model="search"
+            :disabled="disabledInput.value">
         <div v-if="search !== ''" class="flex flex-col">
             <SearchResult v-for="(product, index) in searchResults.value" :key="index" :product="product"
                 @click="addToSearchHistory" />

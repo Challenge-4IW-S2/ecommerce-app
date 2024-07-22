@@ -90,7 +90,7 @@ export const useAPI =  async (method, URL, searchParams, JSON, Credentials) => {
       hooks: {
         afterResponse: [
           async (request, options, response) => {
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 404 || response.status === 500) {
               closeModal();
               isModalOpen.value = false;
             }

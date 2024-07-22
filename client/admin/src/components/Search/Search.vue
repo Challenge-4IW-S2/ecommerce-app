@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { useSearchHistoryStore } from '../../store/searchHistoryStore';
 import { useAPI } from '../../composables/useAPI.js';
-import { debounce } from '../../composables/useDebounce.js';
+import { debounce } from '../../functions/debounce.js';
 
 import SearchResult from './SearchResult.vue';
 import ButtonDelete from '../Buttons/ButtonDelete.vue';

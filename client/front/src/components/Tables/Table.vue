@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
+import ky from "ky";
 import router from "../../router.js";
-import { useAPI } from '../../composables/useAPI.js';
 
 // Définir les props reçues par le composant
 const props = defineProps({
@@ -149,8 +149,7 @@ const deleteSelected = async () => {
     const selectedIds = selectedData.map(row => row.id);
     for (let i = 0; i < selectedIds.length; i++) {
       console.log(selectedIds[i])
-      await useAPI('delete', `${props.title.toLowerCase()}/${selectedIds[i]}`, {}, {}, '');
-
+      const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/${props.title.toLowerCase()}/${selectedIds[i]}`).json();
       router.go();
     }
   } catch (error) {

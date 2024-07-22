@@ -1,7 +1,6 @@
 <script setup>
 import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
-import ky from "ky";
 import { useAPI } from "../../../composables/useAPI";
 import { useRouter } from "vue-router";
 const router = useRouter()
@@ -65,16 +64,16 @@ const actions = ref([
 const fetchData = async () => {
   try {
     const { results } = await useAPI('get', 'users', {}, {}, '');
-    const response = results;
+    const response = results.value;
     console.log(response.length)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
-      const user_roles = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/role`,{
-        json: {
-          role: role[0]
-        },
-      }).json();
+      let json = {
+        role: role[0]
+      }
+      const { results } = await useAPI('post', 'role', {}, json, '');
+      const user_roles = results.value;
       data.value.forEach((user) => {
         if (user.role === user_roles.id) {
           user.role = user_roles.name;
