@@ -48,11 +48,16 @@ export class UserController {
 
         try {
             const userRepository = new UserRepository();
-            parameters.role = await new UserRoleRepository().getRoleId(parameters.role);
+            const userRoleRepository = new UserRoleRepository();
+
+            parameters.role = await userRoleRepository.getRoleId(parameters.role);
+
+
             const [nbUpdated,user] = await userRepository.updateUser(request.params.id, parameters);
             if (nbUpdated === 1) return response.status(200).json(user[0]);
             response.sendStatus(404);
         } catch (e) {
+            console.log(e);
             next(e)
         }
     }

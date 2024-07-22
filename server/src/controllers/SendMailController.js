@@ -1,7 +1,6 @@
 import {Resend} from "resend";
 
 const resend = new Resend(process.env.MAIL_KEY);
-
 export const sendEmail = async (to, subject,template) => {
     try {
 
@@ -12,10 +11,7 @@ export const sendEmail = async (to, subject,template) => {
             html: template,
         });
 
-        console.log(data)
     } catch (err) {
-        console.log(err)
-        console.error("Mail sending failed", err);
         throw new Error("Mail sending failed");
     }
 };

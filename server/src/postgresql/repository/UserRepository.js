@@ -41,7 +41,7 @@ export default class UserRepository {
     }
 
     async updateUser(id, user) {
-        return await this.User.update(user, {
+        return this.User.update(user, {
             where: {
                 id: id
             },
@@ -55,7 +55,8 @@ export default class UserRepository {
         return await this.User.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 

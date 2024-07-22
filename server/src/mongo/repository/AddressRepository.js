@@ -5,9 +5,13 @@ export default class AddressRepository {
         this.Address = AddressModel;
     }
 
+    async findAddressesByUserId(userId) {
+        return this.Address.find({ "user._id": userId });
+    }
+
     async createOrUpdateAddress(address) {
         return this.Address.findByIdAndUpdate(address.id, {
-            user_id: address.user_id,
+            user: address.user,
             street: address.street,
             city: address.city,
             postal_code: address.postal_code,

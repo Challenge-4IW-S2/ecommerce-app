@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeUser } from "../../denormalizations/user.js";
+import {
+    denormalizeUserCreate,
+    denormalizeUserDelete,
+    denormalizeUserUpdate
+} from "../../denormalizations/user.js";
 import bcrypt from 'bcryptjs';
 
 export default function (connection) {
@@ -80,7 +84,7 @@ export default function (connection) {
     });
 
     User.afterCreate(async (user) => {
-        await denormalizeUser(user);
+        await denormalizeUserCreate(user);
     });
 
     User.addHook("beforeUpdate", async function (user, { fields }) {
@@ -88,10 +92,12 @@ export default function (connection) {
             const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
             user.password = hash;
         }
-    });
 
-    User.afterUpdate(async (user) => {
-        await denormalizeUser(user);
+        await denormalizeUserUpdate(user);
+    });
+    User.afterDestroy(async (user) => {
+        await denormalizeUserDelete(user);
+
     });
 
 
