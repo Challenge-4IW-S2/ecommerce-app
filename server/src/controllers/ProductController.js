@@ -113,7 +113,7 @@ export class ProductController {
             if (oldQuantity < newQuantity) {
                 parameters.quantity += oldQuantity;
 
-                const stockMovement = new StockEventRepository()
+                const stockMovement = new StockEventRepository();
                 await stockMovement.createStockEvent({
                     product_id: id,
                     event_type: 'restock',

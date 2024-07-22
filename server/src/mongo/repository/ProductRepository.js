@@ -180,7 +180,7 @@ export default class ProductRepository {
     }
 
     async updateSubdocument(productId, subdocument, data) {
-        const exists = await this.Product.findOne({ _id: userId, [`${subdocument}._id`]: data._id });
+        const exists = await this.Product.findOne({ _id: productId, [`${subdocument}._id`]: data._id });
 
         if (exists) {
             return this.Product.findOneAndUpdate(

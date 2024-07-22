@@ -1,6 +1,7 @@
 import {Schema} from "mongoose";
 import productPictureSchema from "./productPictureSchema.js";
 import commentSchema from "./commentSchema.js";
+import stockEventSchema from "./stockEventSchema.js";
 const productSchema = new Schema({
     _id: {
         type: 'UUID',
@@ -47,6 +48,7 @@ const productSchema = new Schema({
         default: Date.now,
     },
     comments: commentSchema,
-    productPictures: productPictureSchema
+    productPictures: productPictureSchema,
+    stockEvent: stockEventSchema
 });
 export default productSchema;

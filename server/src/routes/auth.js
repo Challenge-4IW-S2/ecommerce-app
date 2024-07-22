@@ -1,6 +1,8 @@
 import {AuthController} from "../controllers/AuthController.js";
 import checkAuth from "../middlewares/checkAuth.js";
 import checkNotAuth from "../middlewares/checkNotAuth.js";
+import UserRepository from "../postgresql/repository/UserRepository.js";
+import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 
 export default function (router) {
     // Front route to check if user is authenticated
