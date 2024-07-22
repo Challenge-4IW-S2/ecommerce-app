@@ -50,10 +50,7 @@ export class AuthController {
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
             .then(() => {
-
-                response.status(201).json({
-                    message: 'Compte créé'
-                })
+                response.status(201)
             })
             .catch(err => {
                 const isNotUnique = err.name === 'SequelizeUniqueConstraintError';

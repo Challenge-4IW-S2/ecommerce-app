@@ -33,7 +33,7 @@ const connect = async () => {
     const httpCode = error.response.status;
     switch (httpCode) {
       case 401:
-        msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        msgError.value = 'Veuillez vérifier les informations que vous avez fournies';
         break;
       default:
         msgError.value = 'Une erreur est survenue';

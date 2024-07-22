@@ -86,6 +86,7 @@ const routes = [
     },
     {
         path: '/products',
+        name: 'products',
         component: ProductsView
     },
     {
