@@ -21,4 +21,30 @@ export default class CategoryRepository {
     async getAllCategories() {
         return this.Category.find();
     }
+
+    async updateSubdocument(categoryId, subdocument, data) {
+        const exists = await this.Category.findOne({ _id: categoryId, [`${subdocument}._id`]: data._id });
+
+        if (exists) {
+            return this.Category.findOneAndUpdate(
+                { _id: categoryId, [`${subdocument}._id`]: data._id },
+                { $set: { [`${subdocument}.$`]: data } },
+                { new: true }
+            );
+        } else {
+            return this.Category.findByIdAndUpdate(
+                categoryId,
+                { $push: { [subdocument]: data } },
+                { new: true }
+            );
+        }
+    }
+
+    async deleteSubdocument(categoryId, subdocument, subdocumentId) {
+        return this.Category.findByIdAndUpdate(
+            categoryId,
+            { $pull: { [subdocument]: { _id: subdocumentId } } },
+            { new: true }
+        );
+    }
 }

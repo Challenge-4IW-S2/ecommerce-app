@@ -45,7 +45,8 @@ export default class AdressRepository {
         return await this.Adress.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
     async deleteAdressFromUser(id) {

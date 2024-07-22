@@ -15,7 +15,7 @@ export default class CategoryRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.Category.findOne({
+        return this.Category.findOne({
             where: {
                 [field]: value
             }

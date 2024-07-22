@@ -23,7 +23,7 @@ export default class ProductRepository {
         return this.Product.findByIdAndDelete(productId);
     }
 
-    async getAllProducts(page, order, categories, valueMin, valueMax, names) {
+    async getAllProducts(page, order, categories, valueMin, valueMax) {
 
         // nombre total de pages ( ex : 100 / 10 = 10)
         const totalProducts = await this.Product.countDocuments({ is_active: true });
@@ -57,10 +57,15 @@ export default class ProductRepository {
         const categoryFilter = categories && categories.length ? { "category.name": { $in: categories } } : {};
 
         // gestion des noms 
-        const nameFilter = names && names.length ? { name: { $in: names } } : {};
+        // const nameFilter = names && names.length ? { name: { $in: names } } : {};
 
+        // gestion des prix 
+        const priceFilter = Number(valueMax) === 0 ? { $gte: Number(valueMin) } : { $gte: Number(valueMin), $lte: Number(valueMax) }
         // récupération des produits
         const productsResults = await this.Product.aggregate()
+            .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+            })
             .lookup({
                 from: 'categories',
                 localField: 'category_id',
@@ -87,8 +92,7 @@ export default class ProductRepository {
             .match({
                 is_active: true,
                 ...categoryFilter,
-                ...nameFilter,
-                price_ttc: { $gte: Number(valueMin), $lte: Number(valueMax) }
+                price_ttc: priceFilter,
             })
             .limit(Number(page))
 
@@ -97,9 +101,9 @@ export default class ProductRepository {
 
     async getMinAndMaxPrice() {
         return this.Product.aggregate().group({
-            _id: null,
-            min: { $min: "$price_ttc" },
-            max: { $max: "$price_ttc" }
+        _id: null,
+        min: { $min: { $multiply: ["$price_ht", 1.2] } },
+        max: { $max: { $multiply: ["$price_ht", 1.2] } }
         })
     }
 
@@ -109,6 +113,9 @@ export default class ProductRepository {
 
     getProduct(slug) {
         return this.Product.aggregate()
+        .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+        })
         .lookup({
             from: 'categories',
             localField: 'category_id',
@@ -170,5 +177,31 @@ export default class ProductRepository {
                     {is_active: true}
                 ]
         })
+    }
+
+    async updateSubdocument(productId, subdocument, data) {
+        const exists = await this.Product.findOne({ _id: userId, [`${subdocument}._id`]: data._id });
+
+        if (exists) {
+            return this.Product.findOneAndUpdate(
+                { _id: productId, [`${subdocument}._id`]: data._id },
+                { $set: { [`${subdocument}.$`]: data } },
+                { new: true }
+            );
+        } else {
+            return this.Product.findByIdAndUpdate(
+                productId,
+                { $push: { [subdocument]: data } },
+                { new: true }
+            );
+        }
+    }
+
+    async deleteSubdocument(productId, subdocument, subdocumentId) {
+        return this.Product.findByIdAndUpdate(
+            productId,
+            { $pull: { [subdocument]: { _id: subdocumentId } } },
+            { new: true }
+        );
     }
 }

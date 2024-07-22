@@ -1,18 +1,15 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+const { query } = require("express");
+import('../../mongo/mongodb.js');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    await queryInterface.bulkInsert('preferences_list', [
+    const { default: PreferenceRepository } = await import("../repository/PreferenceRepository.js");
+    const preferenceRepository = new PreferenceRepository();
+    const { denormalizePreferenceCreate } = await import("../../denormalizations/preference.js");
+
+    const preferences = [
       {
         name: 'RESTOCK',
         description: 'Être notifié lorsqu\'un produit est de nouveau en stock',
@@ -37,17 +34,28 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       }
-    ], {});
+    ];
 
+    // Insert preferences into the database
+    await queryInterface.bulkInsert('preferences_list', preferences, {});
 
+    const allPreferences = await preferenceRepository.findAll();
+    for (const preference of allPreferences) {
+        await denormalizePreferenceCreate(preference);
+    }
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    const { default: PreferenceRepository } = await import("../repository/PreferenceRepository.js");
+    const preferenceRepository = new PreferenceRepository();
+    const { denormalizePreferenceDelete } = await import("../../denormalizations/preference.js");
+
+    const allPreferences = await preferenceRepository.findAll();
+    for (const preference of allPreferences) {
+        await denormalizePreferenceDelete(preference);
+    }
+
+    // Remove inserted preferences from the database
+    await queryInterface.bulkDelete('preferences_list', null, {});
   }
 };

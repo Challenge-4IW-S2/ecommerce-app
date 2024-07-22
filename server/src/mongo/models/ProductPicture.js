@@ -1,20 +1,5 @@
-import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+import {model} from 'mongoose';
+import productPictureSchema from '../models_schema/productPictureSchema.js';
 
-const ProductPictureSchema = new Schema({
-    _id: {
-        type: 'UUID',
-        required: true,
-    },
-    url: {
-        type: String,
-        required: true,
-    },
-    product_id: {
-        type: 'UUID',
-        required: true,
-    }
-});
-
-const ProductPicture = model('ProductPicture', ProductPictureSchema);
+const ProductPicture = model('ProductPicture', productPictureSchema);
 export default ProductPicture;

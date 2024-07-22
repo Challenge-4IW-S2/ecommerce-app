@@ -1,6 +1,7 @@
 import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
+import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
 import User from "../postgresql/models/user.js";
 import Preference from "../postgresql/models/Preference.js";
 import {sendEmail} from "./SendMailController.js";
@@ -16,9 +17,8 @@ export class ProductController {
         const categories = request.query.categories;
         const valueMin = request.query.valueMin;
         const valueMax = request.query.valueMax;
-        const names = request.query.names;
 
-        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax, names);
+        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax);
         response.json(products);
     }
 
@@ -90,7 +90,7 @@ export class ProductController {
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
-            category: request.body.category_id,
+            category_id: request.body.category_id,
             quantity: request.body.quantity
         }
         try {
@@ -98,9 +98,13 @@ export class ProductController {
             const userRepo = new UserRepository();
             const usersPrefNew = await userRepo.findAllWithPreferences('NEW');
             const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
+          
             const id =request.params.id;
+          
             const previousData = await productRepository.findById(id);
-            console.log(previousData)
+            const categoryRepository = new CategoryRepository();
+            parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
+          
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
             const oldQuantity = previousData.quantity;

@@ -1,11 +1,30 @@
 import ProductMongo from "../mongo/repository/ProductRepository.js";
+import CategoryMongo from "../mongo/repository/CategoryRepository.js";
 
-export const denormalizeProduct = async (productId) => {
-    const ProductRepository = new ProductMongo();
-    return await ProductRepository.createOrUpdateProduct(productId);
+export const denormalizeProductCreate = async (product) => {
+    const productRepository = new ProductMongo();
+    const addedProduct = await productRepository.createOrUpdateProduct(product);
+
+    const categoryRepository = new CategoryMongo();
+    return await categoryRepository.updateSubdocument(product.dataValues.category_id, 'products', addedProduct);
 }
 
-export const denormalizeProductDelete = async (productId) => {
-    const ProductRepository = new ProductMongo();
-    return await ProductRepository.deleteProduct(productId);
+export const denormalizeProductUpdate = async (product) => {
+    const productRepository = new ProductMongo();
+    const addedProduct = await productRepository.createOrUpdateProduct(product);
+
+    const categoryRepository = new CategoryMongo();
+    if (product._previousDataValues.category_id !== product.dataValues.category_id) {
+        await categoryRepository.deleteSubdocument(product._previousDataValues.category_id, 'products', product.dataValues.id);
+    }
+
+    return await categoryRepository.updateSubdocument(product.dataValues.category_id, 'products', addedProduct);
+}
+
+export const denormalizeProductDelete = async (product) => {
+    const productRepository = new ProductMongo();
+    await productRepository.deleteProduct(product.dataValues.id);
+
+    const categoryRepository = new CategoryMongo();
+    return await categoryRepository.deleteSubdocument(product.dataValues.category_id, 'products', product.dataValues.id);
 }
