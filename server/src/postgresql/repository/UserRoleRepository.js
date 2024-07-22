@@ -38,7 +38,7 @@ export default class UserRoleRepository {
     }
 
     async updateUserRole(id, name) {
-        return await this.UserRole.update({
+        return this.UserRole.update({
             name: name
         }, {
             where: {
@@ -53,7 +53,8 @@ export default class UserRoleRepository {
         return await this.UserRole.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }

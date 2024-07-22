@@ -1,7 +1,11 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeProduct, denormalizeProductDelete } from "../../denormalizations/product.js";
-export default function (connection) {
+import {
+    denormalizeProductCreate,
+    denormalizeProductDelete,
+    denormalizeProductUpdate
+} from "../../denormalizations/product.js";
 
+export default function (connection) {
     class Product extends Model {
         static associate(models) {
             Product.belongsTo(models.Category, { foreignKey: 'category_id' });
@@ -66,18 +70,16 @@ export default function (connection) {
     );
 
     Product.afterCreate(async (product) => {
-        await denormalizeProduct(product);
+        await denormalizeProductCreate(product);
     });
 
 
-
-
-    Product.afterUpdate(async (product) => {
-        await denormalizeProduct(product);
+    Product.beforeUpdate(async (product) => {
+        await denormalizeProductUpdate(product);
     });
 
-    Product.beforeDestroy(async (product) => {
-        await denormalizeProductDelete(product.id);
+    Product.afterDestroy(async (product) => {
+        await denormalizeProductDelete(product);
     });
 
     return Product;

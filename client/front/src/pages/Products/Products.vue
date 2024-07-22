@@ -11,13 +11,12 @@ let totalPages = ref(0);
 let productsPerPage = ref(10);
 let order = ref('');
 let category = ref([]);
-let name = ref([]);
 let priceMin = ref(0);
 let priceMax = ref(0);
 
 
 // get all products API
-const getProducts = async (page, orderBy, categories, valueMin, valueMax, names) => {
+const getProducts = async (page, orderBy, categories, valueMin, valueMax) => {
     try {
         let searchParams = new URLSearchParams({
             page: page,
@@ -25,16 +24,10 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax, names)
             categories: categories,
             valueMin: valueMin,
             valueMax: valueMax,
-            names: names,
         });
         if (Array.isArray(categories)) {
             categories.forEach(category => {
                 searchParams.append('categories', category);
-            });
-        }
-        if (Array.isArray(names)) {
-            names.forEach(name => {
-                searchParams.append('names', name);
             });
         }
         await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProducts`, {
@@ -49,47 +42,43 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax, names)
 }
 
 onMounted(async () => {
-    await getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+    await getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 });
 
 const goToNextPage = () => {
     if (currentPage.value < totalPages.value) {
         productsPerPage.value = productsPerPage.value + 10;
         currentPage.value++;
-        getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+        getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
     }
 };
 
 const orderSelected = (newValue) => {
     order.value = newValue;
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 };
 
 const categoriesSelected = (categories) => {
     category.value = categories;
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 };
 
 const priceMinSelected = (newPriceMin) => {
     priceMin.value = newPriceMin;
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 };
 
 const priceMaxSelected = (newPriceMax) => {
     priceMax.value = newPriceMax;
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
+    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 };
 
-const namesSelected = (name) => {
-    name.value = name;
-    getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value, name.value);
-};
 </script>
 
 <template>
     <section class="flex flex-col mb-2">
         <FilterProducts @order="orderSelected" @categories="categoriesSelected" @priceMin="priceMinSelected"
-            @priceMax="priceMaxSelected" @names="namesSelected"/>
+            @priceMax="priceMaxSelected"/>
         <!-- <img src="/bannerproduct.webp" alt="bannière de la page produits" class="" /> -->
         <article v-if="products.length !== 0" class="flex flex-col items-center gap-2">
             <div class="grid grid-cols-2">

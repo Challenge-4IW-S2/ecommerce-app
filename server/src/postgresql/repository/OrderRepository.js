@@ -32,13 +32,11 @@ export default class OrderRepository {
     }
 
     async updateOrder(id, order) {
-        return await this.Order.update(order, {
+        return this.Order.update(order, {
             where: {
                 id: id
             },
             individualHooks: true
         });
     }
-
-
 }

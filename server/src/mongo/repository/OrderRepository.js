@@ -17,4 +17,8 @@ export default class OrderRepository {
             new: true,
         });
     }
+
+    async deleteOrder(orderId) {
+        return this.Order.findByIdAndDelete(orderId);
+    }
 }

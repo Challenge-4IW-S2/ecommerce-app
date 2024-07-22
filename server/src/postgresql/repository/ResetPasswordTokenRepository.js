@@ -28,10 +28,11 @@ export default class ResetPasswordTokenRepository {
     }
 
     async updateResetPasswordToken(id, resetPasswordToken) {
-        return await this.ResetPasswordToken.update(resetPasswordToken, {
+        return this.ResetPasswordToken.update(resetPasswordToken, {
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 
@@ -39,7 +40,8 @@ export default class ResetPasswordTokenRepository {
         return await this.ResetPasswordToken.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 }

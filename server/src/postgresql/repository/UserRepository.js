@@ -57,7 +57,8 @@ export default class UserRepository {
         return await this.User.destroy({
             where: {
                 id: id
-            }
+            },
+            individualHooks: true
         });
     }
 
