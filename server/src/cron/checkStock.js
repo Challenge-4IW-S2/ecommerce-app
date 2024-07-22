@@ -5,28 +5,24 @@ import {lowStockTemplate} from "../mailsTemplates/lowStock.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import StockEventRepository from "../postgresql/repository/StockEventRepository.js";
 
-const checkStock = new CronJob('0 * * * *', async () => {
+const checkStock = new CronJob('* * * * *', async () => {
         try {
             console.log('Checking stock levels...')
             const userRepo = new UserRepository();
             const users = await userRepo.findAllByRole('ROLE_STORE_KEEPER');
-            if ( users.length) {
                 const productRepository = new ProductRepository();
                 const products = await productRepository.findAll();
-                console.log('Checking stock levels...')
+
                 for (const product of products) {
+                    
                     if (product.quantity <= product.low_stock_threshold) {
-                        console.log(`Low stock alert for product ${product.id}`)
-                        console.log(`Low stock alert for product ${product.quantity}`)
-                        console.log(`Low stock alert for product ${product.low_stock_threshold}`)
                         const stockEventRepository = new StockEventRepository();
                         await stockEventRepository.createStockEvent({
                             product_id: product.id,
                             event_type: 'low_stock',
                             stock_level: product.quantity,
                         });
-                        console.log(`Low stock alert for product ${product.id}`)
-                        const userRepo = new UserRepository();
+
                         if (!users.length) {
                             console.log('No stock keepers found')
                         }
@@ -39,8 +35,7 @@ const checkStock = new CronJob('0 * * * *', async () => {
                         }
                     }
                 }
-            }
-        } catch (error) {
+            } catch (error) {
             console.error('Error checking stock levels:', error);
         }
     }

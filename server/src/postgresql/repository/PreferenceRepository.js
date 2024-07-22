@@ -35,10 +35,9 @@ export default class PreferenceRepository {
     }
 
 
-    async destroy(preference_id,user_id) {
+    async destroy(user_id) {
         return await this.Preference.destroy({
             where: {
-                preference_id: preference_id,
                 user_id: user_id
             },
             individualHooks: true

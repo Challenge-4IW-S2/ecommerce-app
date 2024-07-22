@@ -2,6 +2,7 @@ import UserRepository from "../postgresql/repository/UserRepository.js";
 import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 import bcrypt from "bcryptjs";
 import AdressRepository from "../postgresql/repository/AdressRepository.js";
+import PreferenceRepository from "../postgresql/repository/PreferenceRepository.js";
 
 export class UserController {
     static async getAllUsers(request, response) {
@@ -58,6 +59,7 @@ export class UserController {
     static async deleteUser(request, response,next) {
         const userRepository = new UserRepository();
         const userAddressRepository = new AdressRepository();
+        const preferencesRepository = new PreferenceRepository();
         // verifier si admin ou si himself
         try {
             const [nbDeleted] = await userRepository.deleteUser(request.params.id);
@@ -70,6 +72,13 @@ export class UserController {
                 const deleteAddress = await userAddressRepository.deleteAdressFromUser(request.params.id);
 
                 response.sendStatus(deleteAddress === 1 ? 204 : 404);
+
+                const deletePreferences = await preferencesRepository.destroy(request.params.id);
+
+                if (deletePreferences === 0) return response.sendStatus(404);
+
+                response.sendStatus(deletePreferences === 1 ? 204 : 404);
+
             } else {
                  response.sendStatus(404);
             }
