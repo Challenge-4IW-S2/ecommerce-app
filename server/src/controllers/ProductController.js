@@ -100,7 +100,7 @@ export class ProductController {
             const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
             const id =request.params.id;
             const previousData = await productRepository.findById(id);
-            console.log(previousData)
+
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
             const oldQuantity = previousData.quantity;

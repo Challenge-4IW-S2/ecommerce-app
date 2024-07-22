@@ -27,6 +27,8 @@ export default class StockController {
         }
 
     }
+
+
 }
 
 /* const stockMovements = await StockMovement.findAll({

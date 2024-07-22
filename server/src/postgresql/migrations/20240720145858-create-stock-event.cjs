@@ -20,7 +20,7 @@ module.exports = {
       },
       // event_type: 'stock_in' | 'stock_out'
       event_type: {
-        type: DataTypes.ENUM('low_stock', 'restock'),
+        type: DataTypes.ENUM('low_stock', 'restock', 'stock_out'),
         allowNull: false,
       },
       stock_level: {

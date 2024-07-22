@@ -21,7 +21,7 @@ export default function (connection) {
       },
     },
     event_type: {
-      type: DataTypes.ENUM('low_stock', 'restock'),
+      type: DataTypes.ENUM( 'stock_in','stock_out'),
       allowNull: false,
     },
     stock_level: {
