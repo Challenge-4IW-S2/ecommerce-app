@@ -9,7 +9,7 @@ export default class StockEventRepository {
         return this.StockEvent.findByIdAndUpdate(stockEvent.id, {
             product_id: stockEvent.product_id,
             event_type: stockEvent.event_type,
-            stock_level: stockEvent.stock_level
+            stock_movement: stockEvent.stock_movement
         }, {
             upsert: true,
             new: true,

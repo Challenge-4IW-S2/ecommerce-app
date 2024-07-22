@@ -29,7 +29,7 @@ export default function (connection) {
       type: DataTypes.ENUM( 'stock_in','stock_out'),
       allowNull: false,
     },
-    stock_level: {
+    stock_movement: {
       type: DataTypes.INTEGER,
       allowNull: false,
     }

@@ -5,6 +5,12 @@ export default class ProductRepository {
         this.Product = ProductModel;
     }
 
+    async getProductsByCategory(categoryId) {
+        // find all products by category (category is a subdocument named category with _id as id)
+        // structure of the category subdocument : { _id: ObjectId, name: String }
+        return this.Product.find({ 'category._id' : categoryId });
+    }
+
     async createOrUpdateProduct(product) {
         return this.Product.findByIdAndUpdate(product.id, {
             name: product.name,
@@ -12,7 +18,9 @@ export default class ProductRepository {
             price_ht: product.price_ht,
             is_active: product.is_active,
             slug: product.slug,
-            category_id: product.category_id,
+            category: product.category_id,
+            quantity: product.quantity,
+            low_stock_threshold: product.low_stock_threshold,
         }, {
             upsert: true,
             new: true,

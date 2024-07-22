@@ -13,7 +13,7 @@ const stockEventSchema = new Schema({
         type: String,
         required: true,
     },
-    stock_level: {
+    stock_movement: {
         type: Number,
         required: true,
     },

@@ -24,7 +24,7 @@ onMounted(async () => {
   await fetchStockHistory();
 
   const labels = stockHistory.value.map((stock) => new Date(stock.createdAt));
-  const dataPoints = stockHistory.value.map((stock) => stock.stock_level);
+  const dataPoints = stockHistory.value.map((stock) => stock.stock_movement);
 
 
   const ctx = document.getElementById('stockChart').getContext('2d');

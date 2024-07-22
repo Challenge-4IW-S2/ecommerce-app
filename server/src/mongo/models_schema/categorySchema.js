@@ -1,5 +1,4 @@
 import {Schema} from "mongoose";
-import productSchema from "./productSchema.js";
 
 const categorySchema = new Schema({
     _id: {
@@ -9,7 +8,6 @@ const categorySchema = new Schema({
     name: {
         type: String,
         required: true,
-    },
-    products: productSchema
+    }
 });
 export default categorySchema;

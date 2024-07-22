@@ -66,9 +66,7 @@ const register = async () => {
       json: {
         ...parameters
       },
-    }).json();
-    console.log(response.status)
-
+    });
     isSubmitted.value = true;
     if (response.status === 201) {
       msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';

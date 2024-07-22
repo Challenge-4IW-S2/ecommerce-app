@@ -1,4 +1,5 @@
 import CategoryMongo from "../mongo/repository/CategoryRepository.js";
+import ProductMongo from "../mongo/repository/ProductRepository.js";
 
 export const denormalizeCategoryCreate = async (category) => {
     const categoryRepository = new CategoryMongo();
@@ -9,9 +10,25 @@ export const denormalizeCategoryCreate = async (category) => {
 
 export const denormalizeCategoryUpdate = async (category) => {
     const categoryRepository = new CategoryMongo();
-    const addedCategory = await categoryRepository.createOrUpdateCategory(category);
+    await categoryRepository.createOrUpdateCategory(category);
 
-    return addedCategory;
+    const productRepository = new ProductMongo();
+
+    const products = await productRepository.getProductsByCategory(category.dataValues.id);
+    console.log(category);
+    console.log(products);
+    console.log('°°°°°°°°°')
+    if (products !== null) {
+        for (const product of products) {
+            console.log(product);
+            product.category_id = {
+                _id: category.dataValues.id,
+                name: category.dataValues.name
+            }
+            await productRepository.createOrUpdateProduct(product);
+        }
+
+    }
 }
 
 export const denormalizeCategoryDelete = async (category) => {
