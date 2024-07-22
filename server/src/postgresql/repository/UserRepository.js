@@ -43,6 +43,7 @@ export default class UserRepository {
     }
 
     async updateUser(id, user) {
+
         return this.User.update(user, {
             where: {
                 id: id
