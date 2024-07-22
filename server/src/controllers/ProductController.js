@@ -16,9 +16,8 @@ export class ProductController {
         const categories = request.query.categories;
         const valueMin = request.query.valueMin;
         const valueMax = request.query.valueMax;
-        const names = request.query.names;
 
-        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax, names);
+        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax);
         response.json(products);
     }
 
