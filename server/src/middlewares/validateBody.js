@@ -7,7 +7,7 @@ export const validateBody = (schema) => {
             next();
         } catch (err) {
             if (err instanceof z.ZodError) {
-                return res.status(400).json({
+                return res.status(422).json({
                     message: "Validation failed",
                     errors: err.errors,
                 });

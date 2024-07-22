@@ -113,8 +113,8 @@ export class AuthController {
             const user = await userRepository.findOne('email', parameters.email);
             const lastPasswordChange = new Date(user.password_updated_at);
             const differenceInDays = Math.floor((today - lastPasswordChange) / (1000 * 60 * 60 * 24));
-            if (!user) return response.status(422).send("Email or password incorrect");
-            if (!user.is_verified) return response.status(422).send("L'utilisateur n'est pas verifié");
+            if (!user) return response.status(401).send("Email or password incorrect");
+            if (!user.is_verified) return response.status(401).send();
             if (differenceInDays >= 60) return response.status(403).send();
             if (user.deleted) return response.status(401).send();
 
