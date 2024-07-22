@@ -4,6 +4,7 @@ import ky from 'ky';
 import ProductCard from '../../components/Cards/ProductCard.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import FilterProducts from '../../components/FilterProducts.vue';
+import { useAPI } from '../../composables/useAPI';
 
 let products = ref([]);
 let currentPage = ref(1);
@@ -30,12 +31,9 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax) => {
                 searchParams.append('categories', category);
             });
         }
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProducts`, {
-            searchParams: searchParams,
-        }).json().then((response) => {
-            products.value = response.productsResults;
-            totalPages.value = response.totalPagesResults;
-        });
+        const { results } = await useAPI('get', 'getProducts', searchParams, {}, '');
+        products.value = results.value.productsResults;
+        totalPages.value = results.value.totalPagesResults;
     } catch (error) {
         console.error(error);
     }
@@ -72,13 +70,12 @@ const priceMaxSelected = (newPriceMax) => {
     priceMax.value = newPriceMax;
     getProducts(productsPerPage.value, order.value, category.value, priceMin.value, priceMax.value);
 };
-
 </script>
 
 <template>
     <section class="flex flex-col mb-2">
         <FilterProducts @order="orderSelected" @categories="categoriesSelected" @priceMin="priceMinSelected"
-            @priceMax="priceMaxSelected"/>
+            @priceMax="priceMaxSelected" />
         <!-- <img src="/bannerproduct.webp" alt="bannière de la page produits" class="" /> -->
         <article v-if="products.length !== 0" class="flex flex-col items-center gap-2">
             <div class="grid grid-cols-2">

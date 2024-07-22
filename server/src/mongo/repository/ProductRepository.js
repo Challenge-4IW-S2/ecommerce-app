@@ -56,9 +56,6 @@ export default class ProductRepository {
         // gestion de la catégorie
         const categoryFilter = categories && categories.length ? { "category.name": { $in: categories } } : {};
 
-        // gestion des noms 
-        // const nameFilter = names && names.length ? { name: { $in: names } } : {};
-
         // gestion des prix 
         const priceFilter = Number(valueMax) === 0 ? { $gte: Number(valueMin) } : { $gte: Number(valueMin), $lte: Number(valueMax) }
         // récupération des produits

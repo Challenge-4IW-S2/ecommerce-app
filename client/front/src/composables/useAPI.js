@@ -77,7 +77,7 @@ export const useAPI =  async (method, URL, searchParams, JSON, Credentials) => {
     })
   }
 
-  const hasSearchParams = searchParams && Object.keys(searchParams).length > 0 ? searchParams : undefined;
+  const hasSearchParams = searchParams && (Object.keys(searchParams).length > 0 || searchParams instanceof URLSearchParams) ? searchParams : undefined;
   const hasJson = JSON && Object.keys(JSON).length > 0 ? JSON : undefined;
   const hasCredentials = Credentials && Credentials !== '' ? Credentials : undefined
 
@@ -90,7 +90,7 @@ export const useAPI =  async (method, URL, searchParams, JSON, Credentials) => {
       hooks: {
         afterResponse: [
           async (request, options, response) => {
-            if (response.status === 401 || response.status === 404 || response.status === 500) {
+            if ([401, 403, 404, 500].includes(response.status)) {
               closeModal();
               isModalOpen.value = false;
             }
@@ -100,6 +100,10 @@ export const useAPI =  async (method, URL, searchParams, JSON, Credentials) => {
     }).json()
     .then((res) => {
       results.value = res;
+      closeModal();
+      isModalOpen.value = false;
+    })
+    .catch((error) => {
       closeModal();
       isModalOpen.value = false;
     })
