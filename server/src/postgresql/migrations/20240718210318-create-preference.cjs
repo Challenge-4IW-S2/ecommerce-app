@@ -9,9 +9,13 @@ module.exports = {
         primaryKey: true,
         defaultValue: Sequelize.fn('gen_random_uuid')
       },
-      name: {
-        type: Sequelize.STRING,
+      preference_id: {
+        type: Sequelize.UUID,
         allowNull: false,
+        references: {
+            model: 'preferences_list',
+            key: 'id'
+        }
       },
       user_id: {
         type: Sequelize.UUID,

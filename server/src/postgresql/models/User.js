@@ -68,6 +68,10 @@ export default function (connection) {
             password_updated_at: {
                 type: DataTypes.DATE,
                 allowNull: true
+            },
+            token: {
+                type: DataTypes.STRING,
+                allowNull: true
             }
         },
         {

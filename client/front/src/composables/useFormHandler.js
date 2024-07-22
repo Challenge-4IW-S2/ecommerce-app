@@ -3,7 +3,6 @@ import { getEntitySchema, handleHttpResponse } from '../functions/model.js';
 import ky from 'ky';
 
 export function useFormHandler(entityType, initialData = {}) {
-    console.log(initialData)
     const formData = ref({ ...initialData });
     const validationErrors = reactive({});
     const serverError = ref(null);

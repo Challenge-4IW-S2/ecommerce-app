@@ -24,10 +24,9 @@ export default class PreferenceRepository {
     }
 
 
-    async destroy(name,user_id) {
+    async destroy(user_id) {
         return await this.Preference.destroy({
             where: {
-                name: name,
                 user_id: user_id
             },
             individualHooks: true
@@ -36,7 +35,7 @@ export default class PreferenceRepository {
 
     async create(params) {
         return await this.Preference.create({
-            name: params.name,
+            preference_id: params.preference_id,
             activated: params.activated,
             user_id: params.user_id
         });

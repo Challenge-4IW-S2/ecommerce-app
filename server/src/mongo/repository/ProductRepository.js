@@ -10,7 +10,6 @@ export default class ProductRepository {
             name: product.name,
             description: product.description,
             price_ht: product.price_ht,
-            price_ttc: product.price_ttc,
             is_active: product.is_active,
             slug: product.slug,
             category_id: product.category_id,

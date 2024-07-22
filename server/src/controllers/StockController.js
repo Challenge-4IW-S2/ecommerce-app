@@ -1,10 +1,11 @@
 import StockRepository from '../postgresql/repository/StockEventRepository.js';
+import Sequelize from "sequelize";
 export default class StockController {
 
     static async getStockHistory(req, res, next) {
         const stockRepository = new StockRepository();
         try {
-            // Example query to get stock history for the last 3 months
+            // query to get stock history for the last 3 months
             const stockHistory = await stockRepository.findAll({
                 attributes: [
                     [Sequelize.fn('date_trunc', 'month', Sequelize.col('created_at')), 'month'],

@@ -12,6 +12,38 @@ const userStore = useUserStore();
 
 const router = useRouter()
 
+const token = router.currentRoute.value.query.token
+console.log(token)
+
+const verifyToken = async (token) => {
+  try {
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
+    if (response.ok) {
+      const data = await response.json();
+      msgError.value ="Compte vérifié, vous pouvez vous connecter";
+    }
+  } catch (error) {
+    const httpCode = error.response.status;
+    console.log(httpCode)
+    switch (httpCode) {
+      case 404:
+        msgError.value = 'Le token est invalide';
+        break;
+      case 401:
+        msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+      default:
+        msgError.value = 'Une erreur est survenue';
+        break;
+    }
+  }
+};
+
+if (token) {
+  verifyToken(token)
+} else {
+}
+
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
@@ -27,13 +59,16 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-      await router.replace('/');
+     await router.replace('/');
     }
   } catch (error) {
     const httpCode = error.response.status;
     switch (httpCode) {
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+      case 403:
+          await router.replace(`/edit-password?email=${email.value}`);
         break;
       default:
         msgError.value = 'Une erreur est survenue';

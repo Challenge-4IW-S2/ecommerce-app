@@ -2,7 +2,7 @@ import z from 'zod';
 export const UserUpdateSchema = z.object({
     id: z.string().uuid(),
     email: z.string().email("Invalid field 'email'"),
-    password: z.string().min(12,"Password must be at least 6 characters long").regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{12,}/),
+    //password: z.string().min(12,"Password must be at least 6 characters long").regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{12,}/),
     firstname: z.string("Field 'firstname' is required"),
     lastname: z.string( "Field 'lastname' is required"),
     phone: z.string("Invalid field 'phone'"),

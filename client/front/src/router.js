@@ -22,7 +22,7 @@ import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
 import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
 import DashboardStock from './pages/Dashboard/Tables/Stock.vue'
-import Subscriptions from './pages/user/Subscriptions.vue'
+import Subscriptions from './pages/Account/Subscriptions.vue'
 
 
 
@@ -103,7 +103,11 @@ const routes = [
         path: '/change-password/:slug',
         component: ProductView
     },
-  
+
+    {
+        path: '/login?token=:token',
+        component: LoginView,
+    },
   
     { path: '/admin/categories', component: DashboardCategoriesView},
     { path: '/admin/users', component: DashboardUsersView },

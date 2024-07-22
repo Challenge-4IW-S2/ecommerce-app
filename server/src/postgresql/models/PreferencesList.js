@@ -2,7 +2,13 @@
 import { Model, DataTypes } from "sequelize";
 
 export default function (connection) {
-  class PreferencesList extends Model { }
+  class PreferencesList extends Model {
+    static associate(models) {
+      PreferencesList.belongsToMany(models.User, {
+        through: models.Preference,
+        foreignKey: 'preference_id',
+        as: 'users'});
+  }}
     PreferencesList.init({
     id: {
       type: DataTypes.UUID,

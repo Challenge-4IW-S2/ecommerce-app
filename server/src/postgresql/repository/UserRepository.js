@@ -7,6 +7,7 @@ export default class UserRepository {
     constructor() {
         this.User = db.models.User;
         this.Preference = db.models.Preference;
+        this.PreferencesList = db.models.PreferencesList;
         //  this.User = new UserModel(db.connection);
         this.userRoleRepository = new UserRoleRepository();
         // this.Preference = new PreferenceModel(db.connection);
@@ -37,6 +38,7 @@ export default class UserRepository {
             lastname: user.lastname,
             phone: user.phone,
             role: await this.userRoleRepository.getRoleId(user.role),
+            token: user.token,
         });
     }
 
@@ -72,29 +74,46 @@ export default class UserRepository {
         });
     }
 
-    async findAllWithPreferences() {
+    async findAllWithPreferences(pref) {
         return await this.User.findAll({
             include: [{
                 model: this.Preference,
                 as: 'preferences',
-                where: {name: 'NEW', activated: true}
+                where: { activated: true},
+                include: {
+                    model: this.PreferencesList,
+                    as: 'preference',
+                    where: { name: pref }
+                }
             }]
         });
     }
 
     async findAllWithPreferencesAndWhishlist() {
         return await this.User.findAll({
-            include: [{
-                model: this.Preference,
-                as: 'preferences',
-                where: {name: 'NEW', activated: true}
-            }, {
-                model: this.Preference,
-                as: 'whishlist',
-                where: {name: 'NEW', activated: true}
-            }]
-        });
-    }
+            include: [
+                {
+                    model: this.Preference,
+                    as: 'preferences',
+                    where: { activated: true },
+                    include: {
+                        model: this.PreferencesList,
+                        as: 'preference',
+                        where: { name: 'NEW' }
+                    }
+                },
+                {
+                    model: this.Preference,
+                    as: 'wishlist',
+                    where: { activated: true },
+                    include: {
+                        model: this.PreferencesList,
+                        as: 'preference',
+                        where: { name: 'NEW' }
+                    }
+                }
+            ]
+        });}
 
     async findAllByRole(role) {
         return await this.User.findAll({
