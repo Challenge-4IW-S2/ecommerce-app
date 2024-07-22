@@ -93,50 +93,48 @@ export class AuthController {
             url: 'https://luzaya.fr',
         };
 
-        const now = Date.now()
         try{
-             if (!loginAttempts[parameters.email]) {
-                loginAttempts[parameters.email] = { attempts: 0, lastAttempt: Date.now() };
-            }
-            const userAttempts = loginAttempts[parameters.email];
-            if (userAttempts.attempts >= 3) {
-                const timeSinceLastAttempt = Date.now() - userAttempts.lastAttempt;
-                if (timeSinceLastAttempt < 3000) {
-                    return response.status(429).send('Trop de tentatives, veuillez réessayer plus tard.');
-                } else {
-                    userAttempts.attempts = 0;
-                }
-            }
+
             const userRepository = new UserRepository();
             const today = new Date();
-
             const user = await userRepository.findOne('email', parameters.email);
+
+            if (user.lockUntil && user.lockUntil > now ) return response.status(429).send('Account is locked. Please try again later.');
             const lastPasswordChange = new Date(user.password_updated_at);
             const differenceInDays = Math.floor((today - lastPasswordChange) / (1000 * 60 * 60 * 24));
-            if (!user) return response.status(401).send("Email or password incorrect");
+            //if (!user) return response.status(401).send("Email or password incorrect");
             if (!user.is_verified) return response.status(401).send();
             if (differenceInDays >= 60) return response.status(403).send();
             if (user.deleted) return response.status(401).send();
 
-
             if (!user ||!(await bcrypt.compare(parameters.password, user.password)) ){
-                loginAttempts[parameters.email].attempts += 1;
-                if (loginAttempts[parameters.email].attempts >= 3) {
+                let attempts = user.attempt_connexion || 0;
+                attempts++;
+                console.log(attempts)
+                if (attempts > 3) {
+                    console.log('lock')
+                    console.log(new Date(today.getTime() + 3600000))
+                    user.lock_until = new Date(today.getTime() + 3600000);
+                    user.attempt_connexion = attempts;
+                    const newUser = await userRepository.updateUser(user.id, user);
+                    console.log(newUser)
+                    console.log('send mail')
                     await sendEmail(parameters.email,
                         'Luzaya.fr; Action requise : Tentative de connexion',
                         attackAttemptTemplate(info))
+
+                    return response.status(429).send('Account is locked due to too many failed attempts. Please check your email.');
+
+                } else {
+
+                    await userRepository.updateUser(user.id, { attempt_connexion: attempts });
+                    return response.status(401).send("Email or password incorrect");
+
                 }
                 return response.sendStatus(401);
+
             }
-            loginAttempts[parameters.email].attempts = 0;
-
-            // Vérification de la date de dernier changement de mot de passe
-
-            /*const passwordChangeDate = new Date(user.password_updated_at);
-            const passwordExpiryDate = new Date(passwordChangeDate.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 jours après le dernier changement
-            if (now > passwordExpiryDate) {
-                console.log(passwordExpiryDate)
-            }*/
+            await userRepository.updateUser(user.id, { attempt_connexion: 0, lock_until: null });
 
            const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
                 expiresIn: "30 days",

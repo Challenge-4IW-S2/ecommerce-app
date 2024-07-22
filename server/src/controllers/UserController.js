@@ -29,6 +29,7 @@ export class UserController {
 
         try {
             const userRepository = new UserRepository();
+            console.log(parameters)
             const user = await userRepository.createUser(parameters);
             response.status(201).json(user);
         }catch (e){
