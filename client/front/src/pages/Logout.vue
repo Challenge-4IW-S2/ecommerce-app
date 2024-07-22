@@ -1,14 +1,15 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAPI } from '../composables/useAPI';
+import ky from "ky";
 
 onMounted(async () => {
   const router = useRouter();
   try {
-    const { results } = await useAPI('get', 'logout', {}, {}, 'include');
-    const response = results;
-    if (response.value.message === 'Logged out successfully') {
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/logout`, {
+      credentials: 'include',
+    });
+    if (response.ok) {
       await router.push('/');
     }
   } catch (e) {
@@ -20,3 +21,4 @@ onMounted(async () => {
 <template>
   <div>Déconnexion...</div>
 </template>
+

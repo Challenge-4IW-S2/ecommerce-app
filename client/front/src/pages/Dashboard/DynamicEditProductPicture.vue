@@ -1,11 +1,11 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
+import ky from 'ky';
 import Input from "../../components/Inputs/Input.vue";
 import {fetchModelStructure, filterUnwantedFields} from "../../functions/model.js";
 import {useFormHandler} from '../../composables/useFormHandler';
 import Button from "../../components/Buttons/Button.vue";
-import { useAPI } from '../../composables/useAPI.js';
 const props = defineProps({
   productId: {
     type: String,
@@ -39,8 +39,7 @@ const fetchEntityStructure = async (modelName) => {
     const unwantedFields = ['createdAt', 'updatedAt', 'id','user_id'];
     let response = {};
     if (entityId) {
-      const { results } = await useAPI('get', `productPicture/${entityId}`, {}, {}, '');
-      response = results.value;
+      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${entityId}`).json();
     } else {
       const structure = await fetchModelStructure(modelName);
       response = structure.reduce((acc, field) => {

@@ -4,6 +4,7 @@ import { useCartStore } from '../../store/cart.js';
 import { loadStripe } from '@stripe/stripe-js';
 import ky from "ky";
 import { useRouter } from 'vue-router';
+import { defineEmits } from 'vue';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const router = useRouter();
