@@ -56,6 +56,8 @@ export class ProductController {
             slug: request.body.slug,
             description: request.body.description,
             category: request.body.category_id,
+            quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
         try {
             const productRepository = new ProductRepository();
@@ -86,20 +88,19 @@ export class ProductController {
     static async updateProduct(request, response,next) {
         const parameters = {
             name: request.body.name,
-            price_ttc: request.body.price_ttc,
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
             category_id: request.body.category_id,
+            quantity: request.body.quantity
         }
         try {
             const productRepository = new ProductRepository();
             const previousData = await productRepository.findById(request.params.id);
-            const oldPrice = previousData.price_ttc;
-            const newPrice = parameters.price_ttc;
-
             const categoryRepository = new CategoryRepository();
             parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
+            const oldPrice = previousData.price_ht;
+            const newPrice = parameters.price_ht;
             const product = await productRepository.updateProduct(request.params.id, parameters)
             if (oldPrice > newPrice) {
                 const userRepo = new UserRepository();

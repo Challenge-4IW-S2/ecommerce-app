@@ -21,7 +21,7 @@ import DashboardUserRolesView from './pages/Dashboard/Tables/UserRoles.vue'
 import DashboardEditAdress from './pages/Dashboard/DynamicEditAdress.vue'
 import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPicture.vue'
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
-
+import DashboardStock from './pages/Dashboard/Tables/Stock.vue'
 import Subscriptions from './pages/user/Subscriptions.vue'
 
 
@@ -118,6 +118,8 @@ const routes = [
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
+    { path: '/admin/stock', component: DashboardStock},
+
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
 

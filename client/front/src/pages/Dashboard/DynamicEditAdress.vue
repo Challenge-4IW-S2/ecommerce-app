@@ -36,7 +36,7 @@ const {
 } = useFormHandler('address', {user_id: props.userId},url);
 const fetchEntityStructure = async (modelName) => {
   try {
-    const unwantedFields = ['createdAt', 'updatedAt', 'id'];
+    const unwantedFields = ['createdAt', 'updatedAt', 'id','user_id'];
     let response = {};
     if (entityId) {
       response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/address/${entityId}/`).json();
