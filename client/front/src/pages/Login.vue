@@ -13,24 +13,26 @@ const userStore = useUserStore();
 const router = useRouter()
 
 const token = router.currentRoute.value.query.token
-console.log(token)
 
 const verifyToken = async (token) => {
   try {
     const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
+    console.log(response)
     if (response.ok) {
       const data = await response.json();
       msgError.value ="Compte vérifié, vous pouvez vous connecter";
     }
   } catch (error) {
-    const httpCode = error.response.status;
-    console.log(httpCode)
+
     switch (httpCode) {
       case 404:
         msgError.value = 'Le token est invalide';
         break;
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+        case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
         msgError.value = 'Une erreur est survenue';
@@ -69,6 +71,9 @@ const connect = async () => {
         break;
       case 403:
           await router.replace(`/edit-password?email=${email.value}`);
+        break;
+      case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
         msgError.value = 'Une erreur est survenue';
