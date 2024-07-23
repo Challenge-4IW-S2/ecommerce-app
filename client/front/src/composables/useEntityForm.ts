@@ -10,16 +10,26 @@ import {
 } from "../functions/model.js";
 import { useAPI } from "./useAPI.js";
 
-const unwantedFields = ['token','createdAt', 'updatedAt', 'is_verified','deleted','is_active', 'user_id', "product_id", "password_updated_at"];
-export function useEntityForm(entityType, entityId = null,BASE_URL) {
-    const formData = reactive({});
-    const entitySchema = ref(getEntitySchema(entityType));
-    const entityStructure = ref([]);
-    const errors = ref({});
-    const isEditing = ref(Boolean(entityId));
-    let addressOptions = ref([]);
-    let categorieOption = ref([]);
-    let images = ref([]);
+const unwantedFields = [
+  "token",
+  "createdAt",
+  "updatedAt",
+  "is_verified",
+  "deleted",
+  "is_active",
+  "user_id",
+  "product_id",
+  "password_updated_at",
+];
+export function useEntityForm(entityType, entityId = null, BASE_URL) {
+  const formData = reactive({});
+  const entitySchema = ref(getEntitySchema(entityType));
+  const entityStructure = ref([]);
+  const errors = ref({});
+  const isEditing = ref(Boolean(entityId));
+  let addressOptions = ref([]);
+  let categorieOption = ref([]);
+  let images = ref([]);
 
   const getRoleOptions = async () => {
     try {
@@ -80,6 +90,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
         {},
         ""
       );
+      console.log(results)
       const response = results.value;
       return response.map((picture) => ({
         id: picture.id,
@@ -96,9 +107,19 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
       unwantedFields.push("id");
       let response = {};
       if (entityId) {
-        response = await ky
-          .get(`${BASE_URL}/${entityType}/${entityId || ""}`)
-          .json();
+        console.log(`${entityType}`);
+        const { results } = await useAPI(
+          "get",
+          `${entityType}/${entityId || ""}`,
+          {},
+          {},
+          ""
+        );
+        response = results.value;
+        console.log(response);
+        // response = await ky
+        //   .get(`${entityType}/${entityId || ""}`)
+        //   .json();
       } else {
         const [structure] = await Promise.all([
           fetchModelStructure(
@@ -230,14 +251,15 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     if (!validateForm()) return;
     try {
       const method = isEditing.value ? "patch" : "post";
-
       const cleanedData = filterUnwantedFields(formData, unwantedFields);
-      const response = await ky[method](
-        `${BASE_URL}/${entityType}/${entityId || ""}`,
-        {
-          json: cleanedData,
-        }
-      ).json();
+      const { results } = await useAPI(
+        method,
+        `${entityType}/${entityId || ""}`,
+        {},
+        cleanedData,
+        ""
+      );
+      console.log(results)
       await sweetalert.fire({
         icon: "success",
         title: "Success",
@@ -258,7 +280,9 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
   const handleDelete = async () => {
     if (entityId) {
       try {
-        await useAPI("delete", `${entityType}/${entityId}`, {}, {}, '');
+        await ky
+          .delete(`http://localhost:8000/${entityType}/${entityId}`)
+          .json();
         console.log(`${entityType} deleted successfully`);
       } catch (error) {
         console.error(`Failed to delete ${entityType}:`, error);

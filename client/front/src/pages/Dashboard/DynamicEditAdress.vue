@@ -2,8 +2,8 @@
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import Input from "../../components/Inputs/Input.vue";
-import {fetchModelStructure, filterUnwantedFields} from "../../functions/model.js";
-import {useFormHandler} from '../../composables/useFormHandler';
+import { fetchModelStructure, filterUnwantedFields } from "../../functions/model.js";
+import { useFormHandler } from '../../composables/useFormHandler';
 import Button from "../../components/Buttons/Button.vue";
 import { useAPI } from '../../composables/useAPI.js';
 const props = defineProps({
@@ -18,9 +18,9 @@ const router = useRouter();
 const entityId = route.params.id;
 
 const formStructure = ref([]);
- const url = entityId
-    ? `${import.meta.env.VITE_API_BASE_URL}/address/${entityId}`
-    : `${import.meta.env.VITE_API_BASE_URL}/address`;
+const url = entityId
+  ? `address/${entityId}`
+  : 'address';
 
 const goBack = () => {
   router.go(-1);
@@ -33,13 +33,13 @@ const {
   isSubmitting,
   handleSubmit,
   resetErrors
-} = useFormHandler('address', {user_id: props.userId},url);
+} = useFormHandler('address', { user_id: props.userId }, url);
 const fetchEntityStructure = async (modelName) => {
   try {
-    const unwantedFields = ['createdAt', 'updatedAt', 'id','user_id'];
+    const unwantedFields = ['createdAt', 'updatedAt', 'id', 'user_id'];
     let response = {};
     if (entityId) {
-      const { results } = await useAPI('get', `address/${entityId}/`, {}, {}, '');
+      const { results } = await useAPI('get', `address/${entityId}/`, {}, {}, '', true);
       response = results.value;
     } else {
       const structure = await fetchModelStructure(modelName);
@@ -87,30 +87,25 @@ onMounted(() => {
 <template>
   <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
     <h1 class="text-center text-3xl">{{ entityId ? 'Modifier' : 'Ajouter' }} une adresse</h1>
-    <p class="text-center">Remplissez le formulaire ci-dessous pour {{ entityId ? 'modifier' : 'ajouter' }} une adresse</p>
+    <p class="text-center">Remplissez le formulaire ci-dessous pour {{ entityId ? 'modifier' : 'ajouter' }} une adresse
+    </p>
     <div class="flex justify-end mb-4">
       <button @click="goBack" class="bg-black px-4 text-white h-12">Retour</button>
     </div>
-    <form @submit.prevent="handleSubmit(url,entityId ? 'PATCH' : 'POST')">
+    <form @submit.prevent="handleSubmit(url, entityId ? 'PATCH' : 'POST')">
       <div class="grid gap-6 mb-6 md:grid-cols-2">
         <div v-for="field in formStructure" :key="field.name" class="mb-4">
-          <Input
-              :id="field.name"
-              :title="field.name"
-              :name="field.name"
-              :placeholder="field.name"
-              v-model="formData[field.name]"
-              :disabled="field.name === 'user_id'"
-          />
+          <Input :id="field.name" :title="field.name" :name="field.name" :placeholder="field.name"
+            v-model="formData[field.name]" :disabled="field.name === 'user_id'" />
           <div v-if="validationErrors[field.name]" class="text-red-500 text-sm">
-            {{ validationErrors[field.name]}}
+            {{ validationErrors[field.name] }}
           </div>
         </div>
       </div>
       <div v-if="serverError" class="text-red-500 text-sm mt-2">
         {{ serverError }}
       </div>
-      <Button text="Submit" :disabled="isSubmitting"/>
+      <Button text="Submit" :disabled="isSubmitting" />
     </form>
   </div>
 </template>

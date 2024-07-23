@@ -4,7 +4,7 @@ import ky from 'ky';
 import ProductCard from '../../components/Cards/ProductCard.vue';
 import ProgressBar from '../../components/ProgressBar.vue';
 import FilterProducts from '../../components/FilterProducts.vue';
-import { useAPI } from '../../composables/useAPI';
+import { useAPI } from '../../composables/useAPI.js';
 
 let products = ref([]);
 let currentPage = ref(1);

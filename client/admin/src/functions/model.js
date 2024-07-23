@@ -1,4 +1,4 @@
-import { useAPI } from "../../../front/src/composables/useAPI";
+import { useAPI } from "../../../front/src/composables/useAPI.js";
 
 export async function fetchModelStructure(modelName) {
     try {

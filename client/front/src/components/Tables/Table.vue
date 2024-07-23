@@ -2,6 +2,8 @@
 import { ref, computed } from 'vue';
 import ky from "ky";
 import router from "../../router.js";
+import { useAPIDelete } from '../../composables/useAPIDelete.js';
+import ButtonDelete from '../Buttons/ButtonDelete.vue';
 
 // Définir les props reçues par le composant
 const props = defineProps({
@@ -231,10 +233,13 @@ const canDeleteOrEdit = computed(() => {
                 {{ item.delete }}
                 <td class="px-4 py-3 flex items-center space-x-3">
                   <template v-if="!item.deleted">
-                    <button v-for="action in actions" :key="action.label" @click="action.method({ row: item })"
-                      :class="getButtonClass(action.color)" class="py-2 px-4 text-sm text-white font-medium ">
-                      {{ action.label }}
-                    </button>
+                    <div v-for="action in actions" :key="action.label">
+                      <ButtonDelete v-if="action.label === 'Supprimer'" :urlToSend="action.method({ row: item })"/>
+                      <button v-else @click="action.method({ row: item })" :class="getButtonClass(action.color)"
+                        class="py-2 px-4 text-sm text-white font-medium ">
+                        {{ action.label }}
+                      </button>
+                    </div>
                   </template>
                   <template v-else>
                     <span class="text-gray-500">Actions not available</span>

@@ -111,6 +111,7 @@ export function useEntityForm(entityType, entityId = null) {
       try {
         const method = isEditing.value ? "patch" : "post";
         const cleanedData = filterUnwantedFields(formData, unwantedFields);
+        
         const response = await ky[method](
           `http://localhost:8000/${entityType}/${entityId || ""}`,
           {

@@ -3,8 +3,8 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
-import {computed, reactive, ref} from "vue";
-import { useAPI } from "../composables/useAPI";
+import { computed, reactive, ref } from "vue";
+import { useRegisterLogin } from "../composables/useRegisterLogin.js";
 
 const parameters = reactive({
   firstname: '',
@@ -62,20 +62,19 @@ const canSubmit = computed(() => {
 
 const register = async () => {
   try {
-    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
-      json: {
-        ...parameters
-      },
-    });
+    const json = {
+      ...parameters
+    };
+    const { status } = await useRegisterLogin('signup', json);
     isSubmitted.value = true;
-    if (response.status === 201) {
+    if (status.value === 201) {
       msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
     }
 
   } catch (error) {
-    if (error.response.status === 409) {
+    if (error.status.value === 409) {
       msgError.value = 'Un compte existe déjà avec cette adresse e-mail';
-    }else  {
+    } else {
       msgError.value = 'Une erreur est survenue pendant la création de votre compte. Veuillez réessayer plus tard.';
     }
     if (error.response) {
@@ -95,67 +94,34 @@ const register = async () => {
         Créer votre compte Luzaya
       </h1>
       <div v-if="!isSubmitted">
-        <small class="error" v-if="msgError" >
+        <small class="error" v-if="msgError">
           {{ msgError }}
         </small>
         <form @submit.prevent="register">
           <div class="flex flex-col gap-y-5">
-            <Input
-                id="firstname"
-                title="Prénom"
-                placeholder="Prénom"
-                v-model="parameters.firstname"
-            />
-            <Input
-                id="lastname"
-                title="Nom"
-                placeholder="Nom"
-                v-model="parameters.lastname"
-            />
+            <Input id="firstname" title="Prénom" placeholder="Prénom" v-model="parameters.firstname" />
+            <Input id="lastname" title="Nom" placeholder="Nom" v-model="parameters.lastname" />
             <div class="flex flex-col">
               <div class="flex flex-wrap flex-grow gap-y-5 gap-x-8">
-                <Input
-                    id="email"
-                    type="email"
-                    title="Adresse e-mail"
-                    placeholder="Adresse e-mail"
-                    class="flex-grow"
-                    v-model="parameters.email"
-                />
-                <Input
-                    id="confirme-email"
-                    type="email"
-                    title="Confirmer votre adresse e-mail"
-                    placeholder="Adresse e-mail"
-                    class="flex-grow"
-                    v-model="parameters.confirmEmail"
-                />
+                <Input id="email" type="email" title="Adresse e-mail" placeholder="Adresse e-mail" class="flex-grow"
+                  v-model="parameters.email" />
+                <Input id="confirme-email" type="email" title="Confirmer votre adresse e-mail"
+                  placeholder="Adresse e-mail" class="flex-grow" v-model="parameters.confirmEmail" />
               </div>
               <span v-if="!isEmailValid && parameters.email.length > 0" class="text-sm error mt-2">
-              L'adresse e-mail entrée n'est pas valide
-            </span>
-              <span v-else-if="parameters.confirmEmail.length > 0 && parameters.confirmEmail !== parameters.email" class="text-sm error mt-2">
-              Les adresses ne correspondent pas
-            </span>
+                L'adresse e-mail entrée n'est pas valide
+              </span>
+              <span v-else-if="parameters.confirmEmail.length > 0 && parameters.confirmEmail !== parameters.email"
+                class="text-sm error mt-2">
+                Les adresses ne correspondent pas
+              </span>
             </div>
             <div class="flex flex-col">
               <div class="flex flex-wrap flex-grow gap-y-5 gap-x-8">
-                <Input
-                    id="password"
-                    type="password"
-                    title="Mot de passe"
-                    placeholder="Mot de passe"
-                    class="flex-grow"
-                    v-model="parameters.password"
-                />
-                <Input
-                    id="confirme-password"
-                    type="password"
-                    title="Confirmer votre mot de passe"
-                    placeholder="Mot de passe"
-                    class="flex-grow"
-                    v-model="parameters.confirmPassword"
-                />
+                <Input id="password" type="password" title="Mot de passe" placeholder="Mot de passe" class="flex-grow"
+                  v-model="parameters.password" />
+                <Input id="confirme-password" type="password" title="Confirmer votre mot de passe"
+                  placeholder="Mot de passe" class="flex-grow" v-model="parameters.confirmPassword" />
               </div>
               <ul class="text-sm mt-2">
                 <li class="checked" :class="isPasswordLongEnough ? 'success' : 'error'">
@@ -171,19 +137,13 @@ const register = async () => {
                   Contient un caractère spécial
                 </li>
               </ul>
-              <span v-if="parameters.confirmPassword.length > 0 && parameters.confirmPassword !== parameters.password" class="text-sm error mt-2">
-              Les mots de passe ne correspondent pas
-            </span>
+              <span v-if="parameters.confirmPassword.length > 0 && parameters.confirmPassword !== parameters.password"
+                class="text-sm error mt-2">
+                Les mots de passe ne correspondent pas
+              </span>
             </div>
-            <Button
-                text="Devenir membre Luzaya"
-                :disabled="!canSubmit"
-            />
-            <ButtonLink
-                class-name="bg-transparent text-black border border-black h-12"
-                text="Connexion"
-                to="/login"
-            />
+            <Button text="Devenir membre Luzaya" :disabled="!canSubmit" />
+            <ButtonLink class-name="bg-transparent text-black border border-black h-12" text="Connexion" to="/login" />
           </div>
         </form>
       </div>
@@ -194,18 +154,11 @@ const register = async () => {
         <p class="text-center">
           Vous allez recevoir un e-mail de confirmation pour activer votre compte.
         </p>
-        <ButtonLink
-            class-name="bg-black text-white border border-black h-12 mt-5"
-            text="Connexion"
-            to="/login"
-        />
+        <ButtonLink class-name="bg-black text-white border border-black h-12 mt-5" text="Connexion" to="/login" />
       </div>
     </div>
   </div>
 
 </template>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

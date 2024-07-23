@@ -1,7 +1,7 @@
 <script setup>
 import RadioInput from "../../components/Inputs/RadioInput.vue";
-import {onMounted, ref} from "vue";
-import { useAPI } from "../../composables/useAPI";
+import { onMounted, ref } from "vue";
+import { useAPI } from "../../composables/useAPI.js";
 const formData = ref({});
 const errors = ref({});
 const entityStructure = ref([]);

@@ -5,7 +5,7 @@ import { useAPI } from '../../composables/useAPI.js';
 import { debounce } from '../../functions/debounce.js';
 
 import SearchResult from './SearchResult.vue';
-import ButtonDelete from '../Buttons/ButtonDelete.vue';
+import ButtonDeleteHistory from '../Buttons/ButtonDeleteHistory.vue';
 
 const search = ref('');
 const searchResults = ref([]);
@@ -20,7 +20,7 @@ const debouncedSearch = debounce(async (newValue) => {
         let searchParams = {
             search: newValue
         };
-        const { results, isModalOpen } = await useAPI('get', 'searchProduct', searchParams, {}, '');
+        const { results, isModalOpen } = await useAPI('get', 'searchProduct', searchParams, {}, '', true);
         searchResults.value = results;
         disabledInput.value = isModalOpen;
     } else {

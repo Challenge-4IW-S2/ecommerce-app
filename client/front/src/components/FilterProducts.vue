@@ -1,5 +1,5 @@
 <script setup>
-import { useAPI } from '../composables/useAPI';
+import { useAPI } from '../composables/useAPI.js';
 import { ref, watch, onBeforeMount } from 'vue';
 import Button from './Buttons/Button.vue';
 
@@ -18,7 +18,7 @@ const openCategories = () => {
 }
 const getCategories = async () => {
     try {
-        const { results } = await useAPI('get', 'getCategories', {}, {}, '');
+        const { results } = await useAPI('get', 'getCategories', {}, {}, '', true);
         categories.value = results.value;
     } catch (error) {
         console.error(error);
@@ -31,7 +31,7 @@ let priceMin = ref(0);
 let priceMax = ref(0);
 const getPrices = async () => {
     try {
-        const { results } = await useAPI('get', 'getMinMaxPrice', {}, {}, '');
+        const { results } = await useAPI('get', 'getMinMaxPrice', {}, {}, '', true);
         priceMin.value = results.value[0].min;
         priceMax.value = results.value[0].max;
 

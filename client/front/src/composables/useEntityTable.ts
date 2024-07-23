@@ -1,7 +1,7 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useTable } from "./useTable";
-import { useAPI } from "./useAPI";
+import { useAPI } from "./useAPI.js";
 
 export const useEntityTable = (
   apiUrl,
@@ -39,25 +39,9 @@ export const useEntityTable = (
           },
           {
             label: "Supprimer",
-            method: async ({ row }) => {
-              console.log(row);
-              try {
-                if (!confirm("Voulez-vous vraiment supprimer cet élément ?")) {
-                  return;
-                }
-                await useAPI(
-                  "delete",
-                  `${entityPath}/${row.id}`,
-                  {},
-                  {},
-                  ""
-                );
-                await fetchData();
-              } catch (error) {
-                console.error("Erreur lors de la suppression:", error);
-              }
+            method: ({ row }) => {
+              return `${entityPath}/${row.id}`;
             },
-            color: "red",
           },
           {
             label: "Exporter",
