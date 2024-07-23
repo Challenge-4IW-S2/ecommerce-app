@@ -5,7 +5,10 @@ import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useRegisterLogin } from "../composables/useRegisterLogin.js";
+
+// For connect user bag
+import { useUserStore } from "../store/userStore";
+const userStore = useUserStore();
 
 const router = useRouter()
 
@@ -28,7 +31,7 @@ const verifyToken = async (token) => {
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
         break;
-        case 429:
+      case 429:
         msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
@@ -47,20 +50,22 @@ const email = ref('')
 const password = ref('')
 const msgError = ref('')
 
+
 const connect = async () => {
-  let localResponseStatus = 0;
   try {
-    const json = {
-      email: email.value,
-      password: password.value,
-    };
-    const { status } = await useRegisterLogin('login', json);
-    localResponseStatus = status.value;
-    if (localResponseStatus === 200) {
+    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
+      json: {
+        email: email.value,
+        password: password.value,
+      },
+      credentials: 'include'
+    });
+    if (response.ok) {
       await router.replace('/');
     }
   } catch (error) {
-    switch (localResponseStatus) {
+    const httpCode = error.response.status;
+    switch (httpCode) {
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
         break;

@@ -3,8 +3,8 @@
 import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
+import ky from "ky";
 import { computed, reactive, ref } from "vue";
-import { useRegisterLogin } from "../composables/useRegisterLogin.js";
 
 const parameters = reactive({
   firstname: '',
@@ -50,29 +50,30 @@ const isPasswordUsingLowercaseLetters = computed(() => {
 
 const canSubmit = computed(() => {
   return parameters.firstname.length > 0
-      && parameters.lastname.length > 0
-      && isEmailValid.value
-      && isPasswordLongEnough.value
-      && isPasswordUsingCapitalLetters.value
-      && isPasswordUsingLowercaseLetters.value
-      && isPasswordUsingSpecialCharacters.value
-      && parameters.password === parameters.confirmPassword
-      && parameters.email === parameters.confirmEmail;
+    && parameters.lastname.length > 0
+    && isEmailValid.value
+    && isPasswordLongEnough.value
+    && isPasswordUsingCapitalLetters.value
+    && isPasswordUsingLowercaseLetters.value
+    && isPasswordUsingSpecialCharacters.value
+    && parameters.password === parameters.confirmPassword
+    && parameters.email === parameters.confirmEmail;
 });
 
 const register = async () => {
   try {
-    const json = {
-      ...parameters
-    };
-    const { status } = await useRegisterLogin('signup', json);
+    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
+      json: {
+        ...parameters
+      },
+    });
     isSubmitted.value = true;
-    if (status.value === 201) {
+    if (response.status === 201) {
       msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
     }
 
   } catch (error) {
-    if (error.status.value === 409) {
+    if (error.response.status === 409) {
       msgError.value = 'Un compte existe déjà avec cette adresse e-mail';
     } else {
       msgError.value = 'Une erreur est survenue pendant la création de votre compte. Veuillez réessayer plus tard.';

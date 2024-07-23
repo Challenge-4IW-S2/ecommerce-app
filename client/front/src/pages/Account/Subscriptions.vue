@@ -1,24 +1,27 @@
 <script setup>
 import RadioInput from "../../components/Inputs/RadioInput.vue";
 import { onMounted, ref } from "vue";
-import { useAPI } from "../../composables/useAPI.js";
+import ky from "ky";
+const url = import.meta.env.VITE_API_BASE_URL;
 const formData = ref({});
 const errors = ref({});
 const entityStructure = ref([]);
 const fetchPreferences = async () => {
   try {
-    const { results } = await useAPI('get', 'preferences', {}, {}, 'include');
-    const response = results.value;
+    const response = await ky.get(`${url}/preferences`, {
+      credentials: 'include'
+    }).json();
+    console.log(response)
     entityStructure.value = response.map(pref => ({
       id: pref.id,
       name: pref.name,
       description: pref.description,
       activated: pref.activated
     }));
-      formData.value = response.reduce((acc, pref) => {
-        acc[pref.name] = pref.activated;
-        return acc;
-      }, {});
+    formData.value = response.reduce((acc, pref) => {
+      acc[pref.name] = pref.activated;
+      return acc;
+    }, {});
   } catch (error) {
     console.error('Failed to fetch preferences', error);
   }
@@ -50,22 +53,14 @@ onMounted(fetchPreferences);
     <h1 class="text-center text-3xl">Modifier les abonnements</h1>
     <p class="text-center mb-5">Sélectionnez les abonnements que vous souhaitez recevoir</p>
     <div class="">
-        <div v-for="input in entityStructure" :key="input.name" class="mb-4 text-center">
-          <Component
-              :is="RadioInput"
-              v-model="formData[input.name]"
-              :id="input.name"
-              :title="input.description"
-              :name="input.id"
-              @change="handleSubmit"
-          />
-          <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
+      <div v-for="input in entityStructure" :key="input.name" class="mb-4 text-center">
+        <Component :is="RadioInput" v-model="formData[input.name]" :id="input.name" :title="input.description"
+          :name="input.id" @change="handleSubmit" />
+        <p v-if="errors[input.name]" class="text-red-500">{{ errors[input.name] }}</p>
 
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

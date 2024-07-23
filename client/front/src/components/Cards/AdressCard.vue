@@ -1,6 +1,7 @@
 <script setup>
 import router from "../../router.js";
 import { useAPI } from "../../composables/useAPI.js";
+import { useAPIDelete } from "../../composables/useAPIDelete.js";
 
 const props = defineProps({
   title: {
@@ -18,11 +19,7 @@ const props = defineProps({
 });
 const deleteAddress = async (id) => {
   try {
-    if (!confirm('Are you sure you want to delete this address?')) {
-      return;
-    }
-    await useAPI('delete', `address/${id}`, {}, {}, '');
-    router.go();
+    await useAPIDelete(`address/${id}`);
   } catch (error) {
     console.error(error);
   }
