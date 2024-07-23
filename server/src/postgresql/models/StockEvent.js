@@ -1,5 +1,10 @@
 'use strict';
 import { Model, DataTypes } from "sequelize";
+import {
+  denormalizeStockEventCreate,
+  denormalizeStockEventDelete,
+  denormalizeStockEventUpdate
+} from "../../denormalizations/stockEvent.js";
 export default function (connection) {
   class StockEvent extends Model {
     static associate(models) {
@@ -24,7 +29,7 @@ export default function (connection) {
       type: DataTypes.ENUM( 'stock_in','stock_out'),
       allowNull: false,
     },
-    stock_level: {
+    stock_movement: {
       type: DataTypes.INTEGER,
       allowNull: false,
     }
@@ -34,5 +39,19 @@ export default function (connection) {
     underscored: true,
     timestamps: true
   });
+
+
+  StockEvent.afterCreate(async (stockEvent) => {
+    await denormalizeStockEventCreate(stockEvent);
+  });
+
+  StockEvent.beforeUpdate(async (stockEvent) => {
+    await denormalizeStockEventUpdate(stockEvent);
+  });
+
+  StockEvent.afterDestroy(async (stockEvent) => {
+    await denormalizeStockEventDelete(stockEvent);
+  });
+
   return StockEvent;
 };

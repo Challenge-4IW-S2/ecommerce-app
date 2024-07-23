@@ -5,6 +5,10 @@ export default class CategoryRepository {
         this.Category = CategoryModel;
     }
 
+    async findOneById(categoryId) {
+        return this.Category.findById(categoryId);
+    }
+
     async createOrUpdateCategory(category) {
         return this.Category.findByIdAndUpdate(category.id, {
             name: category.name,

@@ -77,9 +77,17 @@ export class ProductController {
                     await sendEmail(to, subject, newProductsTemplate());
                 }
             }
+
+            // Stock event initial (premier stock_in = stock initial)
+            const stockEventRepository = new StockEventRepository();
+            await stockEventRepository.createStockEvent({
+                product_id: product.id,
+                event_type: 'stock_in',
+                stock_movement: product.quantity
+            });
+
             response.status(201).json(product);
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -97,34 +105,41 @@ export class ProductController {
             const productRepository = new ProductRepository();
             const userRepo = new UserRepository();
             const usersPrefNew = await userRepo.findAllWithPreferences('NEW');
-            const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
-          
-            const id =request.params.id;
+
+            const id  = request.params.id;
           
             const previousData = await productRepository.findById(id);
           
             const categoryRepository = new CategoryRepository();
+            console.log(parameters.category_id);
             parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
           
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
             const oldQuantity = previousData.quantity;
-            const newQuantity = parameters.quantity;
-            if (oldQuantity < newQuantity) {
-                parameters.quantity += oldQuantity;
+            const newQuantity = Math.max(0, parameters.quantity);
 
-                const stockMovement = new StockEventRepository()
-                await stockMovement.createStockEvent({
+            if (oldQuantity !== newQuantity) {
+                const isRestock = oldQuantity < newQuantity
+                const stockDiff = Math.max(Math.abs(oldQuantity - newQuantity), 0);
+
+                const stockEventRepository = new StockEventRepository();
+                await stockEventRepository.createStockEvent({
                     product_id: id,
-                    event_type: 'restock',
-                    stock_level: parameters.quantity,
+                    event_type: isRestock ? 'stock_in' : 'stock_out',
+                    stock_movement: stockDiff
                 })
-                for (const user of usersPrefRestock) {
-                    const {to, subject} = {
-                        to: user.email,
-                        subject: 'New Stock Alert',
-                    };
-                    await sendEmail(to, subject, newPriceTemplate(parameters));
+
+                // check if the product is restocked
+                if (isRestock && oldQuantity === 0) {
+                    const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
+                    for (const user of usersPrefRestock) {
+                        const {to, subject} = {
+                            to: user.email,
+                            subject: 'New Stock Alert',
+                        };
+                        await sendEmail(to, subject, newPriceTemplate(parameters));
+                    }
                 }
             }
 
