@@ -18,10 +18,6 @@ const productSchema = new Schema({
         type: Number,
         required: true,
     },
-    price_ttc: {
-        type: Number,
-        required: true,
-    },
     is_active: {
         type: Boolean,
         required: true,

@@ -204,4 +204,9 @@ export default class ProductRepository {
             { new: true }
         );
     }
+
+    async aggregateProducts(pipeLine) {
+        return this.Product.aggregate(pipeLine)
+    }
+
 }
