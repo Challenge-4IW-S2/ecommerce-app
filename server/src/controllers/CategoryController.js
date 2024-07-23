@@ -51,6 +51,7 @@ export class CategoryController {
         try {
             const [nbUpdated,category] = await categoryRepository.updateCategory(request.params.id,parameters);
             if (nbUpdated === 1) return response.json(category[0]);
+            if (nbUpdated === 0) return response.json(category[0]);
         } catch (e) {
             response.json({
                 success: false,

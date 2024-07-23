@@ -3,7 +3,7 @@ import cors from "cors";
 import "./src/mongo/mongodb.js";
 import cookieParser from "cookie-parser";
 import RouteLoader from "./RouteLoader.js";
-//import checkStock from "./src/cron/checkStock.js";
+
 const app = express();
 const port = 8000;
 

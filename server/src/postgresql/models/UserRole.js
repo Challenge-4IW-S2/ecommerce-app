@@ -38,7 +38,7 @@ export default function (connection) {
   });
 
   UserRole.afterDestroy(async (userRole) => {
-        await denormalizeUserRoleDelete(userRole.id);
+        await denormalizeUserRoleDelete(userRole);
     });
 
   return UserRole;

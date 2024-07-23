@@ -109,6 +109,8 @@ export class AuthController {
             if (!user.is_verified) return response.status(401).send();
             if (differenceInDays >= 60) return response.status(403).send();
             if (user.deleted) return response.status(401).send();
+            const lastPasswordChange = new Date(user.password_updated_at);
+            const differenceInDays = Math.floor((today - lastPasswordChange) / (1000 * 60 * 60 * 24));
 
             if (!(await bcrypt.compare(parameters.password, user.password))) {
                 console.log('wrong password');
