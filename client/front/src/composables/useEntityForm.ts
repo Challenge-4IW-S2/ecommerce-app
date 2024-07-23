@@ -16,7 +16,6 @@ const unwantedFields = [
   "updatedAt",
   "is_verified",
   "deleted",
-  "is_active",
   "user_id",
   "product_id",
   "password_updated_at",

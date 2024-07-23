@@ -4,49 +4,55 @@ import ProductPictureRepository from "../postgresql/repository/ProductPictureRep
 import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
 import User from "../postgresql/models/user.js";
 import Preference from "../postgresql/models/Preference.js";
-import {sendEmail} from "./SendMailController.js";
-import {newProductsTemplate} from "../mailsTemplates/newProducts.js";
+import { sendEmail } from "./SendMailController.js";
+import { newProductsTemplate } from "../mailsTemplates/newProducts.js";
 import UserRepository from "../postgresql/repository/UserRepository.js";
-import {newPriceTemplate} from "../mailsTemplates/NewPrice.js";
+import { newPriceTemplate } from "../mailsTemplates/NewPrice.js";
 import StockEventRepository from "../postgresql/repository/StockEventRepository.js";
 export class ProductController {
-    static async index(request, response) {
-        const productRepositoryMongo = new ProductRepositoryMongo();
-        const page = request.query.page;
-        const order = request.query.order;
-        const categories = request.query.categories;
-        const valueMin = request.query.valueMin;
-        const valueMax = request.query.valueMax;
+  static async index(request, response) {
+    const productRepositoryMongo = new ProductRepositoryMongo();
+    const page = request.query.page;
+    const order = request.query.order;
+    const categories = request.query.categories;
+    const valueMin = request.query.valueMin;
+    const valueMax = request.query.valueMax;
 
-        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax);
-        response.json(products);
-    }
+    const products = await productRepositoryMongo.getAllProducts(
+      page,
+      order,
+      categories,
+      valueMin,
+      valueMax
+    );
+    response.json(products);
+  }
 
-    static async getMinAndMaxPrice(request, response) {
-        const productRepositoryMongo = new ProductRepositoryMongo();
-        const minMax = await productRepositoryMongo.getMinAndMaxPrice();
-        response.json(minMax);
-    }
+  static async getMinAndMaxPrice(request, response) {
+    const productRepositoryMongo = new ProductRepositoryMongo();
+    const minMax = await productRepositoryMongo.getMinAndMaxPrice();
+    response.json(minMax);
+  }
 
-    static async getProductsName(request, response) {
-        const productRepositoryMongo = new ProductRepositoryMongo();
-        const names = await productRepositoryMongo.getProductsName();
-        response.json(names);
-    }
+  static async getProductsName(request, response) {
+    const productRepositoryMongo = new ProductRepositoryMongo();
+    const names = await productRepositoryMongo.getProductsName();
+    response.json(names);
+  }
 
-    static async getProductBySlug(request, response) {
-        const productRepositoryMongo = new ProductRepositoryMongo();
-        const slug = request.params.slug;
-        const product = await productRepositoryMongo.getProduct(slug);
-        response.json(product);
-    }
+  static async getProductBySlug(request, response) {
+    const productRepositoryMongo = new ProductRepositoryMongo();
+    const slug = request.params.slug;
+    const product = await productRepositoryMongo.getProduct(slug);
+    response.json(product);
+  }
 
-    static async search(request, response) {
-        const productRepositoryMongo = new ProductRepositoryMongo();
-        const search = request.query.search;
-        const result = await productRepositoryMongo.searchProduct(search);
-        response.json(result);
-    }
+  static async search(request, response) {
+    const productRepositoryMongo = new ProductRepositoryMongo();
+    const search = request.query.search;
+    const result = await productRepositoryMongo.searchProduct(search);
+    response.json(result);
+  }
 
     static async createProduct(request, response,next) {
         const parameters = {
@@ -90,16 +96,57 @@ export class ProductController {
         } catch (error) {
             next(error)
         }
+      }
+      response.status(201).json(product);
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
+  }
 
-    static async updateProduct(request, response,next) {
-        const parameters = {
-            name: request.body.name,
-            price_ht: request.body.price_ht,
-            slug: request.body.slug,
-            description: request.body.description,
-            category_id: request.body.category_id,
-            quantity: request.body.quantity
+  static async updateProduct(request, response, next) {
+    const parameters = {
+      name: request.body.name,
+      price_ht: request.body.price_ht,
+      slug: request.body.slug,
+      description: request.body.description,
+      category_id: request.body.category_id,
+      quantity: request.body.quantity,
+    };
+    try {
+      const productRepository = new ProductRepository();
+      const userRepo = new UserRepository();
+      const usersPrefNew = await userRepo.findAllWithPreferences("NEW");
+      const usersPrefRestock = await userRepo.findAllWithPreferences("RESTOCK");
+
+      const id = request.params.id;
+
+      const previousData = await productRepository.findById(id);
+
+      const categoryRepository = new CategoryRepository();
+      parameters.category_id = await categoryRepository.getCategoryId(
+        parameters.category_id
+      );
+
+      const oldPrice = previousData.price_ht;
+      const newPrice = parameters.price_ht;
+      const oldQuantity = previousData.quantity;
+      const newQuantity = parameters.quantity;
+      if (oldQuantity < newQuantity) {
+        parameters.quantity += oldQuantity;
+
+        const stockMovement = new StockEventRepository();
+        await stockMovement.createStockEvent({
+          product_id: id,
+          event_type: "restock",
+          stock_level: parameters.quantity,
+        });
+        for (const user of usersPrefRestock) {
+          const { to, subject } = {
+            to: user.email,
+            subject: "New Stock Alert",
+          };
+          await sendEmail(to, subject, newPriceTemplate(parameters));
         }
         try {
             const productRepository = new ProductRepository();
@@ -143,66 +190,52 @@ export class ProductController {
                 }
             }
 
-            const product = await productRepository.updateProduct(id, parameters)
-
-            if (oldPrice > newPrice) {
-                for (const user of usersPrefNew) {
-                    const {to, subject} = {
-                        to: user.email,
-                        subject: 'Price Drop Alert',
-                    };
-                    await sendEmail(to, subject, newPriceTemplate(parameters));
-                }
-            }
-            response.status(200).json(product);
-        } catch (error) {
-            next(error)
+      if (oldPrice > newPrice) {
+        for (const user of usersPrefNew) {
+          const { to, subject } = {
+            to: user.email,
+            subject: "Price Drop Alert",
+          };
+          await sendEmail(to, subject, newPriceTemplate(parameters));
         }
+      }
+      response.status(200).json(product);
+    } catch (error) {
+      next(error);
     }
+  }
 
-    static async deleteProduct(request, response,next) {
-        try {
+  static async deleteProduct(request, response, next) {
+    try {
+      const productRepository = new ProductRepository();
 
-            const productRepository = new ProductRepository();
-            const productPicture = new ProductPictureRepository();
-
-            const nbDelete =  await productRepository.deleteProduct(request.params.id)
-            if (nbDelete === 1){
-                const productPictures = await productPicture.findByOtherField("product_id", request.params.id);
-
-                if (productPictures === null || productPictures.length === 0) {
-                    return response.sendStatus(204);
-                }
-
-                const deletedPicture = await productPicture.deleteProductPicture(request.params.id)
-                response.sendStatus(deletedPicture === 1 ? 204 : 404);
-
-            }  else {
-            response.sendStatus(404);
-            }
-        } catch (error) {
-            next(error)
-        }
+      const [nbUpdated] = await productRepository.disableProduct(
+        request.params.id
+      );
+      return response.sendStatus(nbUpdated === 1 ? 204 : 404);
+    } catch (error) {
+      next(error);
     }
-    static async getAllProducts(request, response) {
-        try {
-            const productRepository = new ProductRepository();
-            const products = await productRepository.findAll();
-            response.json(products);
-        } catch (error) {
-            response.json({
-                message: error.message,
-            });
-        }
+  }
+  static async getAllProducts(request, response) {
+    try {
+      const productRepository = new ProductRepository();
+      const products = await productRepository.findAll();
+      response.json(products);
+    } catch (error) {
+      response.json({
+        message: error.message,
+      });
     }
+  }
 
-    static async getProduct(request, response,next) {
-        try {
-            const productRepository = new ProductRepository();
-            const product = await productRepository.findById(request.params.id);
-            response.json(product);
-        } catch (e) {
-            next(e)
-        }
+  static async getProduct(request, response, next) {
+    try {
+      const productRepository = new ProductRepository();
+      const product = await productRepository.findById(request.params.id);
+      response.json(product);
+    } catch (e) {
+      next(e);
     }
+  }
 }

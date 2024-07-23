@@ -6,16 +6,8 @@ const props = defineProps({
     }
 })
 
-const startDelete = async (value) => {
-    try {
-        const { isDone } = await useAPIDelete(value);
-        if (isDone.value === true) {
-            location.reload();
-        }
-
-    } catch (error) {
-        console.error("Erreur lors de la suppression :", error);
-    }
+const startDelete = (value) => {
+    useAPIDelete(value);
 }
 </script>
 

@@ -96,6 +96,7 @@ export const useEntityTable = (
       if (response.length > 0) {
         data.value = response;
         if (roleApiUrl) {
+          console.log(roleApiUrl);
           const { results } = await useAPI("get", `${roleApiUrl}`, {}, {}, "");
           const user_roles = results.value;
           data.value.forEach((user) => {

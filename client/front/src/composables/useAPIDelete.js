@@ -196,12 +196,12 @@ export const useAPIDelete = async (URL) => {
             afterResponse: [
               async (request, options, response) => {
                 closeModal("loadingModal");
-                if ([500].includes(response.status)) {
+                if ([200, 204].includes(response.status)) {
                   confirmModal();
                   setTimeout(() => {
                     closeModal("confirmModal");
+                    window.location.reload();
                   }, 3000);
-                  isDone.value = true;
                 }
               },
             ],
