@@ -103,9 +103,6 @@ export class AuthController {
                 return response.status(429).send('Account is locked. Please try again later.');
             }
 
-            const lastPasswordChange = new Date(user.password_updated_at);
-            const differenceInDays = Math.floor((today - lastPasswordChange) / (1000 * 60 * 60 * 24));
-
             if (!user.is_verified) return response.status(401).send();
             if (differenceInDays >= 60) return response.status(403).send();
             if (user.deleted) return response.status(401).send();

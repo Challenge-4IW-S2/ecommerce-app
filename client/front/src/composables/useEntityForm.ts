@@ -16,6 +16,7 @@ const unwantedFields = [
   "updatedAt",
   "is_verified",
   "deleted",
+  "is_active",
   "user_id",
   "product_id",
   "password_updated_at",
@@ -89,7 +90,6 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
         {},
         ""
       );
-      console.log(results)
       const response = results.value;
       return response.map((picture) => ({
         id: picture.id,
@@ -106,7 +106,6 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
       unwantedFields.push("id");
       let response = {};
       if (entityId) {
-        console.log(`${entityType}`);
         const { results } = await useAPI(
           "get",
           `${entityType}/${entityId || ""}`,
@@ -115,10 +114,6 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
           ""
         );
         response = results.value;
-        console.log(response);
-        // response = await ky
-        //   .get(`${entityType}/${entityId || ""}`)
-        //   .json();
       } else {
         const [structure] = await Promise.all([
           fetchModelStructure(
@@ -132,60 +127,10 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
         }, {});
       }
 
-    };
-
-    const initializeFormData = () => {
-        entityStructure.value.forEach(field => {
-            formData[field.name] = field.value || '';
-            if (field.name === 'password') formData[field.name] = '';
-        });
-    };
-
-    const validateForm = () => {
-        try {
-            const cleanedData = filterUnwantedFields(formData, unwantedFields);
-            entitySchema.value.parse(cleanedData);
-            errors.value = {};
-            return true;
-        } catch (err) {
-            if (err instanceof z.ZodError) {
-                const errorMessages = err.errors.reduce((acc, curr) => {
-                    acc[curr.path[0]] = curr.message;
-                    return acc;
-                }, {});
-                errors.value = errorMessages;
-                console.log(errors.value)
-            }
-            return false;
-        }
-    };
-
-    const handleSubmit = async () => {
-            if (!validateForm()) return;
-        try {
-                const method = isEditing.value ? 'patch' : 'post';
-
-                const cleanedData = filterUnwantedFields(formData, unwantedFields);
-                const response = await ky[method](`${BASE_URL}/${entityType}/${entityId || ''}`, {
-                    json: cleanedData
-                }).json();
-                await sweetalert.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: `${entityType} ${isEditing.value ? 'updated' : 'created'} successfully`,
-                });
-
-            } catch (error) {
-                await sweetalert.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: error,
-                });
-                console.error('Failed to submit form:', error);
-            }
-    };
-
-    const handleDelete = async () => {
+      const cleanedResponse = filterUnwantedFields(response, unwantedFields);
+      let roleOptions = [];
+      if (entityType === "user") {
+        roleOptions = await getRoleOptions();
         if (entityId) {
           addressOptions.value = await getAdressOptions();
         }
@@ -224,6 +169,7 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
   const initializeFormData = () => {
     entityStructure.value.forEach((field) => {
       formData[field.name] = field.value || "";
+      if (field.name === "password") formData[field.name] = "";
     });
   };
 
@@ -250,15 +196,14 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
     if (!validateForm()) return;
     try {
       const method = isEditing.value ? "patch" : "post";
+
       const cleanedData = filterUnwantedFields(formData, unwantedFields);
-      const { results } = await useAPI(
-        method,
-        `${entityType}/${entityId || ""}`,
-        {},
-        cleanedData,
-        ""
-      );
-      console.log(results)
+      const response = await ky[method](
+        `${BASE_URL}/${entityType}/${entityId || ""}`,
+        {
+          json: cleanedData,
+        }
+      ).json();
       await sweetalert.fire({
         icon: "success",
         title: "Success",
@@ -279,9 +224,7 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
   const handleDelete = async () => {
     if (entityId) {
       try {
-        await ky
-          .delete(`http://localhost:8000/${entityType}/${entityId}`)
-          .json();
+        await ky.delete(`${BASE_URL}/${entityType}/${entityId}`).json();
         console.log(`${entityType} deleted successfully`);
       } catch (error) {
         console.error(`Failed to delete ${entityType}:`, error);
