@@ -1,9 +1,11 @@
-import ky from "ky";
+import { useAPI } from "../../../front/src/composables/useAPI.js";
 
-export function fetchModelStructure(modelName) {
+export async function fetchModelStructure(modelName) {
     try {
         console.log("Fetching model structure...");
-        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`).json();
+        const { results } = await useAPI('get', `model/${modelName}`, {}, {}, '');
+        const response = results.value;
+        return response;
     } catch (error) {
         console.error("Error fetching model structure:", error);
         throw error;

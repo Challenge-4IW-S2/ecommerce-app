@@ -100,7 +100,7 @@ export default function (connection) {
     });
 
     User.addHook("beforeUpdate", async function (user, { fields }) {
-        if (fields.includes("password")) {
+        if (fields.includes("password") && user.password) {
             const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
             user.password = hash;
         }
@@ -114,15 +114,15 @@ export default function (connection) {
 
 
     User.afterValidate(async (user) => {
-        if (user.changed("lastname")) {
-            user.lastname = user.lastname.toUpperCase();
+        if (user.changed("lastname") && user.lastname) {
+          user.lastname = user.lastname.toUpperCase();
         }
 
-        if (user.changed("firstname")) {
-            // UCWORDS
-            user.firstname = user.firstname
-                .toLowerCase()
-                .replace(/(?<= )[^\s]|^./g, a=> a.toUpperCase())
+        if (user.changed("firstname") && user.firstname) {
+          // UCWORDS
+          user.firstname = user.firstname
+            .toLowerCase()
+            .replace(/(?<= )[^\s]|^./g, (a) => a.toUpperCase());
         }
     });
     return User;

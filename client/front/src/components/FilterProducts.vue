@@ -1,6 +1,6 @@
 <script setup>
-import ky from 'ky';
-import { ref, watch, defineEmits, onBeforeMount } from 'vue';
+import { useAPI } from '../composables/useAPI.js';
+import { ref, watch, onBeforeMount } from 'vue';
 import Button from './Buttons/Button.vue';
 
 const isFiltersOpen = ref(false);
@@ -18,9 +18,8 @@ const openCategories = () => {
 }
 const getCategories = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getCategories`).json().then((response) => {
-            categories.value = response;
-        });
+        const { results } = await useAPI('get', 'getCategories', {}, {}, '', true);
+        categories.value = results.value;
     } catch (error) {
         console.error(error);
     }
@@ -32,10 +31,9 @@ let priceMin = ref(0);
 let priceMax = ref(0);
 const getPrices = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getMinMaxPrice`).json().then((response) => {
-            priceMin.value = response[0].min;
-            priceMax.value = response[0].max;
-        });
+        const { results } = await useAPI('get', 'getMinMaxPrice', {}, {}, '', true);
+        priceMin.value = results.value[0].min;
+        priceMax.value = results.value[0].max;
 
     } catch (error) {
         console.error(error);
@@ -45,7 +43,7 @@ const getPrices = async () => {
 // --> function for inStock
 let inStockSelected = ref([]);
 // --> pour tester la checkbox
-console.log(inStockSelected);
+// console.log(inStockSelected);
 
 // order by
 const OrdersValue = [
