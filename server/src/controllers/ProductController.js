@@ -117,29 +117,30 @@ export class ProductController {
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
             const oldQuantity = previousData.quantity;
-            const newQuantity = parameters.quantity;
+            const newQuantity = Math.max(0, parameters.quantity);
 
-            const isRestock = oldQuantity < newQuantity
-            const stockDiff = Math.max(Math.abs(oldQuantity - newQuantity), 0);
+            if (oldQuantity !== newQuantity) {
+                const isRestock = oldQuantity < newQuantity
+                const stockDiff = Math.max(Math.abs(oldQuantity - newQuantity), 0);
 
-            const stockEventRepository = new StockEventRepository();
-            await stockEventRepository.createStockEvent({
-                product_id: id,
-                event_type: isRestock ? 'stock_in' : 'stock_out',
-                stock_movement: stockDiff
-            })
+                const stockEventRepository = new StockEventRepository();
+                await stockEventRepository.createStockEvent({
+                    product_id: id,
+                    event_type: isRestock ? 'stock_in' : 'stock_out',
+                    stock_movement: stockDiff
+                })
 
-            // check if the product is restocked
-            if (isRestock && oldQuantity === 0) {
-                const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
-                for (const user of usersPrefRestock) {
-                    const {to, subject} = {
-                        to: user.email,
-                        subject: 'New Stock Alert',
-                    };
-                    await sendEmail(to, subject, newPriceTemplate(parameters));
+                // check if the product is restocked
+                if (isRestock && oldQuantity === 0) {
+                    const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
+                    for (const user of usersPrefRestock) {
+                        const {to, subject} = {
+                            to: user.email,
+                            subject: 'New Stock Alert',
+                        };
+                        await sendEmail(to, subject, newPriceTemplate(parameters));
+                    }
                 }
-
             }
 
             const product = await productRepository.updateProduct(id, parameters)
