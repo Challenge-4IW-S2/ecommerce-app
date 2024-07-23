@@ -8,9 +8,16 @@ import {
     UserUpdateSchema
 } from "../schemas/UserSchema.js";
 import checkAuth from "../middlewares/checkAuth.js";
+import {OrderController} from "../controllers/OrderController.js";
+import checkRole from "../middlewares/checkRole.js";
 
 export default function (router) {
-    router.get("/users", UserController.getAllUsers);
+    router.get(
+        "/users",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        UserController.getAllUsers
+    );
     router.post("/user", UserController.createUser);
     router.get("/user/:id", UserController.getUser, validateBody(GetUsersSchema));
     router.put("/users/:id", validateBody(UserUpdateSchema) ,UserController.updateUser);
@@ -18,6 +25,12 @@ export default function (router) {
    // router.get("/role", UserController.getAllUserRole);
     router.patch("/user/:id", UserController.updateUser);
 
+
+    router.get(
+        '/order-history',
+        checkAuth(),
+        OrderController.getOrderByUser
+    );
 
     router.put(
         '/update-profile',

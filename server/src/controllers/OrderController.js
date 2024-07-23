@@ -11,6 +11,23 @@ export class OrderController{
             next(error);
         }
     }
+
+    static async getOrderByUser(req, res, next){
+        try {
+            const orderRepository = new OrderRepository();
+            const orders = await orderRepository.findAllByOtherField('user_id', req.user.id);
+            // remove user_id from all orders if orders is not empty
+            if (orders) {
+                orders.forEach(order => {
+                    delete order.dataValues.user_id;
+                });
+            }
+            res.json({orders} || {});
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static async createOrder(req, res,next){
         try {
             const orderRepository = new OrderRepository();
@@ -20,6 +37,7 @@ export class OrderController{
             next(error);
         }
     }
+
     static async getOrder(req, res,next){
         try {
             const orderRepository = new OrderRepository();

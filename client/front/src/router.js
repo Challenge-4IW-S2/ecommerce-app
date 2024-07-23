@@ -122,7 +122,10 @@ const routes = [
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
-    { path: '/admin/stock', component: DashboardStock},
+    {
+        path: '/admin/stock',
+        component: DashboardStock
+    },
 
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
@@ -154,7 +157,7 @@ router.beforeEach(async (to, from, next) => {
     const userAuthStore = useUserAuthStore();
     userAuthStore.setUserDetails(isLogged ? user : null);
     userAuthStore.setLoginStatus(isLogged);
-    console.log(isLogged);
+
     if (requiresNoAuth && isLogged) {
         next('/');
         return;
