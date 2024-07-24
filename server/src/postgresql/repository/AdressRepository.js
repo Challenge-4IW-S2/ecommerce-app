@@ -22,7 +22,7 @@ export default class AdressRepository {
         });
     }
 
-    async findByUserId(id) {
+    async findAllAddressesFromUser(id) {
         return await this.Adress.findAll({
             where: {
                 user_id: id

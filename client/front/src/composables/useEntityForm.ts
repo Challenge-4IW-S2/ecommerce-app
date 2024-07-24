@@ -31,75 +31,67 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
   let categorieOption = ref([]);
   let images = ref([]);
 
-  const getRoleOptions = async () => {
+const getRoleOptions = async () => {
     try {
-      const { results } = await useAPI("get", "userRoles", {}, {}, "");
-      const response = results.value;
-      return response.map((role) => ({
-        value: role.id,
-        label: role.name,
-      }));
+        const response = await ky.get(`${BASE_URL}/userRoles`, {
+            credentials: "include"
+        }).json();
+        return response.map(role => ({
+            value: role.id,
+            label: role.name
+        }));
     } catch (error) {
-      console.error("Failed to fetch roles:", error);
-      return [];
+        console.error('Failed to fetch roles:', error);
+        return [];
     }
-  };
-  const getAdressOptions = async () => {
+};
+const getAdressOptions = async () => {
     try {
-      const { results } = await useAPI(
-        "get",
-        `address/${entityId}/addresses`,
-        {},
-        {},
-        ""
-      );
-      const response = results.value;
-      return response.map((address) => ({
-        id: address.id,
-        street: address.street,
-        city: address.city,
-        postal_code: address.postal_code,
-        country: address.country,
-      }));
+        const response = await ky.get(`${BASE_URL}/address/${entityId}/addresses`, {
+            credentials: "include"
+        }).json();
+        return response.map(address => ({
+            id: address.id,
+           street: address.street,
+           city: address.city,
+            postal_code: address.postal_code,
+            country: address.country,
+        }));
     } catch (error) {
-      console.error("Failed to fetch addresses:", error);
-      return [];
+        console.error('Failed to fetch addresses:', error);
+        return [];
     }
-  };
+};
 
-  const getCategorieOptions = async () => {
+const getCategorieOptions = async () => {
     try {
-      const { results } = await useAPI("get", "categories", {}, {}, "");
-      const response = results.value;
-      return response.map((categorie) => ({
-        value: categorie.id,
-        label: categorie.name,
-      }));
+        const response = await ky.get(`${BASE_URL}/categories`, {
+            credentials: "include"
+        }).json();
+        return response.map(categorie => ({
+            value: categorie.id,
+            label: categorie.name
+        }));
     } catch (error) {
-      console.error("Failed to fetch categories:", error);
-      return [];
+        console.error('Failed to fetch categories:', error);
+        return [];
     }
-  };
+};
 
-  const getProductPictureOptions = async () => {
+const getProductPictureOptions = async () => {
     try {
-      const { results } = await useAPI(
-        "get",
-        `productPicture/${entityId}/productPictures`,
-        {},
-        {},
-        ""
-      );
-      const response = results.value;
-      return response.map((picture) => ({
-        id: picture.id,
-        url: picture.url.replace(/^.*[\\\/]/, ""),
-      }));
+        const response = await ky.get(`${BASE_URL}/productPicture/${entityId}/productPictures`, {
+            credentials: "include"
+        }).json();
+        return response.map(picture => ({
+            id: picture.id,
+            url: picture.url.replace(/^.*[\\\/]/, '')
+        }));
     } catch (error) {
-      console.error("Failed to fetch pictures:", error);
-      return [];
+        console.error('Failed to fetch pictures:', error);
+        return [];
     }
-  };
+};
 
   const fetchEntityStructure = async () => {
     try {
@@ -132,7 +124,14 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
       if (entityType === "user") {
         roleOptions = await getRoleOptions();
         if (entityId) {
-          addressOptions.value = await getAdressOptions();
+            try {
+                await ky.delete(`${BASE_URL}/${entityType}/${entityId}`, {
+                    credentials: "include"
+                }).json();
+                console.log(`${entityType} deleted successfully`);
+            } catch (error) {
+                console.error(`Failed to delete ${entityType}:`, error);
+            }
         }
       }
       if (entityType === "product") {

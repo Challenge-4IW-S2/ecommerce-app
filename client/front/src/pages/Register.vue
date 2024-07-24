@@ -66,6 +66,7 @@ const register = async () => {
       json: {
         ...parameters
       },
+      credentials: "include"
     });
     isSubmitted.value = true;
     if (response.status === 201) {

@@ -63,4 +63,14 @@ export default class PreferenceController {
             next(e);
         }
     }
+
+    static async deletePreference(req, res, next) {
+        const preferenceRepository = new PreferenceRepository();
+        try {
+            const nbDeleted = await preferenceRepository.destroy(req.params.id, req.user.id);
+            res.sendStatus(nbDeleted === 1 ? 204 : 404);
+        } catch (error) {
+            next(error);
+        }
+    }
 }

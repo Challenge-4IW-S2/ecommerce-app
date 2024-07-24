@@ -8,8 +8,10 @@ const modelStructure = ref([]);
 const modelName = 'User';
 
 const getRoles = async () => {
-  const { results } = await useAPI('get', 'users/roles', {}, {}, '');
-  const response = results.value;
+  const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/roles`, {
+    credentials: "include"
+  }).json();
+
   return response;
 };
 const getModelStructure = async () => {
@@ -39,8 +41,10 @@ const getModelStructure = async () => {
   }
 };
 const handleFormSubmit = async (formData) => {
-  const { results } = await useAPI('post', 'signup', {}, formData, '');
-  const data = results.value;
+  const data = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
+    json: formData,
+    credentials: "include"
+  }).json();
   console.log(data);
 };
 

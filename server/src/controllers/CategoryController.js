@@ -3,30 +3,42 @@ import CategoryRepository from "../postgresql/Repository/CategoryRepository.js";
 import CategoryRepositoryMongo from "../mongo/repository/CategoryRepository.js";
 
 export class CategoryController {
-  static async createCategory(request, response, next) {
-    const parameters = {
-      name: request.body.name,
-    };
-    try {
-      const categoryRepository = new CategoryRepository();
-      const category = categoryRepository.createCategory(parameters);
-      response.status(201).json(category);
-    } catch (e) {
-      next(e);
+    static async getHeaderCategories(request, response) {
+        const categoryRepository = new CategoryRepository();
+        // get only first 4 inserted categories in the database
+        const categories = await categoryRepository.findAll();
+        //only return the first 4 categories and only their names
+        const headerCategories = categories.slice(0, 4).map(category => category.name);
+        response.json(headerCategories);
     }
-  }
+
+    static async createCategory(request, response,next) {
+        const parameters = {
+            name: request.body.name,
+        }
+        try {
+            const categoryRepository = new CategoryRepository();
+            const category = categoryRepository.createCategory(parameters)
+            response.status(201).json(category);
+
+        }catch (e){
+            next(e)
+        }
+    }
 
   static async getAllCategories(request, response) {
     const categoryRepository = new CategoryRepository();
     const categories = await categoryRepository.findAll();
     response.json(categories);
   }
+
   static async getCategory(request, response) {
     const categoryRepository = new CategoryRepository();
     const category = await categoryRepository.findByPk(request.params.id);
     if (!category) return response.status(404).send("Category not found");
     response.json(category);
   }
+
   static async updatePutCategory(request, response, next) {
     const parameters = {
       name: request.body.name,
@@ -44,6 +56,7 @@ export class CategoryController {
       next(e);
     }
   }
+
   static async updatePatchCategory(request, response) {
     const parameters = {
       name: request.body.name,

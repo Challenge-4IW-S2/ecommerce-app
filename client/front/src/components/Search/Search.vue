@@ -6,6 +6,7 @@ import { debounce } from '../../functions/debounce.js';
 
 import SearchResult from './SearchResult.vue';
 import ButtonDeleteHistory from '../Buttons/ButtonDeleteHistory.vue';
+import ky from "ky";
 
 const search = ref('');
 const searchResults = ref([]);
@@ -15,21 +16,24 @@ const openSearch = () => {
     isSearchOpen.value = !isSearchOpen.value;
     search.value = '';
 }
-const debouncedSearch = debounce(async (newValue) => {
-    if (newValue.trim() !== '') {
-        let searchParams = {
-            search: newValue
-        };
-        const { results, isModalOpen } = await useAPI('get', 'searchProduct', searchParams, {}, '', true);
-        searchResults.value = results;
-        disabledInput.value = isModalOpen;
-    } else {
-        searchResults.value = [];
+
+// search product API
+const searchProducts = async (newValue) => {
+    try {
+        response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/searchProduct`, {
+            searchParams: {
+                search: newValue,
+            },
+          credentials: "include"
+        }).json();
+    } catch (error) {
+        console.error(error);
     }
-}, 1000);
-watch(search, (newValue) => {
-    debouncedSearch(newValue);
-});
+}
+
+// watch(search, (newValue) => {
+//     debouncedSearch(newValue);
+// });
 
 // Functions for search history
 const searchHistoryStore = useSearchHistoryStore();

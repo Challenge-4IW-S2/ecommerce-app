@@ -8,6 +8,7 @@ import RegisterView from './pages/Register.vue'
 import UserView from './pages/Account/User.vue'
 import UserHomeView from './pages/Account/UserHomeView.vue'
 import UserOrdersView from './pages/Account/Orders.vue'
+import UserAdressesView from './pages/Account/Addresses.vue'
 
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
@@ -77,16 +78,18 @@ const routes = [
             },
             {
                 path: 'adresses',
-                component: UserView
+                component: UserAdressesView
             },
             {
                 path: 'settings',
-                component: UserView
+                component: Subscriptions
             }
         ]
     },
+
     {
         path: '/products',
+        name: 'products',
         component: ProductsView
     },
     {
@@ -123,13 +126,17 @@ const routes = [
     { path: '/admin/add-:entityType', component: DashboardEdit},
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
-    { path: '/admin/stock', component: DashboardStock},
+    {
+        path: '/admin/stock',
+        component: DashboardStock
+    },
+
     { path: '/admin/', component: Dashboard },
+
 
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
 
-    {path: '/account/settings/preferences', component: Subscriptions},
 
 
 
@@ -156,7 +163,7 @@ router.beforeEach(async (to, from, next) => {
     const userAuthStore = useUserAuthStore();
     userAuthStore.setUserDetails(isLogged ? user : null);
     userAuthStore.setLoginStatus(isLogged);
-    console.log(isLogged);
+
     if (requiresNoAuth && isLogged) {
         next('/');
         return;

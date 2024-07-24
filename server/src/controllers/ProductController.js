@@ -101,60 +101,17 @@ export class ProductController {
     }
   }
 
-  static async updateProduct(request, response, next) {
-    const parameters = {
-      name: request.body.name,
-      price_ht: request.body.price_ht,
-      slug: request.body.slug,
-      description: request.body.description,
-      category_id: request.body.category_id,
-      quantity: request.body.quantity,
-    };
-    try {
-      const productRepository = new ProductRepository();
-      const userRepo = new UserRepository();
-      const usersPrefNew = await userRepo.findAllWithPreferences("NEW");
 
-      const id = request.params.id;
-
-      const previousData = await productRepository.findById(id);
-
-      const categoryRepository = new CategoryRepository();
-      console.log(parameters.category_id);
-      parameters.category_id = await categoryRepository.getCategoryId(
-        parameters.category_id
-      );
-
-      const oldPrice = previousData.price_ht;
-      const newPrice = parameters.price_ht;
-      const oldQuantity = previousData.quantity;
-      const newQuantity = Math.max(0, parameters.quantity);
-
-      if (oldQuantity !== newQuantity) {
-        const isRestock = oldQuantity < newQuantity;
-        const stockDiff = Math.max(Math.abs(oldQuantity - newQuantity), 0);
-
-        const stockEventRepository = new StockEventRepository();
-        await stockEventRepository.createStockEvent({
-          product_id: id,
-          event_type: isRestock ? "stock_in" : "stock_out",
-          stock_movement: stockDiff,
-        });
-
-        // check if the product is restocked
-        if (isRestock && oldQuantity === 0) {
-          const usersPrefRestock = await userRepo.findAllWithPreferences(
-            "RESTOCK"
-          );
-          for (const user of usersPrefRestock) {
-            const { to, subject } = {
-              to: user.email,
-              subject: "New Stock Alert",
-            };
-            await sendEmail(to, subject, newPriceTemplate(parameters));
-          }
+    static async updateProduct(request, response,next) {
+        const parameters = {
+            name: request.body.name,
+            price_ht: request.body.price_ht,
+            slug: request.body.slug,
+            description: request.body.description,
+            category_id: request.body.category_id,
+            quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
-      }
 
       const product = await productRepository.updateProduct(id, parameters);
 

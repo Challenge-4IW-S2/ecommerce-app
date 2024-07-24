@@ -6,6 +6,7 @@ import { fetchModelStructure, filterUnwantedFields } from "../../functions/model
 import { useFormHandler } from '../../composables/useFormHandler';
 import Button from "../../components/Buttons/Button.vue";
 import { useAPI } from '../../composables/useAPI.js';
+import ky from "ky";
 const props = defineProps({
   userId: {
     type: String,
@@ -39,8 +40,9 @@ const fetchEntityStructure = async (modelName) => {
     const unwantedFields = ['createdAt', 'updatedAt', 'id', 'user_id'];
     let response = {};
     if (entityId) {
-      const { results } = await useAPI('get', `address/${entityId}/`, {}, {}, '', true);
-      response = results.value;
+      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/address/${entityId}/`, {
+        credentials: "include"
+      }).json();
     } else {
       const structure = await fetchModelStructure(modelName);
       response = structure.reduce((acc, field) => {

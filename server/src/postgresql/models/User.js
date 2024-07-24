@@ -115,14 +115,14 @@ export default function (connection) {
 
     User.afterValidate(async (user) => {
         if (user.changed("lastname") && user.lastname) {
-          user.lastname = user.lastname.toUpperCase();
+            user.lastname = user.lastname.toUpperCase();
         }
 
         if (user.changed("firstname") && user.firstname) {
-          // UCWORDS
-          user.firstname = user.firstname
-            .toLowerCase()
-            .replace(/(?<= )[^\s]|^./g, (a) => a.toUpperCase());
+            // UCWORDS
+            user.firstname = user.firstname
+                .toLowerCase()
+                .replace(/(?<= )[^\s]|^./g, a=> a.toUpperCase())
         }
     });
     return User;

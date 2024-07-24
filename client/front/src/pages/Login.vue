@@ -16,7 +16,9 @@ const token = router.currentRoute.value.query.token
 
 const verifyToken = async (token) => {
   try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`, {
+      credentials: "include"
+    });
     console.log(response)
     if (response.ok) {
       const data = await response.json();
@@ -30,7 +32,6 @@ const verifyToken = async (token) => {
     Votre compte a été vérifié avec succès
   </div>
 </div>`;
-
     }
   } catch (error) {
 
@@ -60,6 +61,7 @@ const email = ref('')
 const password = ref('')
 const msgError = ref('')
 const msgValidation = ref('')
+const msgSuccess = ref('')
 
 const setErrorWithHtml = () => {
   msgError.value = `

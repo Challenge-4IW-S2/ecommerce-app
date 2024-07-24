@@ -2,6 +2,7 @@
 import router from "../../router.js";
 import { useAPI } from "../../composables/useAPI.js";
 import { useAPIDelete } from "../../composables/useAPIDelete.js";
+import ky from "ky";
 
 const props = defineProps({
   title: {
@@ -19,7 +20,13 @@ const props = defineProps({
 });
 const deleteAddress = async (id) => {
   try {
-    await useAPIDelete(`address/${id}`);
+    if (!confirm('Are you sure you want to delete this address?')) {
+      return;
+    }
+    await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/address/${id}`, {
+      credentials: "include"
+    });
+    router.go();
   } catch (error) {
     console.error(error);
   }
