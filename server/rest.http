@@ -19,7 +19,7 @@ PATCH http://localhost:8000/users/1
 Content-Type: application/json
 
 {
-  "password": "Azerty1234!"
+  "password": "@Azerty1234!"
 }
 ###
 POST http://localhost:8000/users
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
   "email": "john@doe.fr",
-  "password": "Azerty1234!"
+  "password": "@Azerty1234!"
 }
 
 ### Any request to the security routes
@@ -67,7 +67,7 @@ POST localhost:8000/user
 Content-Type: application/json
 
 {
-  "email": "estelle272001@gmail.com",
+  "email": "estelle272001@gmail.cm",
   "password": "Testpassword&1",
   "role": "ROLE_USER",
   "firstname":"Test",

@@ -3,8 +3,8 @@ import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
-import {ref} from "vue";
-import {  useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 // For connect user bag
 import { useUserStore } from "../store/userStore";
@@ -13,11 +13,11 @@ const userStore = useUserStore();
 const router = useRouter()
 
 const token = router.currentRoute.value.query.token
-console.log(token)
 
 const verifyToken = async (token) => {
   try {
     const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
+    console.log(response)
     if (response.ok) {
       const data = await response.json();
       msgError.value =
@@ -30,16 +30,19 @@ const verifyToken = async (token) => {
     Votre compte a été vérifié avec succès
   </div>
 </div>`;
+
     }
   } catch (error) {
-    const httpCode = error.response.status;
-    console.log(httpCode)
+
     switch (httpCode) {
       case 404:
         msgError.value = 'Le token est invalide';
         break;
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+      case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
         msgError.value = 'Une erreur est survenue';
@@ -96,7 +99,7 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-     await router.replace('/');
+      await router.replace('/');
     }
   } catch (error) {
     const httpCode = error.response.status;
@@ -106,7 +109,10 @@ const connect = async () => {
         setValidateWithHtml();
         break;
       case 403:
-          await router.replace(`/edit-password?email=${email.value}`);
+        await router.replace(`/edit-password?email=${email.value}`);
+        break;
+      case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
         msgError.value = 'Une erreur est survenue';
@@ -140,22 +146,16 @@ const connect = async () => {
               placeholder="Mot de passe"
               v-model="password"
           ></Input>
-
         </div>
         <div class="flex flex-col gap-4 mt-5">
           <a href="#" class="text-xs font-medium border-b border-black w-fit">Récupérer mon compte</a>
           <Button text="Connexion" type="submit"></Button>
-          <ButtonLink
-              class-name="bg-transparent text-black border border-black h-12"
-              text="Créer un compte"
-              to="/register"
-          />
+          <ButtonLink class-name="bg-transparent text-black border border-black h-12" text="Créer un compte"
+            to="/register" />
         </div>
       </form>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
