@@ -128,7 +128,6 @@ export class ProductController {
     } catch (error) {
       next(error);
     }
-  }
 
   static async deleteProduct(request, response, next) {
     try {

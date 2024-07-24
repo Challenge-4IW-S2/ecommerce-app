@@ -36,11 +36,11 @@ export default function (router) {
         OrderController.getOrderByUser
     );
 
-    router.get(
-        '/address-list',
-        checkAuth(),
-        AddressController.getAllAddressesFromUser
-    );
+    // router.get(
+    //     '/address-list',
+    //     checkAuth(),
+    //     AddressController.getAllAddressesFromUser
+    // );
 
     router.put(
         '/update-profile',

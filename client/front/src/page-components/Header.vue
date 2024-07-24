@@ -27,7 +27,7 @@ const fetchCategories = async () => {
 };
 
 onMounted(async () => {
-  await fetchCategories();;
+  await fetchCategories();
   await userAuthStore.checkAuthStatus();
   isAuthChecked.value = true;
 });
