@@ -47,6 +47,12 @@ export default function (router) {
         AuthController.checkResetPasswordToken
     );
 
+    router.post(
+        '/delete-account',
+        checkAuth(),
+        AuthController.deleteAccount
+    )
+
     router.get(
         '/verify-token/:token',
         checkNotAuth(),

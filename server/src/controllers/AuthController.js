@@ -223,6 +223,33 @@ export class AuthController {
         response.status(200).send();
     }
 
+    static async deleteAccount(request, response) {
+        const parametersSchema = z.object({
+            password: z.string(),
+            deleteAccountPhrase: z.literal('Je souhaite supprimer mon compte')
+        });
+
+        const parsedParameters = parametersSchema.safeParse(request.body);
+        if (!parsedParameters.success) {
+            return response.status(400).send();
+        }
+
+        const userRepository = new UserRepository();
+        const user = await userRepository.findOne('id', request.user.id);
+        if (!user || !bcrypt.compare(parsedParameters.data.password, user.password)) {
+            return response.status(401).send();
+        }
+
+        userRepository.deleteUser(user.id).then(r => {
+            // logout user
+            response.clearCookie('JWT', {
+                httpOnly: true,
+                signed: true
+            });
+
+            return response.status(200).send();
+        });
+    }
 
     static async authCheck(request, response) {
         const userRoleRepository = new UserRoleRepository();
