@@ -13,16 +13,6 @@ onMounted(() => {
 const userAuthStore = useUserAuthStore();
 const userDetails = userAuthStore.getUserDetails();
 
-const checkGetUsers = () => {
-  ky.get(`${import.meta.env.VITE_API_BASE_URL}/users`, {
-    credentials: "include",
-  }).then((response) => response.json()).then((data) => {
-    console.log(data);
-  }).catch((error) => {
-    console.error(error);
-  });
-}
-
 </script>
 
 <template>

@@ -16,7 +16,7 @@ import {AddressController} from "../controllers/AddressController.js";
 export default function (router) {
     router.get(
         "/users",
-        // checkAuth(),
+        checkAuth(),
         checkRole(['ROLE_ADMIN']),
         UserController.getAllUsers
     );
@@ -26,6 +26,8 @@ export default function (router) {
     router.delete("/user/:id",UserController.deleteUser);
    // router.get("/role", UserController.getAllUserRole);
     router.patch("/user/:id", UserController.updateUser);
+
+
 
 
     router.get(
