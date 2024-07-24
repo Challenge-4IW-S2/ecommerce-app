@@ -42,6 +42,7 @@ function toggleCategorySelection(categoryId) {
     selectedCategories.value.push(categoryId);
   }
   emit('categories-selected', selectedCategories.value);
+}
 
 
 const selectedCategoryNames = computed(() => {

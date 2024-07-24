@@ -20,7 +20,6 @@
     "sweetalert2": "^11.6.13",
     "tw-elements": "^2.0.0",
     "uuid": "^10.0.0",
-    "vue": "^3.4.29",
     "vuetify": "^3.6.13",
     "vue": "^3.4.33",
     "vue-chartjs": "^5.3.1",
