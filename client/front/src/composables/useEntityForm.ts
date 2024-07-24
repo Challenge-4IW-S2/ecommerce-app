@@ -131,6 +131,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const initializeFormData = () => {
         entityStructure.value.forEach(field => {
             formData[field.name] = field.value || '';
+            if (field.name === 'password') formData[field.name] = '';
         });
     };
 

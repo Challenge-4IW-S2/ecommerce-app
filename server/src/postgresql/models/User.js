@@ -69,6 +69,14 @@ export default function (connection) {
                 type: DataTypes.DATE,
                 allowNull: true
             },
+            attempt_connexion: {
+            type: DataTypes.NUMBER,
+            allowNull: true
+          },
+            lock_until: {
+            type: DataTypes.DATE,
+            allowNull: true,
+          },
             token: {
                 type: DataTypes.STRING,
                 allowNull: true

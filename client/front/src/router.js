@@ -24,6 +24,7 @@ import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPic
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
 import DashboardStock from './pages/Dashboard/Tables/Stock.vue'
 import Subscriptions from './pages/Account/Subscriptions.vue'
+import Dashboard from './pages/Dashboard/Dashboard.vue'
 
 
 
@@ -128,6 +129,9 @@ const routes = [
         path: '/admin/stock',
         component: DashboardStock
     },
+
+    { path: '/admin/', component: Dashboard },
+
 
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
