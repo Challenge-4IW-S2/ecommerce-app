@@ -23,6 +23,9 @@ import DashboardEditProductPicture from './pages/Dashboard/DynamicEditProductPic
 import DashboardEdit from './pages/Dashboard/DynamicEdit.vue'
 import DashboardStock from './pages/Dashboard/Tables/Stock.vue'
 import Subscriptions from './pages/Account/Subscriptions.vue'
+import PDC from "./pages/legal/PolitiqueDeConfidentialite.vue";
+import CGV from "./pages/legal/CGV.vue";
+import LegalMentions from "./pages/legal/MentionLegal.vue";
 
 
 
@@ -127,7 +130,11 @@ const routes = [
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
 
-    {path: '/account/settings/preferences', component: Subscriptions},
+    { path: '/account/settings/preferences', component: Subscriptions },
+    { path: '/politique-de-confidentialite', component: PDC },
+    { path: '/conditions-generales-de-vente', component: CGV },
+    { path: '/mentions-legales', component: LegalMentions },
+
 
 
 

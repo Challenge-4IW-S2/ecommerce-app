@@ -8,9 +8,9 @@ import Logo from "../components/Logo.vue";
     <div class="max-w-125 m-auto flex flex-col gap-16">
       <div class="flex justify-between flex-wrap-reverse gap-y-12 gap-x-4">
         <div class="flex flex-col gap-8">
-          <a href="#">Politique de confidentialité</a>
-          <a href="#">Conditions d'utilisations</a>
-          <a href="#">Mentions légales</a>
+          <a href="/politique-de-confidentialite">Politique de confidentialité</a>
+          <a href="/conditions-generales-de-vente">Conditions Générales de Vente</a>
+          <a href="/mention-legale">Mentions légales</a>
         </div>
         <div class="flex flex-grow">
           <div class="flex flex-col items-end gap-5 align-center-small flex-grow">
