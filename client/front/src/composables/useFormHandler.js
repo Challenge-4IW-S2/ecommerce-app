@@ -1,6 +1,7 @@
 import { ref, reactive } from 'vue';
 import { getEntitySchema, handleHttpResponse } from '../functions/model.js';
-import ky from 'ky';
+import { useAPI } from './useAPI.js';
+import ky from "ky";
 
 export function useFormHandler(entityType, initialData = {}) {
     const formData = ref({ ...initialData });

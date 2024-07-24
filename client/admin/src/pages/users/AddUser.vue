@@ -3,8 +3,7 @@
 import { ref, onMounted } from "vue";
 import { fetchModelStructure } from "../../../functions/model.js";
 import DynamicForm from "../../../components/Form/DynamicForm.vue";
-import Button from "../../../components/Buttons/Button.vue";
-import ky from "ky";
+import { useAPI } from "../../../../front/src/composables/useAPI.js";
 const modelStructure = ref([]);
 const modelName = 'User';
 

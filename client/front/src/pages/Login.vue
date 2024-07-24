@@ -3,8 +3,8 @@ import Input from "../components/Inputs/Input.vue";
 import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
-import {ref} from "vue";
-import {  useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 // For connect user bag
 import { useUserStore } from "../store/userStore";
@@ -22,7 +22,16 @@ const verifyToken = async (token) => {
     console.log(response)
     if (response.ok) {
       const data = await response.json();
-      msgSuccess.value ="Compte vérifié, vous pouvez vous connecter";
+      msgError.value =
+        `<div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span class="sr-only">Info</span>
+  <div>
+    Votre compte a été vérifié avec succès
+  </div>
+</div>`;
     }
   } catch (error) {
 
@@ -33,7 +42,7 @@ const verifyToken = async (token) => {
       case 401:
         msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
         break;
-        case 429:
+      case 429:
         msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
@@ -51,8 +60,36 @@ if (token) {
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
+const msgValidation = ref('')
 const msgSuccess = ref('')
 
+const setErrorWithHtml = () => {
+  msgError.value = `
+  <div id="alert-2" class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span class="sr-only">Info</span>
+  <div class="ms-3 text-sm font-medium">
+    Aucun compte trouvé avec les informations que vous avez fournies
+  </div>
+</div>
+  `;
+};
+
+const setValidateWithHtml = () => {
+  msgValidation.value = `
+  <div id="alert-4" class="flex items-center p-4 mb-4 text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+  <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span class="sr-only">Info</span>
+  <div class="ms-3 text-sm font-medium">
+    Si vous n'avez pas vérifié votre compte, la connexion sera impossible
+  </div>
+</div>
+  `;
+};
 
 const connect = async () => {
   try {
@@ -64,16 +101,17 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-     await router.replace('/');
+      await router.replace('/');
     }
   } catch (error) {
     const httpCode = error.response.status;
     switch (httpCode) {
       case 401:
-        msgError.value = 'Veuillez vérifier les informations que vous avez fournies';
+        setErrorWithHtml();
+        setValidateWithHtml();
         break;
       case 403:
-          await router.replace(`/edit-password?email=${email.value}`);
+        await router.replace(`/edit-password?email=${email.value}`);
         break;
       case 429:
         msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
@@ -93,12 +131,8 @@ const connect = async () => {
       <h1 class="mb-4">
         Connectez-vous à votre compte
       </h1>
-      <small class="text-green-500" v-if="msgSuccess" >
-        {{ msgSuccess }}
-      </small>
-      <small class="error" v-if="msgError" >
-        {{ msgError }}
-      </small>
+      <div v-html="msgError" v-if="msgError"></div>
+      <div v-html="msgValidation" v-if="msgValidation"></div>
       <form @submit.prevent="connect">
         <div class="flex flex-col gap-4">
           <Input
@@ -118,17 +152,12 @@ const connect = async () => {
         <div class="flex flex-col gap-4 mt-5">
           <a href="#" class="text-xs font-medium border-b border-black w-fit">Récupérer mon compte</a>
           <Button text="Connexion" type="submit"></Button>
-          <ButtonLink
-              class-name="bg-transparent text-black border border-black h-12"
-              text="Créer un compte"
-              to="/register"
-          />
+          <ButtonLink class-name="bg-transparent text-black border border-black h-12" text="Créer un compte"
+            to="/register" />
         </div>
       </form>
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

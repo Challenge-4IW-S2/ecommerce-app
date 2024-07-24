@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import z from 'zod';
 import { useRoute } from 'vue-router';
-import ky from 'ky';
+import { useAPI } from '../../composables/useAPI.js';
 import CardDescription from '../../components/CardDescription.vue';
 import { useCartStore } from "../../store/cart.js";
 import Warning from '../../components/Alerts/Warning.vue';
+import ky from "ky";
 
 const route = useRoute();
 const slug = computed(() => route.params.slug);

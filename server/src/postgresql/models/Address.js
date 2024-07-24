@@ -48,7 +48,7 @@ export default function (connection) {
         }
     );
 
-    Address.afterCreate(async (address) => {
+  /*  Address.afterCreate(async (address) => {
         await denormalizeAddressCreate(address);
     });
 
@@ -58,7 +58,7 @@ export default function (connection) {
 
     Address.afterDestroy(async (address) => {
         await denormalizeAddressDelete(address);
-    });
+    });*/
 
     return Address;
 }

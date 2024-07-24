@@ -1,8 +1,8 @@
 {
   "name": "server",
+  "type": "module",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "node --watch --trace-warnings index.js",
     "dev:nodemon": "nodemon -L --verbose index.js",

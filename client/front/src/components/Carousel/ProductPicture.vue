@@ -1,8 +1,8 @@
 <script setup>
 
 import Button from "../Buttons/Button.vue";
-import ky from "ky";
 import router from "../../router.js";
+import { useAPI } from "../../composables/useAPI.js";
 const props = defineProps({
   images: {
     type: Array,

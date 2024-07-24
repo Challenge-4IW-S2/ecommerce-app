@@ -1,16 +1,15 @@
 <script setup>
 import Table from "../../../components/Tables/Table.vue";
 import { useEntityTable } from '../../../composables/useEntityTable.ts';
-import ky from "ky";
 import { useGeneratePDF } from "../../../composables/useGeneratorPDF.ts";
 
 
 const entityPath = 'order';
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const route = `${import.meta.env.VITE_API_BASE_URL}/orders`;
+
+const route = 'orders';
 
 
-const { data, actions } = useEntityTable(baseUrl,route, entityPath, [{
+const { data, actions } = useEntityTable(route, entityPath, [{
   label: "Télécharger en PDF",
   method: async ({ row }) => {
     const { generatePDF } = useGeneratePDF();
@@ -35,10 +34,8 @@ const { data, actions } = useEntityTable(baseUrl,route, entityPath, [{
 <template>
   <div>
     <h1>Orders Dashboard</h1>
-    <Table :params="data" :actions="actions" :title="'orders'"/>
+    <Table :params="data" :actions="actions" :title="'orders'" />
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

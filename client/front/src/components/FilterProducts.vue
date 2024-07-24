@@ -17,13 +17,12 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
 import ky from "ky";
 
 const categories = ref([]);
 const selectedCategories = ref([]);
 const dropdownOpen = ref(false);
-const emit = defineEmits(['categories-selected']);
 
 async function fetchCategories() {
   try {
@@ -34,6 +33,81 @@ async function fetchCategories() {
   }
 }
 
+
+// filter by 
+// --> function for categories
+let categoriesSelected = ref([]);
+const isCategoriesOpen = ref(false);
+const openCategories = () => {
+    isCategoriesOpen.value = !isCategoriesOpen.value;
+}
+// const getCategories = async () => {
+//     try {
+//         const { results } = await useAPI('get', 'getCategories', {}, {}, '', true);
+//         categories.value = results.value;
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
+
+
+// --> function for prices
+let priceMin = ref(0);
+let priceMax = ref(0);
+const getPrices = async () => {
+    try {
+        const { results } = await useAPI('get', 'getMinMaxPrice', {}, {}, '', true);
+        priceMin.value = results.value[0].min;
+        priceMax.value = results.value[0].max;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+// --> function for inStock
+let inStockSelected = ref([]);
+// --> pour tester la checkbox
+// console.log(inStockSelected);
+
+// order by
+const OrdersValue = [
+    { id: 0, name: 'Pertinence', value: 'relevance' },
+    { id: 1, name: 'Prix décroissant', value: 'price_desc' },
+    { id: 2, name: 'Prix croissant', value: 'price_asc' },
+    { id: 3, name: 'Plus récent', value: 'date_desc' },
+    { id: 4, name: 'Plus ancien', value: 'date_asc' },
+];
+const selectedOrder = ref('relevance')
+
+// onBeforeMount(() => {
+//     getPrices();
+// })
+
+const deleteFilters = () => {
+    categoriesSelected.value = [];
+    getPrices();
+}
+
+
+// infos send to parent component
+const emit = defineEmits(['categories', 'order', 'priceMin', 'priceMax']);
+//  infos on order by
+watch(selectedOrder, (newValue) => {
+    emit('order', newValue);
+    selectedOrder.value = newValue;
+});
+// infos on categories
+watch(categoriesSelected, () => {
+    emit('categories', categoriesSelected.value);
+});
+// infos on prices
+watch(priceMin, () => {
+    emit('priceMin', priceMin.value);
+});
+watch(priceMax, () => {
+    emit('priceMax', priceMax.value);
+  });
 function toggleCategorySelection(categoryId) {
   const index = selectedCategories.value.indexOf(categoryId);
   if (index > -1) {
@@ -42,13 +116,17 @@ function toggleCategorySelection(categoryId) {
     selectedCategories.value.push(categoryId);
   }
   emit('categories-selected', selectedCategories.value);
+}
 
 
 const selectedCategoryNames = computed(() => {
   return categories.value.filter(c => selectedCategories.value.includes(c.id)).map(c => c.name);
 });
 
-onMounted(fetchCategories);
+onMounted(() => {
+  fetchCategories();
+});
+
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
-import ky from "ky";
 import {z} from "zod";
 import Swal from "sweetalert2";
+import ky from "ky";
 
-export function fetchModelStructure(modelName) {
+export async function fetchModelStructure(modelName) {
     try {
         console.log(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`)
         return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`, {
@@ -48,11 +48,11 @@ export function getEntitySchema (entityType){
             return z.object({
                 street: z.string({ required_error: "Street is required"}).min(5, { message: "Street must be at least 5 characters long" }),
                 city: z.string("City is required")
-                    .regex(/^[a-zA-Z\s]+$/, {message: "City must contain only letters" }),
+                    .regex(/^[a-zA-Z\s\-]+$/, {message: "City must contain only letters and hyphens" }),
                 postal_code: z.string()
                     .regex(/^\d{5}$/, { message: "Postal code must contain exactly 5 digits" }),
-                country: z.string("Country is required")
-                    .regex(/^[a-zA-Z\s]+$/, { message: "Country must contain only letters" }),
+                country: z.string("Country code is required")
+                    .regex(/^[A-Z]{2}$/, { message: "Country code must be 2 uppercase letters" }),
                 user_id: z.string().uuid(),
             }).required();
 

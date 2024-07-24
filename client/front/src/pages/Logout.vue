@@ -21,4 +21,3 @@ onMounted(async () => {
 <template>
   <div>Déconnexion...</div>
 </template>
-

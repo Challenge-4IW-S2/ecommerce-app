@@ -146,6 +146,7 @@ watch(() => route.query, () => {
   }
 }, { immediate: true });
 
+
 watch([minPrice, maxPrice], () => {
   filteredProducts.value = filterProducts();
 }, { immediate: true });
@@ -178,4 +179,3 @@ function clearFilters() {
   padding-bottom: 15px;
 }
 </style>
-
