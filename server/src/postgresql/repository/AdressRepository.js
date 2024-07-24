@@ -22,6 +22,14 @@ export default class AdressRepository {
         });
     }
 
+    async findByUserId(id) {
+        return await this.Adress.findAll({
+            where: {
+                user_id: id
+            }
+        });
+    }
+
     async createAdress(adress) {
         return await this.Adress.create({
             user_id: adress.user_id,

@@ -22,6 +22,7 @@ export default async function RouteLoader(globPattern) {
                 const routeModule = await import(path.resolve(file));
                 router = (routeModule.default || routeModule)(router);
             } catch (e) {
+                console.error(e);
                 throw new Error(`Error when loading route file: ${file} [ ${e.toString()} ]`);
             }
         }
