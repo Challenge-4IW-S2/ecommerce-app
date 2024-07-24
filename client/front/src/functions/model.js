@@ -5,7 +5,9 @@ import Swal from "sweetalert2";
 export function fetchModelStructure(modelName) {
     try {
         console.log(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`)
-        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`).json();
+        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`, {
+            credentials: "include"
+        }).json();
     } catch (error) {
         console.error("Error fetching model structure:", error);
         throw error;

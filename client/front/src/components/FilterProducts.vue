@@ -18,7 +18,9 @@ const openCategories = () => {
 }
 const getCategories = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getCategories`).json().then((response) => {
+        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getCategories`, {
+          credentials: "include"
+        }).json().then((response) => {
             categories.value = response;
         });
     } catch (error) {
@@ -32,7 +34,9 @@ let priceMin = ref(0);
 let priceMax = ref(0);
 const getPrices = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getMinMaxPrice`).json().then((response) => {
+        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getMinMaxPrice`, {
+          credentials: "include"
+        }).json().then((response) => {
             priceMin.value = response[0].min;
             priceMax.value = response[0].max;
         });

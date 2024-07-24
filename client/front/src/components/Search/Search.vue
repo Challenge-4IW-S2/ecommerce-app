@@ -24,6 +24,7 @@ const searchProducts = async (newValue) => {
             searchParams: {
                 search: newValue,
             },
+          credentials: "include"
         }).json();
     } catch (error) {
         console.error(error);

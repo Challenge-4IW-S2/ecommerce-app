@@ -33,9 +33,9 @@ export function useFormHandler(entityType, initialData = {}) {
         serverError.value = null;
         try {
             if (method === 'POST') {
-                response = await ky.post(url, { json: formData.value });
+                response = await ky.post(url, { json: formData.value, credentials: "include" });
             } else {
-                response = await ky.patch(url, { json: formData.value });
+                response = await ky.patch(url, { json: formData.value, credentials: "include" });
             }
             await handleHttpResponse(response);
         } catch (error) {

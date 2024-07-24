@@ -16,7 +16,9 @@ const token = router.currentRoute.value.query.token
 
 const verifyToken = async (token) => {
   try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`);
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`, {
+      credentials: "include"
+    });
     console.log(response)
     if (response.ok) {
       const data = await response.json();
