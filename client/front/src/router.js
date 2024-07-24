@@ -177,7 +177,6 @@ const routes = [
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
     { path: '/admin/stock', component: DashboardStock},
-    { path: '/admin/', component: Dashboard},
 
 
     { path: "/admin/:entityType/:id", component: DashboardEdit },

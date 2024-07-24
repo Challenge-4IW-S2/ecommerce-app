@@ -1,7 +1,4 @@
 <script setup>
-import AveragePriceByCategory from "./widgets/AveragePriceByCategory.vue";
-import ProductsAddedOverTime from "./widgets/ProductsAddedOverTime.vue";
-import NewProductsByCategory from "./widgets/newProductsByCategory.vue";
 
 </script>
 
