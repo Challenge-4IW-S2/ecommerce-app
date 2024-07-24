@@ -7,9 +7,9 @@ import checkRole from "../middlewares/checkRole.js";
 export default function (router) {
 
     router.get(
+        "/order/:id",
         checkAuth(),
         checkRole(['ROLE_ADMIN']),
-        "/order/:id",
         OrderController.getOrder
     ); //user connected
     router.get(
