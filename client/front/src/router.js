@@ -26,7 +26,7 @@ import Subscriptions from './pages/Account/Subscriptions.vue'
 import PDC from "./pages/legal/PolitiqueDeConfidentialite.vue";
 import CGV from "./pages/legal/CGV.vue";
 import LegalMentions from "./pages/legal/MentionLegal.vue";
-
+import Dashboard from './pages/Dashboard/Dashboard.vue'
 
 
 
@@ -111,6 +111,7 @@ const routes = [
         path: '/login?token=:token',
         component: LoginView,
     },
+
   
     { path: '/admin/categories', component: DashboardCategoriesView},
     { path: '/admin/users', component: DashboardUsersView },
@@ -126,6 +127,9 @@ const routes = [
     { path: '/admin/add-address/:userId', component: DashboardEditAdress , props: true},//add address
     { path: '/admin/edit-address/:id/:userId', component: DashboardEditAdress , props: true}, //edit addressess
     { path: '/admin/stock', component: DashboardStock},
+    { path: '/admin/', component: Dashboard},
+
+
 
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},

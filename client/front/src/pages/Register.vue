@@ -186,6 +186,7 @@ const register = async () => {
                   :id="`accept-cgv`"
                   :name="`accept-cgv`"
                   :checked="acceptCGV"
+                  v-model="acceptCGV"
                   :required="true"
               />
 
