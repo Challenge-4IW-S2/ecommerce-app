@@ -43,7 +43,7 @@ export default class ProductRepository {
             is_active: product.is_active,
             token: product.token,
             slug: product.slug,
-            category_id: await this.CategoryRepository.getCategoryId(product.category),
+            category_id: product.category,
             quantity: product.quantity,
             low_stock_threshold: product.low_stock_threshold,
         });
