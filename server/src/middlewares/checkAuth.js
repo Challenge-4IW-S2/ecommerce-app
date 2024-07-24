@@ -24,6 +24,7 @@ export default () => async (request, response, next) => {
         request.user = user;
         next();
     } catch (e) {
+        return response.status(401).json({message: e.message});
         return response.sendStatus(401);
     }
 }

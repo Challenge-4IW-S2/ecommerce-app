@@ -2,6 +2,7 @@ import UserRepository from "../postgresql/repository/UserRepository.js";
 import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 import bcrypt from "bcryptjs";
 import AdressRepository from "../postgresql/repository/AdressRepository.js";
+import PreferenceRepository from "../postgresql/repository/PreferenceRepository.js";
 
 export class UserController {
     static async getAllUsers(request, response) {
@@ -28,6 +29,7 @@ export class UserController {
 
         try {
             const userRepository = new UserRepository();
+            console.log(parameters)
             const user = await userRepository.createUser(parameters);
             response.status(201).json(user);
         }catch (e){
@@ -39,7 +41,6 @@ export class UserController {
     static async updateUser(request, response,next) {
         const parameters = {
             email: request.body.email,
-            password: request.body.password,
             firstname: request.body.firstname,
             lastname: request.body.lastname,
             phone: request.body.phone,
@@ -48,29 +49,39 @@ export class UserController {
 
         try {
             const userRepository = new UserRepository();
-            parameters.role = await new UserRoleRepository().getRoleId(parameters.role);
+            const userRoleRepository = new UserRoleRepository();
+
+            parameters.role = await userRoleRepository.getRoleId(parameters.role);
+
+
             const [nbUpdated,user] = await userRepository.updateUser(request.params.id, parameters);
             if (nbUpdated === 1) return response.status(200).json(user[0]);
             response.sendStatus(404);
         } catch (e) {
+            console.log(e);
             next(e)
         }
     }
     static async deleteUser(request, response,next) {
         const userRepository = new UserRepository();
         const userAddressRepository = new AdressRepository();
+        const preferencesRepository = new PreferenceRepository();
         // verifier si admin ou si himself
         try {
             const [nbDeleted] = await userRepository.deleteUser(request.params.id);
             if (nbDeleted === 1) {
                 const addresses = await userAddressRepository.findByOtherField("user_id", request.params.id);
 
-                if (addresses.length === 0) {
-                    return response.sendStatus(204);
-                }
                 const deleteAddress = await userAddressRepository.deleteAdressFromUser(request.params.id);
 
                 response.sendStatus(deleteAddress === 1 ? 204 : 404);
+
+                const deletePreferences = await preferencesRepository.destroy(request.params.id);
+
+                if (deletePreferences.length === 0) return response.sendStatus(404);
+
+                response.sendStatus(deletePreferences === 1 ? 204 : 404);
+
             } else {
                  response.sendStatus(404);
             }

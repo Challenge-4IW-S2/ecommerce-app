@@ -12,9 +12,46 @@ const userStore = useUserStore();
 
 const router = useRouter()
 
+const token = router.currentRoute.value.query.token
+
+const verifyToken = async (token) => {
+  try {
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/verify-token/${token}`, {
+      credentials: "include"
+    });
+    console.log(response)
+    if (response.ok) {
+      const data = await response.json();
+      msgSuccess.value ="Compte vérifié, vous pouvez vous connecter";
+    }
+  } catch (error) {
+
+    switch (httpCode) {
+      case 404:
+        msgError.value = 'Le token est invalide';
+        break;
+      case 401:
+        msgError.value = 'Aucun compte trouvé avec les informations que vous avez fournies';
+        break;
+        case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
+        break;
+      default:
+        msgError.value = 'Une erreur est survenue';
+        break;
+    }
+  }
+};
+
+if (token) {
+  verifyToken(token)
+} else {
+}
+
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
+const msgSuccess = ref('')
 
 
 const connect = async () => {
@@ -27,13 +64,19 @@ const connect = async () => {
       credentials: 'include'
     });
     if (response.ok) {
-      await router.replace('/');
+     await router.replace('/');
     }
   } catch (error) {
     const httpCode = error.response.status;
     switch (httpCode) {
       case 401:
         msgError.value = 'Veuillez vérifier les informations que vous avez fournies';
+        break;
+      case 403:
+          await router.replace(`/edit-password?email=${email.value}`);
+        break;
+      case 429:
+        msgError.value = 'Plusieurs tentatives de connexion ont été effectuées, veuillez réessayer plus tard';
         break;
       default:
         msgError.value = 'Une erreur est survenue';
@@ -50,6 +93,9 @@ const connect = async () => {
       <h1 class="mb-4">
         Connectez-vous à votre compte
       </h1>
+      <small class="text-green-500" v-if="msgSuccess" >
+        {{ msgSuccess }}
+      </small>
       <small class="error" v-if="msgError" >
         {{ msgError }}
       </small>

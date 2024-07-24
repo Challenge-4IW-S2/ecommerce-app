@@ -33,7 +33,9 @@ export function useEntityForm(entityType, entityId = null) {
     const isEditing = ref(Boolean(entityId));
     const getRoleOptions = async () => {
         try {
-            const response = await ky.get("http://localhost:8000/role").json();
+            const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/role`, {
+                credentials: "include"
+            }).json();
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -47,7 +49,9 @@ export function useEntityForm(entityType, entityId = null) {
 
     const fetchEntityStructure = async () => {
         try {
-            const response = await ky.get(`http://localhost:8000/${entityType}/${entityId || ''}`).json();
+            const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId || ''}`, {
+                credentials: "include"
+            }).json();
             const cleanedResponse = filterUnwantedFields(response, unwantedFields);
             let roleOptions = [];
             if (entityType === 'user') {
@@ -102,7 +106,7 @@ export function useEntityForm(entityType, entityId = null) {
             try {
                 const method = isEditing.value ? 'patch' : 'post';
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
-                const response = await ky[method](`http://localhost:8000/${entityType}/${entityId || ''}`, {
+                const response = await ky[method](`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId || ''}`, {
                     json: cleanedData
                 }).json();
                 await sweetalert.fire({
@@ -126,7 +130,9 @@ export function useEntityForm(entityType, entityId = null) {
     const handleDelete = async () => {
         if (entityId) {
             try {
-                await ky.delete(`http://localhost:8000/${entityType}/${entityId}`).json();
+                await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId}`, {
+                    credentials: "include"
+                }).json();
                 console.log(`${entityType} deleted successfully`);
             } catch (error) {
                 console.error(`Failed to delete ${entityType}:`, error);

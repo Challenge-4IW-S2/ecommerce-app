@@ -3,6 +3,15 @@ import CategoryRepository from "../postgresql/Repository/CategoryRepository.js";
 import CategoryRepositoryMongo from "../mongo/repository/CategoryRepository.js";
 
 export class CategoryController {
+    static async getHeaderCategories(request, response) {
+        const categoryRepository = new CategoryRepository();
+        // get only first 4 inserted categories in the database
+        const categories = await categoryRepository.findAll();
+        //only return the first 4 categories and only their names
+        const headerCategories = categories.slice(0, 4).map(category => category.name);
+        response.json(headerCategories);
+    }
+
     static async createCategory(request, response,next) {
         const parameters = {
             name: request.body.name,
@@ -51,6 +60,7 @@ export class CategoryController {
         try {
             const [nbUpdated,category] = await categoryRepository.updateCategory(request.params.id,parameters);
             if (nbUpdated === 1) return response.json(category[0]);
+            if (nbUpdated === 0) return response.json(category[0]);
         } catch (e) {
             response.json({
                 success: false,

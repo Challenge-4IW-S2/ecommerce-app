@@ -36,10 +36,12 @@ const {
 } = useFormHandler('productPicture', {product_id: props.productId},url);
 const fetchEntityStructure = async (modelName) => {
   try {
-    const unwantedFields = ['createdAt', 'updatedAt', 'id'];
+    const unwantedFields = ['createdAt', 'updatedAt', 'id','user_id'];
     let response = {};
     if (entityId) {
-      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${entityId}`).json();
+      response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${entityId}`, {
+        credentials: "include"
+      }).json();
     } else {
       const structure = await fetchModelStructure(modelName);
       response = structure.reduce((acc, field) => {

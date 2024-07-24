@@ -1,12 +1,14 @@
 import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
+import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
 import User from "../postgresql/models/user.js";
 import Preference from "../postgresql/models/Preference.js";
 import {sendEmail} from "./SendMailController.js";
 import {newProductsTemplate} from "../mailsTemplates/newProducts.js";
 import UserRepository from "../postgresql/repository/UserRepository.js";
 import {newPriceTemplate} from "../mailsTemplates/NewPrice.js";
+import StockEventRepository from "../postgresql/repository/StockEventRepository.js";
 export class ProductController {
     static async index(request, response) {
         const productRepositoryMongo = new ProductRepositoryMongo();
@@ -15,9 +17,8 @@ export class ProductController {
         const categories = request.query.categories;
         const valueMin = request.query.valueMin;
         const valueMax = request.query.valueMax;
-        const names = request.query.names;
 
-        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax, names);
+        const products = await productRepositoryMongo.getAllProducts(page, order, categories, valueMin, valueMax);
         response.json(products);
     }
 
@@ -50,11 +51,12 @@ export class ProductController {
     static async createProduct(request, response,next) {
         const parameters = {
             name: request.body.name,
-            price_ttc: request.body.price_ttc,
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
             category: request.body.category_id,
+            quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
         try {
             const productRepository = new ProductRepository();
@@ -75,9 +77,17 @@ export class ProductController {
                     await sendEmail(to, subject, newProductsTemplate());
                 }
             }
+
+            // Stock event initial (premier stock_in = stock initial)
+            const stockEventRepository = new StockEventRepository();
+            await stockEventRepository.createStockEvent({
+                product_id: product.id,
+                event_type: 'stock_in',
+                stock_movement: product.quantity
+            });
+
             response.status(201).json(product);
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -85,22 +95,59 @@ export class ProductController {
     static async updateProduct(request, response,next) {
         const parameters = {
             name: request.body.name,
-            price_ttc: request.body.price_ttc,
             price_ht: request.body.price_ht,
             slug: request.body.slug,
             description: request.body.description,
-            category: request.body.category_id,
+            category_id: request.body.category_id,
+            quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
         try {
             const productRepository = new ProductRepository();
-            const previousData = await productRepository.findById(request.params.id);
-            const oldPrice = previousData.price_ttc;
-            const newPrice = parameters.price_ttc;
-            const product = await productRepository.updateProduct(request.params.id, parameters)
+            const userRepo = new UserRepository();
+            const usersPrefNew = await userRepo.findAllWithPreferences('NEW');
+
+            const id  = request.params.id;
+          
+            const previousData = await productRepository.findById(id);
+          
+            const categoryRepository = new CategoryRepository();
+            console.log(parameters.category_id);
+            parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
+          
+            const oldPrice = previousData.price_ht;
+            const newPrice = parameters.price_ht;
+            const oldQuantity = previousData.quantity;
+            const newQuantity = Math.max(0, parameters.quantity);
+
+            if (oldQuantity !== newQuantity) {
+                const isRestock = oldQuantity < newQuantity
+                const stockDiff = Math.max(Math.abs(oldQuantity - newQuantity), 0);
+
+                const stockEventRepository = new StockEventRepository();
+                await stockEventRepository.createStockEvent({
+                    product_id: id,
+                    event_type: isRestock ? 'stock_in' : 'stock_out',
+                    stock_movement: stockDiff
+                })
+
+                // check if the product is restocked
+                if (isRestock && oldQuantity === 0) {
+                    const usersPrefRestock = await userRepo.findAllWithPreferences('RESTOCK');
+                    for (const user of usersPrefRestock) {
+                        const {to, subject} = {
+                            to: user.email,
+                            subject: 'New Stock Alert',
+                        };
+                        await sendEmail(to, subject, newPriceTemplate(parameters));
+                    }
+                }
+            }
+
+            const product = await productRepository.updateProduct(id, parameters)
+
             if (oldPrice > newPrice) {
-                const userRepo = new UserRepository();
-                const users = await userRepo.findAllWithPreferences();
-                for (const user of users) {
+                for (const user of usersPrefNew) {
                     const {to, subject} = {
                         to: user.email,
                         subject: 'Price Drop Alert',

@@ -5,17 +5,6 @@ export default class PreferenceRepository {
         this.Preference = Preference(db.connection);
     }
 
-    async createOrUpdatePreference(preference) {
-        return await this.Preference.findByIdAndUpdate(preference.id, {
-            name: preference.name,
-            activated: preference.activated,
-        }, {
-            upsert: true,
-            new: true
-
-        });
-    }
-
     async
 
     async getPreferenceById(id) {
@@ -35,11 +24,11 @@ export default class PreferenceRepository {
     }
 
 
-    async destroy(name,user_id) {
+    async destroy(preference_id, user_id) {
         return await this.Preference.destroy({
             where: {
-                name: name,
-                user_id: user_id
+                user_id: user_id,
+                preference_id: preference_id
             },
             individualHooks: true
         });
@@ -47,9 +36,19 @@ export default class PreferenceRepository {
 
     async create(params) {
         return await this.Preference.create({
-            name: params.name,
+            preference_id: params.preference_id,
             activated: params.activated,
             user_id: params.user_id
+        });
+    }
+
+    async update(id, params) {
+        return this.Preference.update(params, {
+            where: {
+                id: id
+            },
+            returning: true,
+            individualHooks: true
         });
     }
 

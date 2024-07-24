@@ -15,7 +15,7 @@ export default class CategoryRepository {
     }
 
     async findByOtherField(field, value) {
-        return await this.Category.findOne({
+        return this.Category.findOne({
             where: {
                 [field]: value
             }
@@ -23,11 +23,13 @@ export default class CategoryRepository {
     }
 
     async getCategoryId(category) {
+        console.log(category);
         const categoryId = await this.Category.findOne({
             where: {
                 name: category
             }
         });
+        console.log(categoryId);
         return categoryId.id;
     }
 

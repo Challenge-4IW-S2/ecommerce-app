@@ -11,17 +11,20 @@ export default class PreferenceController {
             const preferenceRepository = new PreferenceRepository();
             const userPreferences = await preferenceRepository.findByOtherField("user_id", req.user.id);
             const userPreferencesMap = userPreferences.reduce((acc, pref) => {
-                acc[pref.name] = pref.activated;
+                acc[pref.preference_id] = pref.activated;
                 return acc;
             }, {});
 
-            const combinedPreferences = preferences.map(pref => ({
+            console.log(preferences)
+
+            const combinedPreferences = preferences.map(pref =>  ({
                 id: pref.dataValues.id,
                 name: pref.dataValues.name,
                 description: pref.dataValues.description,
-                activated: userPreferencesMap[pref.dataValues.name] || false
-            }));
-
+                activated: userPreferencesMap.hasOwnProperty(pref.dataValues.id) ? userPreferencesMap[pref.dataValues.id] : false
+            }),
+            );
+            console.log(combinedPreferences)
             res.json(combinedPreferences);
 
         }catch (e) {
@@ -45,12 +48,12 @@ export default class PreferenceController {
     static async createOrUpdatePreference(req, response, next) {
         const preferenceRepository = new PreferenceRepository();
         const params = {
-            name: req.body.name,
+            preference_id: req.body.preference_id,
             activated: req.body.activated,
             user_id: req.user.id
         };
         try{
-           const nbDeleted = await preferenceRepository.destroy(params.name,  req.user.id)
+           const nbDeleted = await preferenceRepository.destroy(params.preference_id,  req.user.id)
            if (params.activated) {
                const preference = await preferenceRepository.create(params);
               response.status(201).json(preference);
@@ -58,6 +61,16 @@ export default class PreferenceController {
 
         } catch (e) {
             next(e);
+        }
+    }
+
+    static async deletePreference(req, res, next) {
+        const preferenceRepository = new PreferenceRepository();
+        try {
+            const nbDeleted = await preferenceRepository.destroy(req.params.id, req.user.id);
+            res.sendStatus(nbDeleted === 1 ? 204 : 404);
+        } catch (error) {
+            next(error);
         }
     }
 }

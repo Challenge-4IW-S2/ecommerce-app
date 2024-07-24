@@ -42,7 +42,7 @@ function toggleCategorySelection(categoryId) {
     selectedCategories.value.push(categoryId);
   }
   emit('categories-selected', selectedCategories.value);
-}
+
 
 const selectedCategoryNames = computed(() => {
   return categories.value.filter(c => selectedCategories.value.includes(c.id)).map(c => c.name);
@@ -55,7 +55,6 @@ onMounted(fetchCategories);
 .category-container {
   margin-bottom: 20px;
 }
-
 .dropdown-button {
   padding: 8px;
   background-color: #f0f0f0;

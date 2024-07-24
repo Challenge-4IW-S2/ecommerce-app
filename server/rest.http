@@ -67,7 +67,7 @@ POST localhost:8000/user
 Content-Type: application/json
 
 {
-  "email": "estelle272001@gmai.com",
+  "email": "estelle272001@gmail.cm",
   "password": "Testpassword&1",
   "role": "ROLE_USER",
   "firstname":"Test",
