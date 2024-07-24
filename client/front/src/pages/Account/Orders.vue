@@ -1,6 +1,7 @@
 <script setup>
 import ky from "ky";
 import {computed, onMounted, reactive} from "vue";
+import Button from "../../components/Buttons/Button.vue";
 
 const orders = reactive([]);
 
@@ -66,6 +67,12 @@ const formatDate = (dateString) => {
               <div class="flex flex-col">
                 <span class="w-max">Commande créée le : {{ formatDate(order.createdAt) }}</span>
                 <span class="w-max">Dernière mise à jour le : {{ formatDate(order.updatedAt) }}</span>
+              </div>
+              <div class="flex gap-x-2">
+                <Button class="mt-4 font-normal" text="Télécharger ma facture " />
+                <Button
+                    class="mt-4 font-normal"
+                    text="Commander à nouveau" />
               </div>
             </div>
           </div>
