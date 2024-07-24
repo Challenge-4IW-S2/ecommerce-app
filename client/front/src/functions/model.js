@@ -39,7 +39,10 @@ export function getEntitySchema (entityType){
                 slug: z.string().min(3, "Slug must be at least 3 characters long"),
                 price_ht: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
                 is_active: z.boolean().optional(),
-                quantity: z.number().int().min(0, "Quantity must be a positive integer"),
+                //la quantite peut être negative ex: -10
+                quantity: z.number().int(),
+
+
 
             });
         case 'address':
