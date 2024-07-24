@@ -29,17 +29,17 @@ export default function (connection) {
     }
   );
 
-  UserRole.afterCreate(async (userRole) => {
-      await denormalizeUserRoleCreate(userRole);
-  });
+//  UserRole.afterCreate(async (userRole) => {
+  //    await denormalizeUserRoleCreate(userRole);
+ // });
 
-  UserRole.beforeUpdate(async (userRole) => {
-      await denormalizeUserRoleUpdate(userRole);
-  });
+ // UserRole.beforeUpdate(async (userRole) => {
+  ///    await denormalizeUserRoleUpdate(userRole);
+  //});
 
-  UserRole.afterDestroy(async (userRole) => {
-        await denormalizeUserRoleDelete(userRole);
-    });
+  //UserRole.afterDestroy(async (userRole) => {
+   //     await denormalizeUserRoleDelete(userRole);
+    //});
 
   return UserRole;
 };
