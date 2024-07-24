@@ -18,7 +18,7 @@ const getOrders = async () => {
 onMounted(async () => {
   const data = await getOrders();
   if (data) {
-    orders.push(...data.orders);
+    orders.push(...data);
   }
 });
 
@@ -49,14 +49,17 @@ const formatDate = (dateString) => {
               <span class="px-2 py-1 block">
                 Statut de la commande :
                 <strong>
-                  {{ order.status || 'Livrée (fausse donnée)' }}
+                  {{ order.status === "'paid'" ? 'Payée' : 'En cours de paiement' }}
                 </strong>
               </span>
             </div>
             <div class="px-2 mt-2">
               <span>Résumé de la commande :</span>
               <ul>
-                <li>A</li>
+                // order.invoice is a json object containing the order's items
+                <li v-for="item in JSON.parse(order.invoice)" :key="item.id">
+                  {{ item.quantity }}
+                </li>
               </ul>
             </div>
             <div class="p-2">
