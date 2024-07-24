@@ -9,13 +9,38 @@ import {
 } from "../schemas/UserSchema.js";
 import checkAuth from "../middlewares/checkAuth.js";
 import {OrderController} from "../controllers/OrderController.js";
+import checkRole from "../middlewares/checkRole.js";
 
 export default function (router) {
-    router.get("/users", UserController.getAllUsers);
-    router.post("/user", UserController.createUser);
-    router.get("/user/:id", UserController.getUser, validateBody(GetUsersSchema));
-    router.put("/users/:id", validateBody(UserUpdateSchema) ,UserController.updateUser);
-    router.delete("/user/:id",UserController.deleteUser);
+    router.get("/users",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        UserController.getAllUsers);
+    router.post(
+        "/user",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        UserController.createUser
+    );
+    router.get("/user/:id",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        UserController.getUser,
+        validateBody(GetUsersSchema)
+    );
+    router.put(
+        "/users/:id",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        validateBody(UserUpdateSchema) ,
+        UserController.updateUser
+    );
+    router.delete(
+        "/user/:id",
+        checkAuth(),
+        checkRole(['ROLE_ADMIN']),
+        UserController.deleteUser
+    );
    // router.get("/role", UserController.getAllUserRole);
     router.patch("/user/:id", UserController.updateUser);
 
