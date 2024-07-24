@@ -8,9 +8,10 @@ import HomeView from "./pages/Homepage.vue";
 import LoginView from "./pages/Login.vue";
 import LogoutView from "./pages/Logout.vue";
 import RegisterView from "./pages/Register.vue";
-import CVG from "./pages/legal/CGV.vue";
 import Dashboard from "./pages/Dashboard/Dashboard.vue";
 import PDC from "./pages/legal/PolitiqueDeConfidentialite.vue"
+import CGV from "./pages/legal/CGV.vue"
+import LegalMentions from "./pages/legal/MentionLegal.vue"
 
 import UserView from "./pages/Account/User.vue";
 import UserHomeView from "./pages/Account/UserHomeView.vue";
@@ -160,7 +161,7 @@ const routes = [
     { path: '/admin/comments', component: DashboardCommentsView},
     { path: '/admin/addresses', component: DashboardAddressesView},
     { path: '/admin/userroles', component: DashboardUserRolesView},
-    { path: "/conditions-generales-de-vente", component: CVG },
+    { path: "/conditions-generales-de-vente", component: CGV},
     // { path: "/politique-de-confidentialite", component: PDC },
 
     { path: "/admin/categories", component: DashboardCategoriesView },
