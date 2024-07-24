@@ -27,9 +27,6 @@ const checkGetUsers = () => {
 
 <template>
   <div>
-    <button @click="checkGetUsers">
-      testtt
-    </button>
     <h1>Mon compte</h1>
 
     <div id="accordion-collapse" data-accordion="collapse" class=" mt-4">

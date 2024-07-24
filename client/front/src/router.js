@@ -8,6 +8,7 @@ import RegisterView from './pages/Register.vue'
 import UserView from './pages/Account/User.vue'
 import UserHomeView from './pages/Account/UserHomeView.vue'
 import UserOrdersView from './pages/Account/Orders.vue'
+import UserAdressesView from './pages/Account/Addresses.vue'
 
 import ProductsView from './pages/Products/Products.vue'
 import ProductView from './pages/Products/Product.vue'
@@ -76,14 +77,15 @@ const routes = [
             },
             {
                 path: 'adresses',
-                component: UserView
+                component: UserAdressesView
             },
             {
                 path: 'settings',
-                component: UserView
+                component: Subscriptions
             }
         ]
     },
+
     {
         path: '/products',
         component: ProductsView
@@ -130,7 +132,6 @@ const routes = [
     { path: '/products', component: ProductsView},
     { path: '/product/:slug', component: ProductView},
 
-    {path: '/account/settings/preferences', component: Subscriptions},
 
 
 

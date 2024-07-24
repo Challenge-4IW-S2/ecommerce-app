@@ -6,7 +6,6 @@ export class OrderController{
             const orderRepository = new OrderRepository();
             const orders = await orderRepository.findAll();
             res.json(orders);
-
         } catch (error) {
             next(error);
         }

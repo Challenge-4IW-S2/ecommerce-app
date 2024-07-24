@@ -48,17 +48,17 @@ export default function (connection) {
     timestamps: true
   });
 
-  Preference.afterCreate(async (order) => {
-    await denormalizePreferenceCreate(order);
-  });
-
-  Preference.beforeUpdate(async (order) => {
-    await denormalizePreferenceUpdate(order);
-  });
-
-  Preference.afterDestroy(async (order) => {
-    await denormalizePreferenceDelete(order);
-  });
+  // Preference.afterCreate(async (order) => {
+  //   await denormalizePreferenceCreate(order);
+  // });
+  //
+  // Preference.beforeUpdate(async (order) => {
+  //   await denormalizePreferenceUpdate(order);
+  // });
+  //
+  // Preference.afterDestroy(async (order) => {
+  //   await denormalizePreferenceDelete(order);
+  // });
 
   return Preference;
 };

@@ -63,8 +63,10 @@ const formatDate = (dateString) => {
                 <span class="w-max">N° de commande : <strong>{{ order.id }}</strong></span>
                 <span class="w-max">Prix de la commande : <strong>{{ order.total_price }}€</strong></span>
               </div>
-              <span class="w-max">Commande créée le : {{ formatDate(order.createdAt) }}</span>
-              <span class="w-max">Dernière mise à jour le : {{ formatDate(order.updatedAt) }}</span>
+              <div class="flex flex-col">
+                <span class="w-max">Commande créée le : {{ formatDate(order.createdAt) }}</span>
+                <span class="w-max">Dernière mise à jour le : {{ formatDate(order.updatedAt) }}</span>
+              </div>
             </div>
           </div>
         </div>

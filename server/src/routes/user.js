@@ -10,11 +10,13 @@ import {
 import checkAuth from "../middlewares/checkAuth.js";
 import {OrderController} from "../controllers/OrderController.js";
 import checkRole from "../middlewares/checkRole.js";
+import AdressRepository from "../postgresql/repository/AdressRepository.js";
+import {AddressController} from "../controllers/AddressController.js";
 
 export default function (router) {
     router.get(
         "/users",
-        checkAuth(),
+        // checkAuth(),
         checkRole(['ROLE_ADMIN']),
         UserController.getAllUsers
     );
@@ -30,6 +32,12 @@ export default function (router) {
         '/order-history',
         checkAuth(),
         OrderController.getOrderByUser
+    );
+
+    router.get(
+        '/address-list',
+        checkAuth(),
+        AddressController.getAllAddressesFromUser
     );
 
     router.put(

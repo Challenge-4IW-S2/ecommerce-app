@@ -47,8 +47,14 @@ export class AddressController {
 
     static async getAllAddressByUserId(req, res) {
         const adressRepository = new AdressRepository();
-        const address = await adressRepository.findByOtherField("user_id",req.params.userId);
+        const address = await adressRepository.findAllAddressesFromUser(req.params.userId);
         res.json(address);
+    }
+
+    static async getAllAddressesFromUser(request, response) {
+        const addressRepository = new AdressRepository();
+        const addresses = await addressRepository.findAllAddressesFromUser(request.user.id);
+        response.json(addresses);
     }
 
     static async getAddress(req, res) {
