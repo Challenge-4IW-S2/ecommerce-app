@@ -76,7 +76,7 @@ const setSearchValue = (value) => {
         <div class="" v-if="searchHistory.lenght !== 0 && search == ''">
             <div class="flex justify-between">
                 <h2 class="text-xl font-bold">Historique de recherche</h2>
-                <ButtonDelete @click="deleteSearchHistory" />
+                <ButtonDeleteHistory @click="deleteSearchHistory" />
             </div>
             <ul class="flex flex-col gap-2">
                 <li v-for="(search, index) in searchHistory" :key="index" class="cursor-pointer"

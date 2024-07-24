@@ -225,7 +225,6 @@ export function useEntityForm(entityType, entityId = null, BASE_URL) {
     if (entityId) {
       try {
         await ky.delete(`${BASE_URL}/${entityType}/${entityId}`).json();
-        console.log(`${entityType} deleted successfully`);
       } catch (error) {
         console.error(`Failed to delete ${entityType}:`, error);
       }

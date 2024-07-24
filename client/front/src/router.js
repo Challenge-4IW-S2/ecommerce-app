@@ -156,7 +156,6 @@ router.beforeEach(async (to, from, next) => {
     const userAuthStore = useUserAuthStore();
     userAuthStore.setUserDetails(isLogged ? user : null);
     userAuthStore.setLoginStatus(isLogged);
-    console.log(isLogged);
     if (requiresNoAuth && isLogged) {
         next('/');
         return;

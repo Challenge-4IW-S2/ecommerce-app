@@ -31,7 +31,6 @@ export const useStockStore = defineStore('stock', {
       try {
         const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/history`).json();
         this.stockHistory = response;
-        console.log('Fetched stock history:', this.stockHistory)
       } catch (error) {
         console.error('Failed to fetch stock history:', error);
       }

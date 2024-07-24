@@ -3,6 +3,7 @@ import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
 import { useAPI } from "../../../composables/useAPI.js";
 import { useRouter } from "vue-router";
+import { useAPIDelete } from "../../../composables/useAPIDelete.js";
 const router = useRouter()
 // Définir les données dynamiques
 const data = ref([])
@@ -18,8 +19,7 @@ const actions = ref([
   {
     label: 'Supprimer',
     method: async (row) => {
-      const { results } = await useAPI('delete', `user/${row.id}`, {}, {}, '');
-      location.reload();
+      await useAPIDelete(`user / ${ row.id }`);
     },
     color: 'red',
   },
@@ -48,7 +48,6 @@ const actions = ref([
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          console.log(row.name)
           a.download = `${row.name}.csv`;
           a.click();
           URL.revokeObjectURL(url); // libérer le blob
@@ -65,7 +64,6 @@ const fetchData = async () => {
   try {
     const { results } = await useAPI('get', 'users', {}, {}, '');
     const response = results.value;
-    console.log(response.length)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)

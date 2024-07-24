@@ -176,23 +176,13 @@ export class ProductController {
   static async deleteProduct(request, response, next) {
     try {
       const productRepository = new ProductRepository();
-      const productPicture = new ProductPictureRepository();
 
-      const nbDelete = await productRepository.deleteProduct(request.params.id);
-      console.log(nbDelete);
-      // if (nbDelete === 1) {
-        
-      //   // const productPictures = await productPicture.findByOtherField(
-      //   //   "product_id",
-      //   //   request.params.id
-      //   // );
-      //   // for (const picture in productPictures) {
-      //   //   await productPicture.deleteProductPicture(picture.id);
-      //   // }
-      //   //response.sendStatus(204);
-      // } else {
-      //   //response.sendStatus(404);
-      // }
+      const [nbDelete] = await productRepository.disableProduct(request.params.id);
+      if (nbDelete === 1) {
+        response.sendStatus(204);
+      } else {
+        response.sendStatus(404);
+      }
     } catch (error) {
       next(error);
     }

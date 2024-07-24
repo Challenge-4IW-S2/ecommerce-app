@@ -11,7 +11,6 @@ const data = ref([]);
 
 const fetchData = async () => {
   data.value = await getChartData('getTheMostExpensiveProducts');
-  console.log("data.value Most", data.value);
 };
 
 const chartData = computed(() => {

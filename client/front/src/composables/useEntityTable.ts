@@ -32,7 +32,6 @@ export const useEntityTable = (
           {
             label: "Modifier",
             method: ({ row }) => {
-              console.log(row);
               router.push(`/admin/${entityPath}/${row.id}`);
             },
             color: "blue",
@@ -89,14 +88,11 @@ export const useEntityTable = (
 
   const fetchData = async () => {
     try {
-      console.log(`${apiUrl}`);
       const { results } = await useAPI("get", `${apiUrl}`, {}, {}, "");
       const response = results.value;
-      console.log(response > 0);
       if (response.length > 0) {
         data.value = response;
         if (roleApiUrl) {
-          console.log(roleApiUrl);
           const { results } = await useAPI("get", `${roleApiUrl}`, {}, {}, "");
           const user_roles = results.value;
           data.value.forEach((user) => {

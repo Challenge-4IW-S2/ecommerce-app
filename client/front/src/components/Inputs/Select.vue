@@ -20,7 +20,6 @@ const internalModelValue = computed({
   set: (value) => emit('update:modelValue', value)
 });
 
-console.log(props.modelValue)
 </script>
 
 <template>
