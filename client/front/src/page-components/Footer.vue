@@ -10,7 +10,7 @@ import Logo from "../components/Logo.vue";
         <div class="flex flex-col gap-8">
           <a href="/politique-de-confidentialite">Politique de confidentialité</a>
           <a href="/conditions-generales-de-vente">Conditions Générales de Vente</a>
-          <a href="/mention-legale">Mentions légales</a>
+          <a href="/mentions-legales">Mentions légales</a>
         </div>
         <div class="flex flex-grow">
           <div class="flex flex-col items-end gap-5 align-center-small flex-grow">
