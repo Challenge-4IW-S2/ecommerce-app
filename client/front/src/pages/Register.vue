@@ -5,6 +5,7 @@ import Button from "../components/Buttons/Button.vue";
 import ButtonLink from "../components/Links/ButtonLink.vue";
 import ky from "ky";
 import {computed, reactive, ref} from "vue";
+import RadioInput from "../components/Inputs/RadioInput.vue";
 
 const parameters = reactive({
   firstname: '',
@@ -14,7 +15,7 @@ const parameters = reactive({
   password: '',
   confirmPassword: ''
 });
-
+const acceptCGV = ref(false);
 const msgError = ref('');
 const isSubmitted = ref(false);
 
@@ -62,14 +63,18 @@ const canSubmit = computed(() => {
 
 const register = async () => {
   try {
-    const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
-      json: {
-        ...parameters
-      },
-    });
-    isSubmitted.value = true;
-    if (response.status === 201) {
-      msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
+    if (acceptCGV.value) {
+      const response = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
+        json: {
+          ...parameters
+        },
+      });
+      isSubmitted.value = true;
+      if (response.status === 201) {
+        msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
+      }
+    }else {
+      msgError.value = 'Veuillez accepter les conditions générales de vente et la politique de confidentialité';
     }
 
   } catch (error) {
@@ -95,7 +100,7 @@ const register = async () => {
         Créer votre compte Luzaya
       </h1>
       <div v-if="!isSubmitted">
-        <small class="error" v-if="msgError" >
+        <small class="error" v-if="msgError">
           {{ msgError }}
         </small>
         <form @submit.prevent="register">
@@ -174,16 +179,21 @@ const register = async () => {
               <span v-if="parameters.confirmPassword.length > 0 && parameters.confirmPassword !== parameters.password" class="text-sm error mt-2">
               Les mots de passe ne correspondent pas
             </span>
+              <RadioInput
+                  :title="`J'accepte les conditions générales de vente et la politique de confidentialité`"
+                  :id="`accept-cgv`"
+                  :name="`accept-cgv`"
+                  :checked="acceptCGV"
+                  :required="true"
+              />
+
+              <span v-if="parameters.confirmPassword.length > 0 && parameters.confirmPassword !== parameters.password"
+                    class="text-sm error mt-2">
+                Les mots de passe ne correspondent pas
+              </span>
             </div>
-            <Button
-                text="Devenir membre Luzaya"
-                :disabled="!canSubmit"
-            />
-            <ButtonLink
-                class-name="bg-transparent text-black border border-black h-12"
-                text="Connexion"
-                to="/login"
-            />
+            <Button text="Devenir membre Luzaya" :disabled="!canSubmit" />
+            <ButtonLink class-name="bg-transparent text-black border border-black h-12" text="Connexion" to="/login" />
           </div>
         </form>
       </div>
