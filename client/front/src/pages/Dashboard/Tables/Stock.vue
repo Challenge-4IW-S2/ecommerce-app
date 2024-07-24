@@ -12,7 +12,9 @@ const stockHistory = ref([]);
 
 const fetchStockHistory = async () => {
   try {
-    stockHistory.value = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/history`).json();
+    stockHistory.value = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/history`, {
+      credentials: "include"
+    }).json();
   } catch (error) {
     console.error('Failed to fetch stock history:', error);
   }

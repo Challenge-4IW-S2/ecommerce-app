@@ -15,7 +15,9 @@ const { data, actions } = useEntityTable(baseUrl,route, entityPath, [{
   method: async ({ row }) => {
     const { generatePDF } = useGeneratePDF();
     try {
-      const response = await ky.get(`${baseUrl}/order/${row.id}`).json();
+      const response = await ky.get(`${baseUrl}/order/${row.id}`, {
+        credentials: "include"
+      }).json();
       const { address, user, products, order } = response.invoice;
       generatePDF({ address, user, products, order });
 

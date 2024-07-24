@@ -18,7 +18,9 @@ const actions = ref([
   {
     label: 'Supprimer',
     method: (row) => {
-      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`);
+      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`, {
+        credentials: "include"
+      });
       location.reload();
     },
     color: 'red',
