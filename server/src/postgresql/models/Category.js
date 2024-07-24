@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeCategory, denormalizeCategoryDelete } from "../../denormalizations/category.js";
+import {
+    denormalizeCategoryCreate,
+    denormalizeCategoryDelete,
+    denormalizeCategoryUpdate
+} from "../../denormalizations/category.js";
 
 export default function (connection) {
   class Category extends Model {}
@@ -24,15 +28,15 @@ export default function (connection) {
   );
 
   Category.afterCreate(async (category) => {
-      await denormalizeCategory(category);
+      await denormalizeCategoryCreate(category);
   });
 
-  Category.afterUpdate(async (category) => {
-      await denormalizeCategory(category);
+  Category.beforeUpdate(async (category) => {
+      await denormalizeCategoryUpdate(category);
   });
 
-  Category.beforeDestroy(async (category) => {
-      await denormalizeCategoryDelete(category.id);
+  Category.afterDestroy(async (category) => {
+      await denormalizeCategoryDelete(category);
   });
 
   return Category;

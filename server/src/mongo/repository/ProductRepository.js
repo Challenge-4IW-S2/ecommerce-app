@@ -5,15 +5,22 @@ export default class ProductRepository {
         this.Product = ProductModel;
     }
 
+    async getProductsByCategory(categoryId) {
+        // find all products by category (category is a subdocument named category with _id as id)
+        // structure of the category subdocument : { _id: ObjectId, name: String }
+        return this.Product.find({ 'category._id' : categoryId });
+    }
+
     async createOrUpdateProduct(product) {
         return this.Product.findByIdAndUpdate(product.id, {
             name: product.name,
             description: product.description,
             price_ht: product.price_ht,
-            price_ttc: product.price_ttc,
             is_active: product.is_active,
             slug: product.slug,
-            category_id: product.category_id,
+            category: product.category_id,
+            quantity: product.quantity,
+            low_stock_threshold: product.low_stock_threshold,
         }, {
             upsert: true,
             new: true,
@@ -24,7 +31,7 @@ export default class ProductRepository {
         return this.Product.findByIdAndDelete(productId);
     }
 
-    async getAllProducts(page, order) {
+    async getAllProducts(page, order, categories, valueMin, valueMax) {
 
         // nombre total de pages ( ex : 100 / 10 = 10)
         const totalProducts = await this.Product.countDocuments({ is_active: true });
@@ -54,8 +61,19 @@ export default class ProductRepository {
                 break;
         }
 
+        // gestion de la catégorie
+        const categoryFilter = categories && categories.length ? { "category.name": { $in: categories } } : {};
+
+        // gestion des noms 
+        // const nameFilter = names && names.length ? { name: { $in: names } } : {};
+
+        // gestion des prix 
+        const priceFilter = Number(valueMax) === 0 ? { $gte: Number(valueMin) } : { $gte: Number(valueMin), $lte: Number(valueMax) }
         // récupération des produits
         const productsResults = await this.Product.aggregate()
+            .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+            })
             .lookup({
                 from: 'categories',
                 localField: 'category_id',
@@ -80,15 +98,32 @@ export default class ProductRepository {
                 slug: 1,
             })
             .match({
-                is_active: true
+                is_active: true,
+                ...categoryFilter,
+                price_ttc: priceFilter,
             })
             .limit(Number(page))
 
         return { productsResults, totalPagesResults };
     }
 
+    async getMinAndMaxPrice() {
+        return this.Product.aggregate().group({
+        _id: null,
+        min: { $min: { $multiply: ["$price_ht", 1.2] } },
+        max: { $max: { $multiply: ["$price_ht", 1.2] } }
+        })
+    }
+
+    async getProductsName() {
+        return this.Product.find({}, 'name -_id');
+    }
+
     getProduct(slug) {
         return this.Product.aggregate()
+        .addFields({
+                price_ttc: { $multiply: ["$price_ht", 1.2] }
+        })
         .lookup({
             from: 'categories',
             localField: 'category_id',
@@ -151,4 +186,35 @@ export default class ProductRepository {
                 ]
         })
     }
+
+    async updateSubdocument(productId, subdocument, data) {
+        const exists = await this.Product.findOne({ _id: productId, [`${subdocument}._id`]: data._id });
+
+        if (exists) {
+            return this.Product.findOneAndUpdate(
+                { _id: productId, [`${subdocument}._id`]: data._id },
+                { $set: { [`${subdocument}.$`]: data } },
+                { new: true }
+            );
+        } else {
+            return this.Product.findByIdAndUpdate(
+                productId,
+                { $push: { [subdocument]: data } },
+                { new: true }
+            );
+        }
+    }
+
+    async deleteSubdocument(productId, subdocument, subdocumentId) {
+        return this.Product.findByIdAndUpdate(
+            productId,
+            { $pull: { [subdocument]: { _id: subdocumentId } } },
+            { new: true }
+        );
+    }
+
+    async aggregateProducts(pipeLine) {
+        return this.Product.aggregate(pipeLine)
+    }
+
 }

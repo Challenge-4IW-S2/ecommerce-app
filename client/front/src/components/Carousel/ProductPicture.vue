@@ -17,7 +17,9 @@ const deleteImage = async (id) => {
     if (!confirm('Are you sure you want to delete this address?')) {
       return;
     }
-    const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${id}`);
+    const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/productPicture/${id}`, {
+      credentials: "include"
+    });
     router.go();
   } catch (error) {
     console.error(error);

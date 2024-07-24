@@ -5,7 +5,9 @@ import Swal from "sweetalert2";
 export function fetchModelStructure(modelName) {
     try {
         console.log(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`)
-        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`).json();
+        return ky.get(`${import.meta.env.VITE_API_BASE_URL}/model/${modelName}`, {
+            credentials: "include"
+        }).json();
     } catch (error) {
         console.error("Error fetching model structure:", error);
         throw error;
@@ -37,9 +39,10 @@ export function getEntitySchema (entityType){
                 description: z.string().optional(),
                 category_id: z.string(),
                 slug: z.string().min(3, "Slug must be at least 3 characters long"),
-                price_ttc: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
                 price_ht: z.string().regex(/^\d+(\.\d{2})?$/, { message: "Price must be a number with up to two decimal places" }),
                 is_active: z.boolean().optional(),
+                quantity: z.number().int().min(0, "Quantity must be a positive integer"),
+
             });
         case 'address':
             return z.object({

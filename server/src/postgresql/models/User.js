@@ -1,10 +1,19 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeUser } from "../../denormalizations/user.js";
+import {
+    denormalizeUserCreate,
+    denormalizeUserDelete,
+    denormalizeUserUpdate
+} from "../../denormalizations/user.js";
 import bcrypt from 'bcryptjs';
 
 export default function (connection) {
 
-    class User extends Model {}
+    class User extends Model {
+        static associate(models) {
+            User.hasMany(models.Preference,{ foreignKey: 'user_id', as: 'preferences' });
+            User.hasMany(models.Wishlist, { foreignKey: 'user_id' });
+        }
+    }
 
     User.init(
         {
@@ -30,7 +39,7 @@ export default function (connection) {
             },
             firstname: {
                 type: DataTypes.STRING,
-                allowNull: true
+                allowNull: true,
             },
             lastname: {
                 type: DataTypes.STRING,
@@ -55,6 +64,22 @@ export default function (connection) {
             deleted: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false
+            },
+            password_updated_at: {
+                type: DataTypes.DATE,
+                allowNull: true
+            },
+            attempt_connexion: {
+            type: DataTypes.NUMBER,
+            allowNull: true
+          },
+            lock_until: {
+            type: DataTypes.DATE,
+            allowNull: true,
+          },
+            token: {
+                type: DataTypes.STRING,
+                allowNull: true
             }
         },
         {
@@ -71,19 +96,34 @@ export default function (connection) {
     });
 
     User.afterCreate(async (user) => {
-        await denormalizeUser(user);
+        await denormalizeUserCreate(user);
     });
 
     User.addHook("beforeUpdate", async function (user, { fields }) {
-        if (fields.includes("password")) {
+        if (fields.includes("password") && user.password) {
             const hash = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
             user.password = hash;
         }
+
+        await denormalizeUserUpdate(user);
+    });
+    User.afterDestroy(async (user) => {
+        await denormalizeUserDelete(user);
+
     });
 
-    User.afterUpdate(async (user) => {
-        await denormalizeUser(user);
-    });
 
+    User.afterValidate(async (user) => {
+        if (user.changed("lastname") && user.lastname) {
+            user.lastname = user.lastname.toUpperCase();
+        }
+
+        if (user.changed("firstname") && user.firstname) {
+            // UCWORDS
+            user.firstname = user.firstname
+                .toLowerCase()
+                .replace(/(?<= )[^\s]|^./g, a=> a.toUpperCase())
+        }
+    });
     return User;
 }

@@ -20,10 +20,11 @@ const openSearch = () => {
 // search product API
 const connect = async (newValue) => {
     try {
-        response = await ky.get("http://localhost:8000/searchProduct", {
+        response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/searchProduct`, {
             searchParams: {
                 search: newValue,
             },
+          credentials: "include"
         }).json();
     } catch (error) {
         console.error(error);

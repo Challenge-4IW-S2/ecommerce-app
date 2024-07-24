@@ -61,16 +61,7 @@ const toggleSizeOptions = () => {
   console.log(showSizeOptions.value)
 
 };
-const handleSubmit = (event) => {
-  console.log("okok")
-  if (window.innerWidth >= 768) {
-    // Desktop behavior: submit the form
-    console.log('Form submitted');
-  } else {
-    event.preventDefault();
-    toggleSizeOptions();
-  }
-};
+
 </script>
 
 <template>
@@ -125,7 +116,7 @@ const handleSubmit = (event) => {
         </div>
         <div class="fixed md:relative bottom-0 w-full z-50 mt-6 sm:mt-8 lg:mt-0">
           <div class="p-6 bg-white text-left border border-[#E4E4E4] rounded dark:bg-gray-800 dark:border-gray-700">
-            <form  @submit.prevent="handleSubmit" >
+            <form  @submit.prevent="addProductToBag" >
               <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
                 <a href="#">
                   <p class="mb-2 text-left tracking-tight text-black dark:text-white">Tapes In</p>
@@ -148,6 +139,7 @@ const handleSubmit = (event) => {
               </div>
               <button
                   type="button"
+
                   class="mt-10 flex w-full bg-principal items-center justify-center text-white rounded-md border border-transparent px-8 py-3 text-base font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Ajouter

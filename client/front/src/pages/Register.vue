@@ -66,11 +66,19 @@ const register = async () => {
       json: {
         ...parameters
       },
-    }).json();
-
+      credentials: "include"
+    });
     isSubmitted.value = true;
+    if (response.status === 201) {
+      msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
+    }
 
   } catch (error) {
+    if (error.response.status === 409) {
+      msgError.value = 'Un compte existe déjà avec cette adresse e-mail';
+    }else  {
+      msgError.value = 'Une erreur est survenue pendant la création de votre compte. Veuillez réessayer plus tard.';
+    }
     if (error.response) {
       const serverResponse = await error.response.json();
       msgError.value = serverResponse.message;
@@ -84,7 +92,7 @@ const register = async () => {
 <template>
   <div>
     <div class="m-auto max-w-125">
-      <h1>
+      <h1 class="mb-4">
         Créer votre compte Luzaya
       </h1>
       <div v-if="!isSubmitted">

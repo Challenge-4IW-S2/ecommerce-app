@@ -30,7 +30,7 @@ export default class ProductPictureRepository {
     }
 
     async updateProductPicture(id, productPicture) {
-        return await this.ProductPicture.update(productPicture, {
+        return this.ProductPicture.update(productPicture, {
             where: {
                 id: id,
             },
@@ -44,6 +44,7 @@ export default class ProductPictureRepository {
             where: {
                 id: id,
             },
+            individualHooks: true,
         });
     }
 }

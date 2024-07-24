@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath,pathToFileURL } from 'url';
+import UserRepository from "./repository/UserRepository.js";
 
 const connection = new Sequelize(process.env.DATABASE_URL);
 
@@ -33,9 +34,9 @@ const loadModels = async () => {
         Object.values(models).forEach(model => {
             if (model.associate) {
                 model.associate(models);
+                console.log(`Associations du modèle ${model.name} chargées`)
             }
         });
-        console.log('Modèles chargés avec succès:', Object.keys(models));
         return models;
     }catch (error) {
         console.error('Erreur lors du chargement des modèles:', error);

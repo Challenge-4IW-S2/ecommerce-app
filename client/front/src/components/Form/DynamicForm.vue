@@ -48,9 +48,9 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
                 :address="addressOptions"
                 :userId="entityId"
             />
-          </div>
-          <div v-else>
-            <p>No address found</p>
+            <div v-else>
+              <p>No address found</p>
+            </div>
           </div>
         <div v-if="entityType === 'product' && entityId">
           <div class="flex justify-between">
@@ -65,7 +65,7 @@ const { formData, errors, entityStructure, handleSubmit, handleDelete, addressOp
           </div>
       <div class="flex justify-end">
         <Button text="Submit" />
-        <Button v-if="entityId" text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />
+        <Button v-if="entityId && entityType ==='user' " text="Delete" @click.prevent="handleDelete" class="ml-2 bg-red-500 hover:bg-red-600 text-white" />
       </div>
     </form>
 </template>

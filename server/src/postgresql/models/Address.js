@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { denormalizeAddress, denormalizeAddressesDelete } from "../../denormalizations/address.js";
+import {
+    denormalizeAddressCreate,
+    denormalizeAddressDelete,
+    denormalizeAddressUpdate
+} from "../../denormalizations/address.js";
 
 export default function (connection) {
     class Address extends Model {}
@@ -45,15 +49,15 @@ export default function (connection) {
     );
 
     Address.afterCreate(async (address) => {
-        await denormalizeAddress(address);
+        await denormalizeAddressCreate(address);
     });
 
-    Address.afterUpdate(async (address) => {
-        await denormalizeAddress(address);
+    Address.beforeUpdate(async (address) => {
+        await denormalizeAddressUpdate(address);
     });
 
-    Address.beforeDestroy(async (address) => {
-        await denormalizeAddressesDelete(address);
+    Address.afterDestroy(async (address) => {
+        await denormalizeAddressDelete(address);
     });
 
     return Address;

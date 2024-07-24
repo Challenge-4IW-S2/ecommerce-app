@@ -22,6 +22,14 @@ export default class OrderRepository {
         });
     }
 
+    async findAllByOtherField(field, value) {
+        return await this.Order.findAll({
+            where: {
+                [field]: value
+            }
+        });
+    }
+
     async createOrder(order) {
         return await this.Order.create({
             user_id: order.user_id,
@@ -32,13 +40,11 @@ export default class OrderRepository {
     }
 
     async updateOrder(id, order) {
-        return await this.Order.update(order, {
+        return this.Order.update(order, {
             where: {
                 id: id
             },
             individualHooks: true
         });
     }
-
-
 }

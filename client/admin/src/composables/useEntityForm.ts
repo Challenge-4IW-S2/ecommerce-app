@@ -22,7 +22,13 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
     const getRoleOptions = async () => {
         try {
+<<<<<<< HEAD
             const response = await ky.get(`${BASE_URL}/userRoles`).json();
+=======
+            const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/role`, {
+                credentials: "include"
+            }).json();
+>>>>>>> main
             return response.map(role => ({
                 value: role.id,
                 label: role.name
@@ -76,6 +82,7 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
 
     const fetchEntityStructure = async () => {
+<<<<<<< HEAD
             try {
                 unwantedFields.push('id');
                 let response = {};
@@ -125,6 +132,30 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
             } catch (error) {
                 console.error('Failed to fetch entity structure:', error);
             }
+=======
+        try {
+            const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId || ''}`, {
+                credentials: "include"
+            }).json();
+            const cleanedResponse = filterUnwantedFields(response, unwantedFields);
+            let roleOptions = [];
+            if (entityType === 'user') {
+                roleOptions = await getRoleOptions();
+            }
+            entityStructure.value = Object.keys(cleanedResponse).map(key => {
+            const field = {
+                name: key,
+                value: cleanedResponse[key],
+                type: getTypeForKey(key, cleanedResponse[key])
+            };
+            // Ajouter les options pour les champs de type select
+            if (key === 'role') {
+                field.is = 'select';
+                field.options = roleOptions;
+            }
+            return field;
+        });
+>>>>>>> main
 
     };
 
@@ -159,7 +190,11 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 const method = isEditing.value ? 'patch' : 'post';
 
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
+<<<<<<< HEAD
                 const response = await ky[method](`${BASE_URL}/${entityType}/${entityId || ''}`, {
+=======
+                const response = await ky[method](`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId || ''}`, {
+>>>>>>> main
                     json: cleanedData
                 }).json();
                 await sweetalert.fire({
@@ -181,7 +216,13 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
     const handleDelete = async () => {
         if (entityId) {
             try {
+<<<<<<< HEAD
                 await ky.delete(`${BASE_URL}/${entityType}/${entityId}`).json();
+=======
+                await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/${entityType}/${entityId}`, {
+                    credentials: "include"
+                }).json();
+>>>>>>> main
                 console.log(`${entityType} deleted successfully`);
             } catch (error) {
                 console.error(`Failed to delete ${entityType}:`, error);
