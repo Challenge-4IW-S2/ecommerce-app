@@ -16,7 +16,9 @@ export default class PreferenceRepository {
         });
     }
 
-    async deletePreference(preferenceId) {
-        return this.Preference.findByIdAndDelete(preferenceId);
+    async destroy(preference_id, user_id) {
+        return this.Preference.deleteOne({ user_id , preference_id });
     }
+
+
 }

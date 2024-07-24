@@ -8,6 +8,7 @@ import {
     UserUpdateSchema
 } from "../schemas/UserSchema.js";
 import checkAuth from "../middlewares/checkAuth.js";
+import {OrderController} from "../controllers/OrderController.js";
 
 export default function (router) {
     router.get("/users", UserController.getAllUsers);
@@ -18,6 +19,18 @@ export default function (router) {
    // router.get("/role", UserController.getAllUserRole);
     router.patch("/user/:id", UserController.updateUser);
 
+
+    router.get(
+        '/order-history',
+        checkAuth(),
+        OrderController.getOrderByUser
+    );
+
+    // router.get(
+    //     '/address-list',
+    //     checkAuth(),
+    //     AddressController.getAllAddressesFromUser
+    // );
 
     router.put(
         '/update-profile',
