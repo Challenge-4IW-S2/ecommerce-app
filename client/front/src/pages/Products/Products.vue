@@ -34,7 +34,9 @@ const isDataLoaded = ref(false);
 
 async function fetchProducts() {
   try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/products`).json();
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/products`, {
+      credentials: "include"
+    }).json();
     allProducts.value = response;
     isDataLoaded.value = true;
     updateFiltersFromUrl();
@@ -46,7 +48,9 @@ async function fetchProducts() {
 async function fetchCategories() {
   console.log('fetchCategories called');
   try {
-    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/categories`).json();
+    const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/categories`, {
+      credentials: "include"
+    }).json();
     categories.value = response;
   } catch (error) {
     console.error('Failed to fetch categories:', error);

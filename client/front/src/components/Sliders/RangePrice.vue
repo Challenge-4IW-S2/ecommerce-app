@@ -76,7 +76,9 @@ export default {
   mounted() {
     const loadDate = async () => {
       try {
-        const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/products`).json();
+        const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/products`, {
+          credentials: "include"
+        }).json();
         const prices = response.map(product => Number(product.price_ttc));
         const minPrice = Math.min(...prices);
         const maxPrice = Math.max(...prices);

@@ -171,7 +171,8 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
 
                 const cleanedData = filterUnwantedFields(formData, unwantedFields);
                 const response = await ky[method](`${BASE_URL}/${entityType}/${entityId || ''}`, {
-                    json: cleanedData
+                    json: cleanedData,
+                    credentials: "include"
                 }).json();
                 await sweetalert.fire({
                     icon: "success",
