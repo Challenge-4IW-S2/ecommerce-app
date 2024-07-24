@@ -20,7 +20,7 @@ const verifyToken = async (token) => {
     console.log(response)
     if (response.ok) {
       const data = await response.json();
-      msgError.value ="Compte vérifié, vous pouvez vous connecter";
+      msgSuccess.value ="Compte vérifié, vous pouvez vous connecter";
     }
   } catch (error) {
 
@@ -49,6 +49,7 @@ if (token) {
 const email = ref('')
 const password = ref('')
 const msgError = ref('')
+const msgSuccess = ref('')
 
 
 const connect = async () => {
@@ -90,6 +91,9 @@ const connect = async () => {
       <h1 class="mb-4">
         Connectez-vous à votre compte
       </h1>
+      <small class="text-green-500" v-if="msgSuccess" >
+        {{ msgSuccess }}
+      </small>
       <small class="error" v-if="msgError" >
         {{ msgError }}
       </small>

@@ -38,7 +38,9 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
                     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) {
                         return;
                     }
-                    await ky.delete(`${baseUrl}/${entityPath}/${row.id}`);
+                    await ky.delete(`${baseUrl}/${entityPath}/${row.id}`, {
+                        credentials: 'include',
+                    });
                     await fetchData();
                 } catch (error) {
                     console.error('Erreur lors de la suppression:', error);
@@ -88,12 +90,16 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
     const fetchData = async () => {
         try {
             console.log(`${apiUrl}`)
-            const response = await ky.get(`${apiUrl}`).json();
+            const response = await ky.get(`${apiUrl}`, {
+                credentials: 'include',
+            }).json();
             console.log(response>0)
             if (response.length > 0) {
                 data.value = response;
                 if (roleApiUrl) {
-                    const user_roles = await ky.get(`${roleApiUrl}`).json();
+                    const user_roles = await ky.get(`${roleApiUrl}`, {
+                        credentials: 'include',
+                    }).json();
                     data.value.forEach((user) => {
                         user_roles.forEach((role) => {
                         if (user.role === role.id) {

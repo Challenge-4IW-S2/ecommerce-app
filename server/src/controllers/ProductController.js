@@ -99,7 +99,8 @@ export class ProductController {
             slug: request.body.slug,
             description: request.body.description,
             category_id: request.body.category_id,
-            quantity: request.body.quantity
+            quantity: request.body.quantity,
+            low_stock_threshold: request.body.low_stock_threshold
         }
         try {
             const productRepository = new ProductRepository();
