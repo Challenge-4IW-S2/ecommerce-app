@@ -36,5 +36,15 @@ export class OrderController{
         }
     }
 
+    static async getOrderByUser(req, res,next){
+        try {
+            const orderRepository = new OrderRepository();
+            const orders = await orderRepository.findByUser(req.user.id);
+            res.json(orders);
+        } catch (error) {
+            next(error);
+        }
+    }
+
 
 }

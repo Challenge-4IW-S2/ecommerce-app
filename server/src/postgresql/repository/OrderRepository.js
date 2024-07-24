@@ -22,6 +22,14 @@ export default class OrderRepository {
         });
     }
 
+    async findByUser(user_id) {
+        return await this.Order.findAll({
+            where: {
+                user_id: user_id
+            }
+        });
+    }
+
     async createOrder(order) {
         return await this.Order.create({
             user_id: order.user_id,

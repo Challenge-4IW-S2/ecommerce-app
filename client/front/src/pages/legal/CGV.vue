@@ -9,7 +9,7 @@ import DynamicForm from "../../components/Form/DynamicForm.vue";
     <p class="text-sm mb-4 py-2"> Les présentes conditions générales de vente (ci-après les Conditions Générales)
       s’appliquent à tout achat effectué par un internaute / personne physique (ci-après le « CLIENT »)
       sur le site Internet www.luzaya.fr (ci-après le « SITE ») auprès de LUZAYA, ayant son siège social au
-     245 Faubourg Saint Antoine, 75012 Paris, France. Tél : 06 52 14 41 89 (ci-après le « VENDEUR »).
+      245 Faubourg Saint Antoine, 75012 Paris, France. Tél : 06 52 14 41 89 (ci-après le « VENDEUR »).
     </p>
     <strong class="text-sm">Typologie des Produits</strong>
     <p class="text-sm mb-4">
@@ -19,7 +19,7 @@ import DynamicForm from "../../components/Form/DynamicForm.vue";
     <p class="text-sm mb-4">
       La livraison est assurée uniquement en France Métropolitaine via DHL.
     </p>
-   <div class="text-sm">
+    <div class="text-sm">
       <h2 class="font-bold py-4 text-2xl" >Article 1. DÉFINITION </h2>
       <p class="mb-2"> Les termes employés ci-après ont, dans les présentes Conditions Générales, la signification suivante : </p>
       <ul class="text-sm">
@@ -32,7 +32,7 @@ import DynamicForm from "../../components/Form/DynamicForm.vue";
         <li class="mb-2"> <strong> VENDEUR    </strong> : désigne la société LUZAYA, ayant son siège social au 245 Faubourg Saint Antoine, 75012 Paris, France. Tél : 01 23 45 67 89. </li>
         <li class="mb-2"> <strong> SITE </strong>  : désigne le site Internet <a href="www.luzaya.fr." >www.luzaya.fr.</a> </li>
       </ul>
-   </div>
+    </div>
     <div class="text-sm" >
       <h2 class="font-bold py-4 text-2xl" >Article 2. OBJET</h2>
       <p class="text-sm">
