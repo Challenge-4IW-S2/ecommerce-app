@@ -8,13 +8,10 @@
     <p class="text-center">  </p>
     <div>
       <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-4">
-        <ProductsAddedOverTime class="bg-white p-4 rounded-lg shadow-md mb-4"/>
-        <AveragePriceByCategory class="bg-white p-4 rounded-lg shadow-md mb-4"/>
       </div>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-      <NewProductsByCategory class="bg-white p-4 rounded-lg shadow-md"/>
     </div>
   </div>
 </template>
