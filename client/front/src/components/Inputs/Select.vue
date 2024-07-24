@@ -31,14 +31,11 @@ console.log(props.modelValue)
     <div class="w-full relative">
       <select
           :id="id"
-          :value="modelValue"
           v-model="internalModelValue"
           @change="$emit('update:modelValue', $event.target.value)"
-          class="border p-3.5  pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          class="border p-3.5 pl-3 py-2 placeholder:text:base border-black text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
       >
-
-        <option v-for="option in options" :key="option.label" :value="option.label"
-                :selected="option.value === modelValue">
+        <option v-for="option in options" :key="option.label" :value="option.value">
           {{ option.label }}
         </option>
       </select>
