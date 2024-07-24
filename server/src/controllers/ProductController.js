@@ -112,7 +112,7 @@ export class ProductController {
           
             const categoryRepository = new CategoryRepository();
             console.log(parameters.category_id);
-            parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
+            //parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
           
             const oldPrice = previousData.price_ht;
             const newPrice = parameters.price_ht;
