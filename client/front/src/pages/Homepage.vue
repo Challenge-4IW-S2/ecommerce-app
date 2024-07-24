@@ -38,7 +38,7 @@
           Des extensions naturelles au meilleur prix
         </h1>
         <RouterLink to="/products" class="text-white border border-white px-4 py-2 hover:bg-white hover:text-black">
-          DÃ©couvrir
+          Découvrir
         </RouterLink>
       </div>
     </div>
