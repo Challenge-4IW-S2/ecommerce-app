@@ -69,6 +69,7 @@ export class AuthController {
 
         const userRepository = new UserRepository();
         userRepository.createUser(userData)
+
             .then(async () => {
                 await sendEmail(userData.email, 'Luzaya.fr; Action requise : Vérification de votre adresse email', confirmUser(userData))
                 response.sendStatus(201)

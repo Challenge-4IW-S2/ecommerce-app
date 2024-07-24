@@ -3,13 +3,14 @@
 import { ref, onMounted } from "vue";
 import { fetchModelStructure } from "../../../functions/model.js";
 import DynamicForm from "../../../components/Form/DynamicForm.vue";
-import Button from "../../../components/Buttons/Button.vue";
-import ky from "ky";
+import { useAPI } from "../../../../front/src/composables/useAPI.js";
 const modelStructure = ref([]);
 const modelName = 'User';
 
 const getRoles = async () => {
-  const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/roles`).json();
+  const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users/roles`, {
+    credentials: "include"
+  }).json();
 
   return response;
 };
@@ -42,6 +43,7 @@ const getModelStructure = async () => {
 const handleFormSubmit = async (formData) => {
   const data = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
     json: formData,
+    credentials: "include"
   }).json();
   console.log(data);
 };

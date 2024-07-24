@@ -7,6 +7,9 @@ import ky from "ky";
 import {computed, reactive, ref} from "vue";
 import RadioInput from "../components/Inputs/RadioInput.vue";
 
+import { computed, reactive, ref } from "vue";
+
+
 const parameters = reactive({
   firstname: '',
   lastname: '',
@@ -51,14 +54,14 @@ const isPasswordUsingLowercaseLetters = computed(() => {
 
 const canSubmit = computed(() => {
   return parameters.firstname.length > 0
-      && parameters.lastname.length > 0
-      && isEmailValid.value
-      && isPasswordLongEnough.value
-      && isPasswordUsingCapitalLetters.value
-      && isPasswordUsingLowercaseLetters.value
-      && isPasswordUsingSpecialCharacters.value
-      && parameters.password === parameters.confirmPassword
-      && parameters.email === parameters.confirmEmail;
+    && parameters.lastname.length > 0
+    && isEmailValid.value
+    && isPasswordLongEnough.value
+    && isPasswordUsingCapitalLetters.value
+    && isPasswordUsingLowercaseLetters.value
+    && isPasswordUsingSpecialCharacters.value
+    && parameters.password === parameters.confirmPassword
+    && parameters.email === parameters.confirmEmail;
 });
 
 const register = async () => {
@@ -71,16 +74,18 @@ const register = async () => {
       });
       isSubmitted.value = true;
       if (response.status === 201) {
+      
         msgError.value = 'Votre compte a bien été créé. Vous allez recevoir un e-mail de confirmation pour activer votre compte.';
       }
     }else {
+    
       msgError.value = 'Veuillez accepter les conditions générales de vente et la politique de confidentialité';
-    }
-
+      }
+      
   } catch (error) {
     if (error.response.status === 409) {
       msgError.value = 'Un compte existe déjà avec cette adresse e-mail';
-    }else  {
+    } else {
       msgError.value = 'Une erreur est survenue pendant la création de votre compte. Veuillez réessayer plus tard.';
     }
     if (error.response) {
@@ -105,62 +110,29 @@ const register = async () => {
         </small>
         <form @submit.prevent="register">
           <div class="flex flex-col gap-y-5">
-            <Input
-                id="firstname"
-                title="Prénom"
-                placeholder="Prénom"
-                v-model="parameters.firstname"
-            />
-            <Input
-                id="lastname"
-                title="Nom"
-                placeholder="Nom"
-                v-model="parameters.lastname"
-            />
+            <Input id="firstname" title="Prénom" placeholder="Prénom" v-model="parameters.firstname" />
+            <Input id="lastname" title="Nom" placeholder="Nom" v-model="parameters.lastname" />
             <div class="flex flex-col">
               <div class="flex flex-wrap flex-grow gap-y-5 gap-x-8">
-                <Input
-                    id="email"
-                    type="email"
-                    title="Adresse e-mail"
-                    placeholder="Adresse e-mail"
-                    class="flex-grow"
-                    v-model="parameters.email"
-                />
-                <Input
-                    id="confirme-email"
-                    type="email"
-                    title="Confirmer votre adresse e-mail"
-                    placeholder="Adresse e-mail"
-                    class="flex-grow"
-                    v-model="parameters.confirmEmail"
-                />
+                <Input id="email" type="email" title="Adresse e-mail" placeholder="Adresse e-mail" class="flex-grow"
+                  v-model="parameters.email" />
+                <Input id="confirme-email" type="email" title="Confirmer votre adresse e-mail"
+                  placeholder="Adresse e-mail" class="flex-grow" v-model="parameters.confirmEmail" />
               </div>
               <span v-if="!isEmailValid && parameters.email.length > 0" class="text-sm error mt-2">
-              L'adresse e-mail entrée n'est pas valide
-            </span>
-              <span v-else-if="parameters.confirmEmail.length > 0 && parameters.confirmEmail !== parameters.email" class="text-sm error mt-2">
-              Les adresses ne correspondent pas
-            </span>
+                L'adresse e-mail entrée n'est pas valide
+              </span>
+              <span v-else-if="parameters.confirmEmail.length > 0 && parameters.confirmEmail !== parameters.email"
+                class="text-sm error mt-2">
+                Les adresses ne correspondent pas
+              </span>
             </div>
             <div class="flex flex-col">
               <div class="flex flex-wrap flex-grow gap-y-5 gap-x-8">
-                <Input
-                    id="password"
-                    type="password"
-                    title="Mot de passe"
-                    placeholder="Mot de passe"
-                    class="flex-grow"
-                    v-model="parameters.password"
-                />
-                <Input
-                    id="confirme-password"
-                    type="password"
-                    title="Confirmer votre mot de passe"
-                    placeholder="Mot de passe"
-                    class="flex-grow"
-                    v-model="parameters.confirmPassword"
-                />
+                <Input id="password" type="password" title="Mot de passe" placeholder="Mot de passe" class="flex-grow"
+                  v-model="parameters.password" />
+                <Input id="confirme-password" type="password" title="Confirmer votre mot de passe"
+                  placeholder="Mot de passe" class="flex-grow" v-model="parameters.confirmPassword" />
               </div>
               <ul class="text-sm mt-2">
                 <li class="checked" :class="isPasswordLongEnough ? 'success' : 'error'">
@@ -204,18 +176,11 @@ const register = async () => {
         <p class="text-center">
           Vous allez recevoir un e-mail de confirmation pour activer votre compte.
         </p>
-        <ButtonLink
-            class-name="bg-black text-white border border-black h-12 mt-5"
-            text="Connexion"
-            to="/login"
-        />
+        <ButtonLink class-name="bg-black text-white border border-black h-12 mt-5" text="Connexion" to="/login" />
       </div>
     </div>
   </div>
 
 </template>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

@@ -53,6 +53,44 @@ const routes = [
     component: LogoutView,
     meta: {
       requiresAuth: true,
+
+    {
+        path: '/register',
+        component: RegisterView,
+        meta: {
+            requiresNoAuth: true
+        }
+    },
+    {
+        path: '/account',
+        component: UserView,
+        meta: {
+            requiresAuth: true
+        },
+        children: [
+            {
+                path: '',
+                component: UserHomeView
+            },
+            {
+                path: 'orders',
+                component: UserOrdersView
+            },
+            {
+                path: 'adresses',
+                component: UserAdressesView
+            },
+            {
+                path: 'settings',
+                component: Subscriptions
+            }
+        ]
+    },
+
+    {
+        path: '/products',
+        name: 'products',
+        component: ProductsView
     },
   },
   {

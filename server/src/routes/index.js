@@ -15,6 +15,5 @@ export default function (router) {
     // Model routes :(structure d'un modèle)
     router.get('/model/:modelName', UtilitiesController.fetchModelStructure);
 
-    router.post("/searchProduct", ProductController.search);
     return router;
 }

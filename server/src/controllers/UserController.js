@@ -71,19 +71,13 @@ export class UserController {
             const [nbDeleted] = await userRepository.deleteUser(request.params.id);
             if (nbDeleted === 1) {
                 const addresses = await userAddressRepository.findByOtherField("user_id", request.params.id);
-
-                const deleteAddress = await userAddressRepository.deleteAdressFromUser(request.params.id);
-
-                response.sendStatus(deleteAddress === 1 ? 204 : 404);
-
-                const deletePreferences = await preferencesRepository.destroy(request.params.id);
-
-                if (deletePreferences.length === 0) return response.sendStatus(404);
-
-                response.sendStatus(deletePreferences === 1 ? 204 : 404);
-
+                for (const address of addresses) {
+                    await userAddressRepository.deleteAdress(address.id);
+                }
+                await preferencesRepository.destroy(request.params.id);
+                response.sendStatus(204);
             } else {
-                 response.sendStatus(404);
+                response.sendStatus(404);
             }
         }catch (e){
             next(e)

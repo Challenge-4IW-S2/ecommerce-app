@@ -38,8 +38,8 @@ export default function (router) {
 
     router.patch(
         '/category/:id',
-        checkAuth(),
-        checkRole(['ROLE_ADMIN']),
+        // checkAuth(),
+        // checkRole(['ROLE_ADMIN']),
         validateBody(CategorySchema),
         CategoryController.updatePatchCategory
     );

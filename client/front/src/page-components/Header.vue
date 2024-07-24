@@ -14,7 +14,9 @@ const isAuthChecked = ref(false);
 const categories = reactive([]);
 const fetchCategories = async () => {
   try {
-    const response = ky.get(`${import.meta.env.VITE_API_BASE_URL}/header-categories`)
+    const response = ky.get(`${import.meta.env.VITE_API_BASE_URL}/header-categories`, {
+      credentials: "include"
+    })
         .then((res) => res.json())
         .then((data) => {
           categories.push(...data);
@@ -25,7 +27,7 @@ const fetchCategories = async () => {
 };
 
 onMounted(async () => {
-  await fetchCategories();;
+  await fetchCategories();
   await userAuthStore.checkAuthStatus();
   isAuthChecked.value = true;
 });

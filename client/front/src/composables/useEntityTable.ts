@@ -102,10 +102,10 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
                     }).json();
                     data.value.forEach((user) => {
                         user_roles.forEach((role) => {
-                        if (user.role === role.id) {
-                            user.role = role.name;
-                        }
-                    });
+                            if (user.role === role.id) {
+                                user.role = role.name;
+                            }
+                        });
                     })
                 }
             } else {

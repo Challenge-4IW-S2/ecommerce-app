@@ -1,11 +1,11 @@
 <script setup>
 import Table from "../../../components/Tables/Table.vue";
 import { ref, computed } from "vue";
-import ky from "ky";
-import {  useRouter } from "vue-router";
+import { useAPI } from "../../../composables/useAPI.js";
+import { useRouter } from "vue-router";
 const router = useRouter()
 // Définir les données dynamiques
-const data = ref( [] )
+const data = ref([])
 // Définir les actions dynamiques
 const actions = ref([
   {
@@ -18,7 +18,9 @@ const actions = ref([
   {
     label: 'Supprimer',
     method: (row) => {
-      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`);
+      const response = ky.delete(`${import.meta.env.VITE_API_BASE_URL}/user/${row.id}`, {
+        credentials: "include"
+      });
       location.reload();
     },
     color: 'red',
@@ -43,7 +45,7 @@ const actions = ref([
           const writable = await fileHandle.createWritable();
           await writable.write(new Blob([csv], { type: 'text/csv' }));
           await writable.close();
-        }else {
+        } else {
           const blob = new Blob([csv], { type: 'text/csv' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
@@ -97,10 +99,8 @@ fetchData();
   <div>
     <h1>User Dashboard</h1>
   </div>
-  <Table :params="data" :actions="actions"  />
+  <Table :params="data" :actions="actions" />
 
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
