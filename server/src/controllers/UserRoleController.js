@@ -1,4 +1,4 @@
-import UserRoleRepository from "../postgresql/Repository/UserRoleRepository.js";
+import UserRoleRepository from "../postgresql/repository/UserRoleRepository.js";
 
 export class UserRoleController{
     static async getAllUserRole(req, res) {

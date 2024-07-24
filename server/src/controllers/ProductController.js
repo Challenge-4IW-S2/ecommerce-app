@@ -2,7 +2,7 @@ import ProductRepositoryMongo from "../mongo/repository/ProductRepository.js";
 import ProductRepository from "../postgresql/repository/ProductRepository.js";
 import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
 import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
-import User from "../postgresql/models/user.js";
+import User from "../postgresql/models/User.js";
 import Preference from "../postgresql/models/Preference.js";
 import {sendEmail} from "./SendMailController.js";
 import {newProductsTemplate} from "../mailsTemplates/newProducts.js";

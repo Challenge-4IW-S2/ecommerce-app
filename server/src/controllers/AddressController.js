@@ -1,4 +1,4 @@
-import AdressRepository from "../postgresql/Repository/AdressRepository.js";
+import AdressRepository from "../postgresql/repository/AdressRepository.js";
 import Adress from "../postgresql/models/Address.js";
 
 export class AddressController {

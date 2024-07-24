@@ -1,5 +1,5 @@
 import Category from "../postgresql/models/Category.js";
-import CategoryRepository from "../postgresql/Repository/CategoryRepository.js";
+import CategoryRepository from "../postgresql/repository/CategoryRepository.js";
 import CategoryRepositoryMongo from "../mongo/repository/CategoryRepository.js";
 
 export class CategoryController {

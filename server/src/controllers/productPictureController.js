@@ -1,4 +1,4 @@
-import ProductPictureRepository from "../postgresql/Repository/ProductPictureRepository.js";
+import ProductPictureRepository from "../postgresql/repository/ProductPictureRepository.js";
 export class productPictureController {
     static async createProductPicture(req, res, next) {
         const params= {

@@ -1,4 +1,4 @@
-import CommentRepository from "../postgresql/Repository/CommentRepository.js";
+import CommentRepository from "../postgresql/repository/CommentRepository.js";
 
 export class CommentController {
     static async getAllComments(req, res,next) {

@@ -1,4 +1,4 @@
-import OrderRepository from "../postgresql/Repository/OrderRepository.js";
+import OrderRepository from "../postgresql/repository/OrderRepository.js";
 
 export class OrderController{
     static async getAllOrders(req, res,next){
