@@ -14,7 +14,8 @@ export const useUserStore = defineStore('user', {
                     await ky.post(`${import.meta.env.VITE_API_BASE_URL}/init-bag`, {
                         json: { 
                             sessionId: sessionId
-                        }
+                        },
+                        credentials: "include"
                     }).json();
                 }
             } catch(error) {
@@ -31,7 +32,8 @@ export const useUserStore = defineStore('user', {
                         json: {
                             oldSessionId,
                             newSessionId
-                        }
+                        },
+                        credentials: "include"
                     }).json();
                 }
             } catch(error) {

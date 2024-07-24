@@ -32,6 +32,7 @@ const getProducts = async (page, orderBy, categories, valueMin, valueMax) => {
         }
         await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProducts`, {
             searchParams: searchParams,
+          credentials: "include"
         }).json().then((response) => {
             products.value = response.productsResults;
             totalPages.value = response.totalPagesResults;

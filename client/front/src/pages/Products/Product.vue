@@ -17,7 +17,9 @@ const warningMessage = ref('');
 
 const getProduct = async () => {
     try {
-        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProduct/${slug.value}`).json().then((response) => {
+        await ky.get(`${import.meta.env.VITE_API_BASE_URL}/getProduct/${slug.value}`, {
+          credentials: "include"
+        }).json().then((response) => {
             product.value = response[0];
         });
     } catch (error) {
