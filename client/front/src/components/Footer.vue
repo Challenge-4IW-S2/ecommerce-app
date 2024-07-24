@@ -3,9 +3,8 @@
 <template>
     <footer class="bg-principal text-white flex flex-col gap-[60px] pt-[51px] pb-[30px] px-6 items-center">
         <div class="flex flex-col gap-[35px] self-start">
-            <a href="#" class="font-medium text-sm">Politique de confidentialité</a>
-            <a href="#" class="font-medium text-sm">Conditions d’utilisations</a>
-            <a href="#" class="font-medium text-sm">Mentions légales</a>
+            <a href="/politique-de-confidentialite">Politique de confidentialité</a>
+            <a href="/conditions-generales-de-vente">Conditions Générales de Vente</a>
         </div>
         <div class="flex gap-[42px]">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 18 18">
