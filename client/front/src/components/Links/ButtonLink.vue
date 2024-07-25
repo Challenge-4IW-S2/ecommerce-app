@@ -1,29 +1,20 @@
-<script setup>
-
-const sizingStyle = ` block text-center content-center`;
-
-defineProps({
-  to: {
-    type: String,
-    default: "#"
-  },
-  text: {
-    type: String,
-    default: 'Action'
-  },
-  className: {
-    type: String,
-    default: "bg-black text-white"
-  }
-})
-</script>
-
+// src/components/Links/ButtonLink.vue
 <template>
-  <RouterLink :to="to" :class="className + sizingStyle">
-    {{ text }}
-  </RouterLink>
+  <RouterLink :to="to">{{ text }}</RouterLink>
 </template>
 
-<style scoped>
-
-</style>
+<script>
+export default {
+  name: 'ButtonLink',
+  props: {
+    to: {
+      type: String,
+      required: true
+    },
+    text: {
+      type: String,
+      required: true
+    }
+  }
+};
+</script>

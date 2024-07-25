@@ -1,6 +1,6 @@
 <script setup>
     import { ref } from 'vue';
-    import OpenCart from './OpenCart.vue';
+    // import OpenCart from './OpenCart.vue';
     const isCartOpen = ref(false);
     const openCart = () => {
         isCartOpen.value = !isCartOpen.value;

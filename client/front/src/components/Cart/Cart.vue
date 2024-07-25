@@ -1,6 +1,6 @@
 <script setup>
 import { useCartStore } from '../../store/cart.js'
-import OpenCart from "./OpenCart.vue"
+// import OpenCart from "./OpenCart.vue"
 import {computed} from "vue";
 
 const cartStore = useCartStore()
