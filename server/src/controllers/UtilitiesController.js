@@ -4,10 +4,8 @@ import nodemailer from "nodemailer";
 
 export class UtilitiesController {
     static async fetchModelStructure(req, res) {
-        console.log('init fetchModelStructure')
         const { modelName } = req.params;
         const model = models[modelName];
-        console.log(models[modelName])
 
         if (model) {
             const modelAttributes = model.rawAttributes;

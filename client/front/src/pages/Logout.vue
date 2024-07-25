@@ -13,7 +13,7 @@ onMounted(async () => {
       await router.push('/');
     }
   } catch (e) {
-    console.log(e);
+
   }
 });
 </script>

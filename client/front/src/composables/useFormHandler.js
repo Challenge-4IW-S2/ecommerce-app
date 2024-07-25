@@ -26,7 +26,6 @@ export function useFormHandler(entityType, initialData = {}) {
 
     const handleSubmit = async (url, method = 'POST') => {
         let response;
-        console.log(formData.value)
 
         if (!validate()) return;
         isSubmitting.value = true;
@@ -39,7 +38,6 @@ export function useFormHandler(entityType, initialData = {}) {
             }
             await handleHttpResponse(response);
         } catch (error) {
-            console.log('Error:', error.message);
 
             serverError.value = error.message;
         } finally {

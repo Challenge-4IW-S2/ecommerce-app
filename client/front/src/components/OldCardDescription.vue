@@ -58,14 +58,10 @@ const product = {
 
 const toggleSizeOptions = () => {
     showSizeOptions.value = !showSizeOptions.value;
-    console.log(showSizeOptions.value)
-
 };
 const handleSubmit = (event) => {
-    console.log("okok")
     if (window.innerWidth >= 768) {
         // Desktop behavior: submit the form
-        console.log('Form submitted');
     } else {
         event.preventDefault();
         toggleSizeOptions();

@@ -15,7 +15,6 @@ export default class PreferenceController {
                 return acc;
             }, {});
 
-            console.log(preferences)
 
             const combinedPreferences = preferences.map(pref =>  ({
                 id: pref.dataValues.id,
@@ -24,7 +23,6 @@ export default class PreferenceController {
                 activated: userPreferencesMap.hasOwnProperty(pref.dataValues.id) ? userPreferencesMap[pref.dataValues.id] : false
             }),
             );
-            console.log(combinedPreferences)
             res.json(combinedPreferences);
 
         }catch (e) {

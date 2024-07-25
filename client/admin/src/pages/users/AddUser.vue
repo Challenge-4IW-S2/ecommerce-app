@@ -19,11 +19,6 @@ const getModelStructure = async () => {
     modelStructure.value = structure.map(field => {
       if (field.name === 'role') {
         field.is = 'select';
-       /* field.options = getRoles();
-        field.options.then((data) => {
-          field.options = data;
-        });
-        console.log(field.options)*/
         field.options = [
           { value: 'admin', label: 'Admin' },
           { value: 'user', label: 'User' },
@@ -43,7 +38,6 @@ const handleFormSubmit = async (formData) => {
   const data = await ky.post(`${import.meta.env.VITE_API_BASE_URL}/signup`, {
     json: formData,
   }).json();
-  console.log(data);
 };
 
 onMounted(() => {

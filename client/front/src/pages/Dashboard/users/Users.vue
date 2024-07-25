@@ -50,7 +50,6 @@ const actions = ref([
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          console.log(row.name)
           a.download = `${row.name}.csv`;
           a.click();
           URL.revokeObjectURL(url); // libérer le blob
@@ -68,7 +67,6 @@ const fetchData = async () => {
     const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users`, {
       credentials: "include"
     }).json();
-    console.log(response)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
@@ -84,11 +82,10 @@ const fetchData = async () => {
         }
       });
     } else {
-      console.log('No data found');
+
     }
   } catch (error) {
 
-    console.log(error);
   }
 }
 fetchData();

@@ -148,7 +148,6 @@ const deleteSelected = async () => {
     const selectedData = props.params.filter(row => selectedRows.value.includes(row.id));
     const selectedIds = selectedData.map(row => row.id);
     for (let i = 0; i < selectedIds.length; i++) {
-      console.log(selectedIds[i])
       const response = await ky.delete(`${import.meta.env.VITE_API_BASE_URL}/${props.title.toLowerCase()}/${selectedIds[i]}`, {
         credentials: "include"
       }).json();

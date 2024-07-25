@@ -157,7 +157,6 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                     return acc;
                 }, {});
                 errors.value = errorMessages;
-                console.log(errors.value)
             }
             return false;
         }
@@ -195,9 +194,8 @@ export function useEntityForm(entityType, entityId = null,BASE_URL) {
                 await ky.delete(`${BASE_URL}/${entityType}/${entityId}`, {
                     credentials: "include"
                 }).json();
-                console.log(`${entityType} deleted successfully`);
             } catch (error) {
-                console.error(`Failed to delete ${entityType}:`, error);
+
             }
         }
     };

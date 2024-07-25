@@ -49,7 +49,6 @@ const getPrices = async () => {
 // --> function for inStock
 let inStockSelected = ref([]);
 // --> pour tester la checkbox
-console.log(inStockSelected);
 
 // order by
 const OrdersValue = [

@@ -13,7 +13,6 @@ const userStore = useUserStore();
 const router = useRouter()
 
 const token = router.currentRoute.value.query.token
-console.log(token)
 
 const verifyToken = async (token) => {
   try {
@@ -35,7 +34,6 @@ const verifyToken = async (token) => {
     }
   } catch (error) {
     const httpCode = error.response.status;
-    console.log(httpCode)
     switch (httpCode) {
       case 404:
         msgError.value = 'Le token est invalide';

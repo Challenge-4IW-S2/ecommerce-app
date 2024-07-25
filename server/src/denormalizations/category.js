@@ -15,12 +15,8 @@ export const denormalizeCategoryUpdate = async (category) => {
     const productRepository = new ProductMongo();
 
     const products = await productRepository.getProductsByCategory(category.dataValues.id);
-    console.log(category);
-    console.log(products);
-    console.log('°°°°°°°°°')
     if (products !== null) {
         for (const product of products) {
-            console.log(product);
             product.category_id = {
                 _id: category.dataValues.id,
                 name: category.dataValues.name

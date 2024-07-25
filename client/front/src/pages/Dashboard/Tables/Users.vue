@@ -29,9 +29,8 @@ const deleteSelected = async () => {
   try {
     const selectedData = data.value.filter(row => selectedRows.value.includes(row.id));
     const selectedIds = selectedData.map(row => row.id);
-    console.log("DELETE", selectedIds);
   } catch (error) {
-    console.error('Erreur lors de la suppression des éléments sélectionnés:', error);
+
   }
 };
 </script>

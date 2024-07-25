@@ -23,13 +23,11 @@ export default class CategoryRepository {
     }
 
     async getCategoryId(category) {
-        console.log(category);
         const categoryId = await this.Category.findOne({
             where: {
                 name: category
             }
         });
-        console.log(categoryId);
         return categoryId.id;
     }
 

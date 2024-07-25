@@ -116,10 +116,7 @@ export function useEntityForm(entityType, entityId = null) {
                     title: "Oops...",
                     text: error,
                 });
-                console.error('Failed to submit form:', error);
             }
-        } else {
-            console.log('Validation errors:', errors.value);
         }
     };
 
@@ -127,9 +124,6 @@ export function useEntityForm(entityType, entityId = null) {
         if (entityId) {
             try {
                 await ky.delete(`http://localhost:8000/${entityType}/${entityId}`).json();
-                console.log(`${entityType} deleted successfully`);
-            } catch (error) {
-                console.error(`Failed to delete ${entityType}:`, error);
             }
         }
     };

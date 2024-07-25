@@ -35,9 +35,8 @@ export const useStockStore = defineStore('stock', {
           credentials: "include"
         }).json();
         this.stockHistory = response;
-        console.log('Fetched stock history:', this.stockHistory)
       } catch (error) {
-        console.error('Failed to fetch stock history:', error);
+
       }
     }
   }

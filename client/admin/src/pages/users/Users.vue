@@ -48,13 +48,10 @@ const actions = ref([
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          console.log(row.name)
           a.download = `${row.name}.csv`;
           a.click();
           URL.revokeObjectURL(url); // libérer le blob
         }
-      } catch (error) {
-        console.error('Erreur lors de l\'exportation du CSV:', error);
       }
     },
     color: 'green',
@@ -64,7 +61,6 @@ const actions = ref([
 const fetchData = async () => {
   try {
     const response = await ky.get(`${import.meta.env.VITE_API_BASE_URL}/users`).json();
-    console.log(response)
     if (response.length > 0) {
       data.value = response;
       const role = response.map((user) => user.role)
@@ -78,12 +74,9 @@ const fetchData = async () => {
           user.role = user_roles.name;
         }
       });
-    } else {
-      console.log('No data found');
     }
   } catch (error) {
 
-    console.log(error);
   }
 }
 fetchData();

@@ -57,7 +57,6 @@ export class UserController {
             if (nbUpdated === 1) return response.status(200).json(user[0]);
             response.sendStatus(404);
         } catch (e) {
-            console.log(e);
             next(e)
         }
     }
@@ -93,7 +92,6 @@ export class UserController {
     static async getAllUserRole(request, response) {
         const userRoleRepository = new UserRoleRepository();
         const roles = await userRoleRepository.findAll();
-        console.log(roles)
         response.json(roles);
     }
 

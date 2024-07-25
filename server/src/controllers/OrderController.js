@@ -14,11 +14,9 @@ export class OrderController{
     static async createOrder(req, res,next){
         try {
             const orderRepository = new OrderRepository();
-            console.log("Creating order with data:", req.body);
             const order = await orderRepository.createOrder(req.body);
             res.status(201).json(order);
         } catch (error) {
-            console.log("Error creating order",error);
             next(error);
         }
     }

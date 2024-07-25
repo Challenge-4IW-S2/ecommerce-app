@@ -26,10 +26,9 @@ const submitDeleteAccount = async () => {
       credentials: "include",
     });
     if (response.ok) {
-      console.log('Redirecting to home...');
       await router.push('/');
     } else {
-      console.error('Failed to delete account. Response not OK.');
+
     }
   } catch (error) {
     console.error('Error during account deletion:', error);

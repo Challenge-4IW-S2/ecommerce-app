@@ -25,16 +25,12 @@ const loadModels = async () => {
             // Résoudre le chemin du fichier en URL compatible avec import()
             const modelUrl = pathToFileURL(modelPath).href;
             const { default: initModel } = await import(modelUrl);
-            console.log("initModel",initModel)
             const model = initModel(connection);
-            console.log(model)
             models[model.name] = model;
-            console.log(`Modèle chargé: ${model.name}`);
         }
         Object.values(models).forEach(model => {
             if (model.associate) {
                 model.associate(models);
-                console.log(`Associations du modèle ${model.name} chargées`)
             }
         });
         return models;

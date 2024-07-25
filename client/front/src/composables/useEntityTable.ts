@@ -25,7 +25,6 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
         {
             label: 'Modifier',
             method: ({ row }) => {
-                console.log(row)
                 router.push(`/admin/${entityPath}/${row.id}`);
             },
             color: 'blue',
@@ -33,7 +32,6 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
         {
             label: 'Supprimer',
             method: async ({ row }) => {
-                console.log(row)
                 try {
                     if (!confirm('Voulez-vous vraiment supprimer cet élément ?')) {
                         return;
@@ -89,11 +87,9 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
 
     const fetchData = async () => {
         try {
-            console.log(`${apiUrl}`)
             const response = await ky.get(`${apiUrl}`, {
                 credentials: "include"
             }).json();
-            console.log(response>0)
             if (response.length > 0) {
                 data.value = response;
                 if (roleApiUrl) {
@@ -109,10 +105,10 @@ export const useEntityTable = (baseUrl,apiUrl, entityPath, actionsConfig = [], r
                     })
                 }
             } else {
-                console.log('No data found');
+
             }
         } catch (error) {
-            console.error('Erreur lors de la récupération des données:', error);
+
         }
     }
 

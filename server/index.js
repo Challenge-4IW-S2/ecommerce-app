@@ -19,17 +19,13 @@ app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (requ
 
   try {
     const event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    console.log('Event constructed:', event.type);
 
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object;
-        console.log("session", session)
-        console.log(`Processing payment_intent.succeeded for session ID: ${session.id}`);
 
         try {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {limit: 100});
-          console.log('Line items:', lineItems.data);
 
           // recuperer le nom du produit depuis lineItems.data
 
@@ -47,20 +43,14 @@ app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (requ
 
             if (productFound) {
               const productQuantity = productFound.quantity - lineItem.quantity;
-              console.log("Updated Quantity for", productName, ":", productQuantity);
               lineItem.product_id = productFound.id; // Assign the found product's ID
-              console.log("Updated line item with product ID:", lineItem);
               await productRepository.updateProduct(productFound.id, {quantity: productQuantity});
-            } else {
-              console.log("Product not found:", productName);
             }
           }
 
 
           const userRepository = new UserRepository();
           const user = await userRepository.findOne('email', session.customer_details.email);
-          console.log(session.customer_details.email)
-          console.log(user)
 
           const order = {
             user_id: user.id ,
@@ -71,17 +61,15 @@ app.post('/stripe-webhook', express.raw({type: 'application/json'}), async (requ
 
           const orderRepository = new OrderRepository();
 
-          console.log('Creating order:', order);
           const createOrderResult = await orderRepository.createOrder(order);
 
-          console.log('Order created:', createOrderResult);
         } catch (processError) {
           console.error('Error processing order:', processError);
           // Consider adding more specific error handling or recovery logic here
         }
         break;
       default:
-        console.log(`Unhandled event type ${event.type}`);
+
     }
 
     response.send({received: true});

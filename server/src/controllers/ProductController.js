@@ -111,7 +111,6 @@ export class ProductController {
             const previousData = await productRepository.findById(id);
           
             const categoryRepository = new CategoryRepository();
-            console.log(parameters.category_id);
             //parameters.category_id = await categoryRepository.getCategoryId(parameters.category_id);
           
             const oldPrice = previousData.price_ht;
@@ -178,7 +177,7 @@ export class ProductController {
                 response.sendStatus(deletedPicture === 1 ? 204 : 404);
 
             }  else {
-            response.sendStatus(404);
+                response.sendStatus(404);
             }
         } catch (error) {
             next(error)
