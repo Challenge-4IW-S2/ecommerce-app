@@ -18,7 +18,7 @@ export class UtilitiesController {
             }));
             res.json(structure);
         } else {
-            res.status(404).json({ message: `Model ${modelName} not found` });
+            res.status(404);
         }
     }
 }

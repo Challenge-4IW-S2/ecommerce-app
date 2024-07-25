@@ -97,6 +97,6 @@ export const  handleHttpResponse = async (response) => {
                 text: 'Resource not found',
             });
         default:
-            return { success: false, message: 'An error occurred' };
+            return { message: 'An error occurred' };
     }
 };

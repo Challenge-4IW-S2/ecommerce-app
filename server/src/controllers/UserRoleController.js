@@ -7,7 +7,7 @@ export class UserRoleController{
             const userRole = await userRoleRepository.findAll();
             res.status(200).json(userRole);
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(400);
         }
     }
     static async createUserRole(req, res,next) {

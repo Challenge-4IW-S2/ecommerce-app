@@ -143,9 +143,7 @@ export class UserController {
     }
 
     static deleteClientAccount(request, response) {
-        return response.json({
-            message: 'Logged'
-        }).send()
+        return response.send();
     }
 }
 

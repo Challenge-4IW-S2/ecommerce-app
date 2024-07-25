@@ -189,9 +189,7 @@ export class ProductController {
             const products = await productRepository.findAll();
             response.json(products);
         } catch (error) {
-            response.json({
-                message: error.message,
-            });
+            response.sendStatus(500);
         }
     }
 

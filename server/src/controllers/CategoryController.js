@@ -53,11 +53,7 @@ export class CategoryController {
             if (nbUpdated === 1) return response.json(category[0]);
             if (nbUpdated === 0) return response.json(category[0]);
         } catch (e) {
-            response.json({
-                success: false,
-                message: 'Category not updated, an error occurred',
-                e: e.message,
-            });
+            response.status(404);
         }
     }
     static async deleteCategory(request, response,next) {
